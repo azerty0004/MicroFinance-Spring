@@ -1,9 +1,12 @@
 package tn.esprit.infini.Pidev.entities;
 
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
-
+@Entity
 public class Fine  implements Serializable {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Long idCustomer;
     private Double totalAmount;
@@ -13,7 +16,12 @@ public class Fine  implements Serializable {
     private Double interest;
     private String picture;
     private Date declaredDate;
+    @Enumerated(EnumType.STRING)
     private FineType fineType;
+
+    public Fine() {
+
+    }
 
     public void setFineType(FineType fineType) {
         this.fineType = fineType;

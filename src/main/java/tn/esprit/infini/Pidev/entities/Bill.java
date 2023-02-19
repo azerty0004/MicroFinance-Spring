@@ -1,12 +1,14 @@
 package tn.esprit.infini.Pidev.entities;
 
 
+import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 
-
+@Entity
 public class Bill  implements Serializable {
-
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Long idCustomer;
     private Double totalAmount;
@@ -15,6 +17,13 @@ public class Bill  implements Serializable {
     private Date startDate;
     private  Date declaredDate;
     private Double interest;
+    @Enumerated(EnumType.STRING)
+    private BillType billType;
+    private String picture;
+
+    public Bill() {
+
+    }
 
     public BillType getBillType() {
         return billType;
@@ -51,7 +60,6 @@ public class Bill  implements Serializable {
         this.billType = billType;
     }
 
-    private BillType billType;
 
     public Bill(Long id, Long idCustomer, Double totalAmount, Date dueDate, Boolean verified, Date startDate, Date declaredDate, Double interest, BillType billType, String picture) {
         this.id = id;
@@ -77,7 +85,7 @@ public class Bill  implements Serializable {
         this.interest = interest;
     }
 
-    private String picture;
+
 
 
     public Date getDeclaredDate() {
