@@ -5,8 +5,8 @@ import java.util.Set;
 import javax.persistence.*;
 import java.io.Serializable;
 @Entity
-@Table( name = "cart")
-public class cart implements Serializable {
+@Table( name = "Cart")
+public class Cart implements Serializable {
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         @Column(name="idCart")
@@ -21,7 +21,7 @@ public class cart implements Serializable {
         private TypePack typePAck;
 
         @OneToMany (mappedBy = "cart")
-        private Set <pack> pack;
+        private Set <Pack> pack;
 
 
 }

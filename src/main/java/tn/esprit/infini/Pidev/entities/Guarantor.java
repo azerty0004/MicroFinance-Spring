@@ -4,8 +4,8 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
-@Table( name = "guarantor")
-public class guarantor implements Serializable {
+@Table( name = "Guarantor")
+public class Guarantor implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="idGuarantor")
@@ -15,5 +15,7 @@ public class guarantor implements Serializable {
     private int cinGuarantor ;
     private String salary ;
     private String job ;
+    @OneToOne (mappedBy = "guarantor")
+    private Credit credit;
 
 }
