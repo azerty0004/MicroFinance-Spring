@@ -10,6 +10,8 @@ public class Credit {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Double montant;
+    private Date Dateofapplication;
+    private Date
 
     @Enumerated(EnumType.STRING)
     private Statut statut;
