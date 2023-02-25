@@ -6,7 +6,7 @@ import java.io.Serializable;
 
 @Entity
     @Table( name = "pack")
-    public class pack implements Serializable {
+    public class Pack implements Serializable {
 
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -18,7 +18,7 @@ import java.io.Serializable;
         private TypePack typePAck;
 
     @ManyToOne
-    cart cart;
+    Cart cart;
     }
 
 

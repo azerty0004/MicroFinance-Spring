@@ -5,7 +5,7 @@ import java.io.Serializable;
 
 @Entity
 @Table( name = "guarantor")
-public class guarantor implements Serializable {
+public class Guarantor implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="idGuarantor")
@@ -15,5 +15,4 @@ public class guarantor implements Serializable {
     private int cinGuarantor ;
     private String salary ;
     private String job ;
-
 }
