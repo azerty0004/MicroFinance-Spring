@@ -1,4 +1,7 @@
 package tn.esprit.infini.Pidev.entities;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 
 
 import javax.persistence.*;
@@ -70,5 +73,6 @@ public class Credit implements Serializable {
     public void setInterestrate(Double interestrate) {
         this.interestrate = interestrate;
     }
+
 }
 
