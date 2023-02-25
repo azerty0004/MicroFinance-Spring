@@ -17,5 +17,4 @@ public class Guarantor implements Serializable {
     private String job ;
     @OneToOne (mappedBy = "guarantor")
     private Credit credit;
-
 }
