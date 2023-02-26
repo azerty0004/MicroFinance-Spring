@@ -22,8 +22,6 @@ public class Credit implements Serializable {
     private Date dateoffinish;
     private Double interestrate;
     private Integer mounths;
-
-
     @Enumerated(EnumType.STRING)
     private Statut statut;
     @OneToOne

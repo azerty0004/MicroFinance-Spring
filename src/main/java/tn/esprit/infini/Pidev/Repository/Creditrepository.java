@@ -4,5 +4,5 @@ import org.springframework.data.repository.CrudRepository;
 import tn.esprit.infini.Pidev.entities.Credit;
 
 
-public interface creditrpository extends CrudRepository<Credit,Long> {
+public interface Creditrepository extends CrudRepository<Credit,Long> {
 }
