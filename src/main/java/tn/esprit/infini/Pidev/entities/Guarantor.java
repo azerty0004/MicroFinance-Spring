@@ -6,10 +6,6 @@ import java.io.Serializable;
 @Entity
 @Table( name = "guarantor")
 public class Guarantor implements Serializable {
-<<<<<<< HEAD:src/main/java/tn/esprit/infini/Pidev/entities/Guarantor.java
-=======
-
->>>>>>> linda:src/main/java/tn/esprit/infini/Pidev/entities/guarantor.java
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name="idGuarantor")
@@ -19,8 +15,6 @@ public class Guarantor implements Serializable {
     private int cinGuarantor ;
     private String salary ;
     private String job ;
-<<<<<<< HEAD:src/main/java/tn/esprit/infini/Pidev/entities/Guarantor.java
-=======
 
     public int getIdGuarantor() {
         return idGuarantor;
@@ -69,5 +63,4 @@ public class Guarantor implements Serializable {
     public void setJob(String job) {
         this.job = job;
     }
->>>>>>> linda:src/main/java/tn/esprit/infini/Pidev/entities/guarantor.java
 }

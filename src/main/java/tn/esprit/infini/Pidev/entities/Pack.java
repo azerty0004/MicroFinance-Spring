@@ -19,12 +19,8 @@ import java.io.Serializable;
 
     @ManyToOne
     Cart cart;
-<<<<<<< HEAD:src/main/java/tn/esprit/infini/Pidev/entities/Pack.java
-=======
-
     public int getIdPack() {
         return idPack;
->>>>>>> linda:src/main/java/tn/esprit/infini/Pidev/entities/pack.java
     }
 
     public void setIdPack(int idPack) {

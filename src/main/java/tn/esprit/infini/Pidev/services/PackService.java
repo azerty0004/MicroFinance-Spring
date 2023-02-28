@@ -1,9 +1,9 @@
-package tn.esprit.infini.Pidev.services;
+package tn.esprit.infini.Pidev.Services;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import tn.esprit.infini.Pidev.entities.Pack;
-import tn.esprit.infini.Pidev.repositories.PackRepository;
+import tn.esprit.infini.Pidev.Repository.PackRepository;
 
 import java.util.List;
 
@@ -12,6 +12,7 @@ import java.util.List;
 
 public class PackService implements IPackService {
     PackRepository packRepository;
+    
     @Override
     public List<Pack> retrieveAllPack() {
         return (List<Pack>) packRepository.findAll();    }

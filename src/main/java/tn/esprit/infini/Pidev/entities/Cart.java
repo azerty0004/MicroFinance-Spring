@@ -5,31 +5,24 @@ import java.util.Set;
 import javax.persistence.*;
 import java.io.Serializable;
 @Entity
-<<<<<<< HEAD:src/main/java/tn/esprit/infini/Pidev/entities/Cart.java
-@Table( name = "Cart")
-public class Cart implements Serializable {
-=======
 @Table( name = "cart")
 public class Cart implements Serializable {
 
->>>>>>> linda:src/main/java/tn/esprit/infini/Pidev/entities/cart.java
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
-        @Column(name="idCart")
-        private int idCart ;
-        private String productName ;
-        private String productDescription ;
+        @Column(name = "idCart")
+        private int idCart;
+        private String productName;
+        private String productDescription;
         private int quantity;
-        private double price ;
+        private double price;
         private double mouthlyamount;
-        private int nbreMounths ;
+        private int nbreMounths;
         @Enumerated(EnumType.STRING)
         private TypePack typePAck;
 
-        @OneToMany (mappedBy = "cart")
-        private Set <Pack> pack;
-<<<<<<< HEAD:src/main/java/tn/esprit/infini/Pidev/entities/Cart.java
-=======
+        @OneToMany(mappedBy = "cart")
+        private Set<Pack> pack;
 
         public int getIdCart() {
                 return idCart;
@@ -102,9 +95,7 @@ public class Cart implements Serializable {
         public void setPack(Set<Pack> pack) {
                 this.pack = pack;
         }
-
-
->>>>>>> linda:src/main/java/tn/esprit/infini/Pidev/entities/cart.java
-
-
 }
+
+
+
