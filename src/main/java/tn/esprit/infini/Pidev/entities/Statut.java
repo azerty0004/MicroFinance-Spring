@@ -6,7 +6,7 @@ import java.util.Date;
 public enum Statut {
     ACTIF,
     EN_ATTENTE,
-    EN_RETAEDISSEMENT,
+    EN_RETARDISSEMENT,
     REMBOURSE,
     ANNULE
 }
