@@ -5,6 +5,9 @@ import java.util.Set;
 import javax.persistence.*;
 import java.io.Serializable;
 @Entity
+@Table( name = "Cart")
+public class Cart implements Serializable {
+=======
 @Table( name = "cart")
 public class Cart implements Serializable {
 
@@ -21,6 +24,8 @@ public class Cart implements Serializable {
         @Enumerated(EnumType.STRING)
         private TypePack typePAck;
 
+        @OneToMany (mappedBy = "cart")
+        private Set <Pack> pack;
         @OneToMany(mappedBy = "cart")
         private Set<Pack> pack;
 

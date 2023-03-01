@@ -16,6 +16,7 @@ public class Guarantor implements Serializable {
     private String salary ;
     private String job ;
 
+
     public int getIdGuarantor() {
         return idGuarantor;
     }

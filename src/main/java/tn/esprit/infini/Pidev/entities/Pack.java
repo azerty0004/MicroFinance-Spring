@@ -58,7 +58,6 @@ import java.io.Serializable;
     public void setCart(Cart cart) {
         this.cart = cart;
     }
-}
 
 
 
