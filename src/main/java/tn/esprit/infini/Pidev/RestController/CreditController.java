@@ -31,7 +31,7 @@ public class CreditController {
         return icreditservice.updateCredit(credit);
     }
 
-    @DeleteMapping("/deletePack/{idCredit}")
+    @DeleteMapping("/deleteCredit/{idCredit}")
     void deleteCredit(@PathVariable ("idCredit") Long idCredit)
     {
         icreditservice.deleteCredit(idCredit);

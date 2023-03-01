@@ -31,7 +31,7 @@ public class InvestController {
         return iinvestservice.updateInvest(invest);
     }
 
-    @DeleteMapping("/deletePack/{idInvest}")
+    @DeleteMapping("/deleteInvest/{idInvest}")
     void deleteInvest(@PathVariable ("idInvest") Long idInvest)
     {
         iinvestservice.deleteInvest(idInvest);
