@@ -1,10 +1,9 @@
-package tn.esprit.infini.Pidev.services;
+package tn.esprit.infini.Pidev.Services;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import tn.esprit.infini.Pidev.entities.Cart;
-import tn.esprit.infini.Pidev.repositories.CartRepository;
-import tn.esprit.infini.Pidev.repositories.PackRepository;
+import tn.esprit.infini.Pidev.Repository.CartRepository;
 
 import java.util.List;
 

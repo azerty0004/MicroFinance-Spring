@@ -3,7 +3,7 @@ import tn.esprit.infini.Pidev.entities.Invest;
 import java.util.List;
 public interface Iinvestservice  {
     List<Invest> retrieveAllInvests();
-
+    List<Invest> retrieveByInterestRatelike(double i);
     Invest addInvest(Invest i);
 
     Invest updateInvest (Invest i);

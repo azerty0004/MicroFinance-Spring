@@ -1,12 +1,17 @@
 package tn.esprit.infini.Pidev.Services;
+import org.springframework.stereotype.Service;
 import tn.esprit.infini.Pidev.entities.Credit;
-import org.springframework.data.repository.CrudRepository;
+import tn.esprit.infini.Pidev.entities.Statut;
 
-
+import java.util.Date;
 import java.util.List;
-
+@Service
 public interface Icreditservice {
-    List<Credit> retrieveAllcredits();
+    List<Credit> retrieveAllCredits();
+    List<Credit> findByDateOfObtainingGreaterThan(
+    Date c);
+    List<Credit> findByStatuts(Statut statut);
+
 
     Credit addCredit(Credit c);
 
