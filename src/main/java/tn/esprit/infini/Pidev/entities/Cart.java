@@ -28,8 +28,8 @@ public class Cart implements Serializable {
         @Enumerated(EnumType.STRING)
         private TypePack typePAck;
 
-         @OneToMany(mappedBy = "cart")
-        private Set<Pack> pack;
+         @OneToMany(mappedBy = "Cart")
+          private Set<Pack> pack;
 
 
 }
