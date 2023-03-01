@@ -4,7 +4,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
-@Table( name = "guarantor")
+@Table( name = "Guarantor")
 public class Guarantor implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
