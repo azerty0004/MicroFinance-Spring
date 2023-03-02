@@ -7,6 +7,7 @@ import tn.esprit.infini.Pidev.Services.Icreditservice;
 import tn.esprit.infini.Pidev.entities.Credit;
 import tn.esprit.infini.Pidev.entities.Guarantor;
 import tn.esprit.infini.Pidev.entities.Statut;
+import tn.esprit.infini.Pidev.entities.Insurance;
 
 import java.util.Date;
 import java.util.List;
@@ -48,9 +49,10 @@ public class CreditController {
             @RequestParam(value = "date", required = false) Date date,
             @RequestParam(value = "duration", required = false) Integer duration,
             @RequestParam(value = "statut", required = false) Statut statut,
-            @RequestParam(value = "guarantor", required = false) Guarantor guarantor
+            @RequestParam(value = "guarantor", required = false) Guarantor guarantor,
+            @RequestParam(value = "insurance", required = false) Insurance insurance
     ) {
-        return icreditservice.findBySearchParams(creditId, amount, date, duration, statut, guarantor);
+        return icreditservice.findBySearchParams(creditId, amount, date, duration, statut, guarantor,insurance);
     }
 }
 
