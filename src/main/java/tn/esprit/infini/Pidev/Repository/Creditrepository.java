@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 import tn.esprit.infini.Pidev.entities.Credit;
 import tn.esprit.infini.Pidev.entities.Statut;
 import tn.esprit.infini.Pidev.entities.Guarantor;
+import tn.esprit.infini.Pidev.entities.Insurance;
 
 import java.util.Date;
 import java.util.List;

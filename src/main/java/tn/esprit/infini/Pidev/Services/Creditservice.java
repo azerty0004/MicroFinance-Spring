@@ -5,7 +5,7 @@ import tn.esprit.infini.Pidev.Repository.Creditrepository;
 import tn.esprit.infini.Pidev.entities.Credit;
 import tn.esprit.infini.Pidev.entities.Statut;
 import tn.esprit.infini.Pidev.entities.Guarantor;
-
+import tn.esprit.infini.Pidev.entities.Insurance;
 import java.util.Date;
 import java.util.List;
 
@@ -40,7 +40,7 @@ public class Creditservice implements Icreditservice {
 
     }
     @Override
-    public List<Credit> findBySearchParams(Long creditId, Double amount, Date date, Integer duration, Statut statut, Guarantor guarantor) {
+    public List<Credit> findBySearchParams(Long creditId, Double amount, Date date, Integer duration, Statut statut, Guarantor guarantor,Insurance insurance) {
         return creditrepository.findBySearchParams(creditId, amount, date, duration, statut, guarantor,insurance);
     }
 
