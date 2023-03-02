@@ -13,8 +13,6 @@ import java.util.List;
 public class CartService implements ICartService {
 
     CartRepository cartRepository;
-
-
     @Override
     public List<Cart> retrieveAllCarts() {
         return (List<Cart>) cartRepository.findAll();
@@ -39,4 +37,5 @@ public class CartService implements ICartService {
         cartRepository.deleteById(idCart);
 
     }
+
 }
