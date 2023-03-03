@@ -1,5 +1,7 @@
 package tn.esprit.infini.Pidev.Services;
 
+import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Service;
 import tn.esprit.infini.Pidev.Repository.AccountRepository;
 import tn.esprit.infini.Pidev.Repository.UserRepository;
 import tn.esprit.infini.Pidev.entities.Account;
@@ -7,7 +9,8 @@ import tn.esprit.infini.Pidev.entities.TypeUser;
 
 
 import java.util.List;
-
+@Service
+@AllArgsConstructor
 public class AccountService implements IAccount {
     AccountRepository AR;
     UserRepository UR;

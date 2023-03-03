@@ -1,12 +1,14 @@
 package tn.esprit.infini.Pidev.Services;
 
+import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Service;
 import tn.esprit.infini.Pidev.Repository.UserRepository;
 import tn.esprit.infini.Pidev.entities.TypeUser;
 import tn.esprit.infini.Pidev.entities.User;
-
-
 import java.util.List;
 
+@Service
+@AllArgsConstructor
 public class UserService implements IUser{
     UserRepository UR;
     //CRUD

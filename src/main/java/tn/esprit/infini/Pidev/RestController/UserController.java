@@ -1,12 +1,14 @@
 package tn.esprit.infini.Pidev.RestController;
 
+import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import tn.esprit.infini.Pidev.Services.IUser;
 import tn.esprit.infini.Pidev.entities.Cart;
 import tn.esprit.infini.Pidev.entities.User;
 
 import java.util.List;
-
+@RestController
+@AllArgsConstructor
 public class UserController {
     private IUser iUser;
     @GetMapping("/getUsers")
