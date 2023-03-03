@@ -3,6 +3,7 @@ package tn.esprit.infini.Pidev.entities;
 public enum Typecomplaint {
     Accountclaim,Customerserviceclaim,Securityclaim,Productclaim ,others
 }
+
 ///types of claims:
 //
 //Loan claim: This may include issues related to the loan amount, processing or
@@ -23,3 +24,4 @@ public enum Typecomplaint {
 //Product claim: This may include issues related to the quality or compliance
 // of products offered by the microfinance institution, warranty issues, replacement
 // or refund claims.
+

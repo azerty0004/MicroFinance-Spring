@@ -4,7 +4,8 @@ import org.springframework.stereotype.Service;
 import tn.esprit.infini.Pidev.Repository.Creditrepository;
 import tn.esprit.infini.Pidev.entities.Credit;
 import tn.esprit.infini.Pidev.entities.Statut;
-
+import tn.esprit.infini.Pidev.entities.Guarantor;
+import tn.esprit.infini.Pidev.entities.Insurance;
 import java.util.Date;
 import java.util.List;
 
@@ -18,17 +19,7 @@ public class Creditservice implements Icreditservice {
 
     }
 
-    @Override
-    public List<Credit> findByDateOfObtainingGreaterThan(Date c) {
-        return (List<Credit>) creditrepository.findByDateOfObtainingGreaterThan(c);
-    }
-
-    @Override
-    public List<Credit> findByStatuts(Statut statut) {
-        return (List<Credit>) creditrepository.findByStatuts(Statut.ACTIF);
-    }
-
-    @Override
+       @Override
     public Credit addCredit(Credit c) {
         return creditrepository.save(c);
     }
@@ -47,6 +38,10 @@ public class Creditservice implements Icreditservice {
     public void deleteCredit(Long id) {
         creditrepository.deleteById(id);
 
+    }
+    @Override
+    public List<Credit> findBySearchParams(Long creditId, Double amount, Date date, Integer duration, Statut statut, Guarantor guarantor,Insurance insurance) {
+        return creditrepository.findBySearchParams(creditId, amount, date, duration, statut, guarantor,insurance);
     }
 
 }

@@ -23,8 +23,11 @@ public class Insurance implements Serializable {
     private String coverage;
     private Double deductible;
     private String claimsHistory;
-    @ManyToOne
-    Pack pack;
+   // @ManyToOne
+  //  Pack pack;
+     @OneToOne
+    Credit credit;
+
 
 
 }

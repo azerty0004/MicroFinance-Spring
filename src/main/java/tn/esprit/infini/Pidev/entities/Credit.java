@@ -25,6 +25,13 @@ public class Credit implements Serializable {
     Guarantor guarantor;
     @Enumerated(EnumType.STRING)
     private TypeCredit typeCredit;
+    @ManyToOne
+    Transaction transaction;
+    @OneToOne
+    Insurance insurance;
+
+
+
 
 
 }
