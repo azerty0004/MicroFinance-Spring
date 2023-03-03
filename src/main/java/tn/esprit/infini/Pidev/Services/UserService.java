@@ -1,6 +1,7 @@
 package tn.esprit.infini.Pidev.Services;
 
 import tn.esprit.infini.Pidev.Repository.UserRepository;
+import tn.esprit.infini.Pidev.entities.TypeUser;
 import tn.esprit.infini.Pidev.entities.User;
 
 
@@ -10,7 +11,9 @@ public class UserService implements IUser{
     UserRepository UR;
     //CRUD
     @Override
-    public User addUser(User user) {return UR.save(user);}
+    public User addUser(User user) {
+        UR.findById(user.getId()).get().setType(TypeUser.Potential_Client);
+        return UR.save(user);}
     @Override
     public List<User> retrieveAllUsers() {return (List<User>) UR.findAll();}
     @Override

@@ -11,6 +11,8 @@ public class User implements Serializable {
     private int id;
     private String firstName;
     private String lastName;
+    @Enumerated(EnumType.STRING)
+    private TypeUser type;
     private String email;
     private int cin;
     private int phoneNumber;
@@ -45,6 +47,14 @@ public class User implements Serializable {
 
     public void setLastName(String lastName) {
         this.lastName = lastName;
+    }
+
+    public TypeUser getType() {
+        return type;
+    }
+
+    public void setType(TypeUser type) {
+        this.type = type;
     }
 
     public String getEmail() {
@@ -126,4 +136,5 @@ public class User implements Serializable {
     public void setAccount(Account account) {
         this.account = account;
     }
+
 }

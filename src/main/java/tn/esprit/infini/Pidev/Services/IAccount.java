@@ -13,4 +13,7 @@ public interface IAccount {
     void deleteAccount(Integer idAccount);
     //Advanced functions
     Account retrieveAccount (int idAccount);
+    void addBalance(Account account, float amount);
+    void substractBalance(Account account, float amount);
+
 }
