@@ -1,13 +1,15 @@
 package tn.esprit.infini.Pidev.RestController;
 
+
 import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 import tn.esprit.infini.Pidev.Services.ITransaction;
 import tn.esprit.infini.Pidev.entities.Transaction;
-
 import java.util.List;
 
 @RestController
+@Service
 @AllArgsConstructor
 public class TransactionController {
     private ITransaction iTransaction;
@@ -22,18 +24,18 @@ public class TransactionController {
         return iTransaction.addTransaction(transaction);
     }
 
-    @GetMapping("/getTransactionById/{id}")
-    Transaction afficherAvecId(@PathVariable int idTransaction){
+    @GetMapping("/getTransactionById/{idTransaction}")
+    Transaction afficherAvecId(@PathVariable Integer idTransaction){
         return iTransaction.retrieveTransaction(idTransaction);
     }
 
     @PutMapping("/updateTransaction")
-    public Transaction updatePack(@RequestBody Transaction transaction) {
+    public Transaction updateTransaction(@RequestBody Transaction transaction) {
         return iTransaction.updateTransaction(transaction);
     }
 
     @DeleteMapping("/deleteTransaction/{idTransaction}")
-    void  deletePack(@PathVariable ("idTransaction") Integer idTransaction)
+    void  deleteTransaction(@PathVariable ("idTransaction") Integer idTransaction)
     {
         iTransaction.deleteTransaction(idTransaction);
     }
