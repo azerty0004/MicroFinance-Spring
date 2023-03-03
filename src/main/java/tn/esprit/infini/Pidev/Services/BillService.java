@@ -1,10 +1,14 @@
 package tn.esprit.infini.Pidev.Services;
 
+import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Service;
 import tn.esprit.infini.Pidev.Repository.BillRepository;
 import tn.esprit.infini.Pidev.entities.Account;
 import tn.esprit.infini.Pidev.entities.Bill;
 
 import java.util.List;
+@Service
+@AllArgsConstructor
 
 public class BillService implements IBill {
     BillRepository billRepository;

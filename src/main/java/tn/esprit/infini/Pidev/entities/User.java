@@ -16,6 +16,8 @@ public class User implements Serializable {
     private int id;
     private String firstName;
     private String lastName;
+    @Enumerated(EnumType.STRING)
+    private TypeUser type;
     private String email;
     private int cin;
     private int phoneNumber;
