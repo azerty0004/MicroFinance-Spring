@@ -1,9 +1,6 @@
 package tn.esprit.infini.Pidev.entities;
-
-
 import lombok.Getter;
 import lombok.Setter;
-
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
@@ -21,10 +18,21 @@ public class Credit implements Serializable {
     private Date dateofobtaining;
     private Date dateoffinish;
     private Double interestrate;
-    private Integer mounths;
+    private Integer duration;
     @Enumerated(EnumType.STRING)
     private Statut statut;
     @OneToOne
     Guarantor guarantor;
+    @Enumerated(EnumType.STRING)
+    private TypeCredit typeCredit;
+    @ManyToOne
+    Transaction transaction;
+    @OneToOne
+    Insurance insurance;
+
+
+
+
+
 }
 
