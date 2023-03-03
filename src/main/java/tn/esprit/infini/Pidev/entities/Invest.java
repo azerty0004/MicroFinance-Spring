@@ -26,6 +26,11 @@ public class Invest implements Serializable {
 
     @Enumerated(EnumType.STRING)
     private Statut statut;
+    @ManyToOne
+    Transaction transaction;
+
+
+
 }
 
 
