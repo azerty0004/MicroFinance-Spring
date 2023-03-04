@@ -1,6 +1,8 @@
 package tn.esprit.infini.Pidev.entities;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -10,6 +12,8 @@ import java.util.Date;
 @Entity
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,8 +31,8 @@ public class User implements Serializable {
     private String login;
     private String password;
     private Date lastBanDate;
-    @OneToOne
-    private Account account;
+    //@OneToOne
+    //private Account account;
 
 
 }

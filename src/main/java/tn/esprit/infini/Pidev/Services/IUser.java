@@ -16,5 +16,7 @@ public interface IUser {
     User retrieveUser (int idUser);
     User retrieveUserByLogin(String login);
     Boolean login(String login, String mdp);
+    void changePassword(User user, String mdp);
+    boolean veriyUserPassword(User user, String password);
     void banUser(User user);
 }

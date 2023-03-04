@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface IAccount {
     //CRUD
-    Account addAccount(Account account);
+    Account addAccount(Account account, int idUser);
     List<Account> retrieveAllAccounts();
     Account updateAccount (Account account);
     void deleteAccount(Integer idAccount);
