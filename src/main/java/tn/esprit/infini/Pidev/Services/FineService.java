@@ -1,10 +1,14 @@
 package tn.esprit.infini.Pidev.Services;
 
+import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Service;
 import tn.esprit.infini.Pidev.Repository.FineRepository;
 import tn.esprit.infini.Pidev.entities.Fine;
 
 import java.util.List;
 
+@Service
+@AllArgsConstructor
 public class FineService implements  IFine {
     FineRepository fineRepository;
     @Override
