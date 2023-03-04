@@ -17,5 +17,6 @@ public class Account implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
     private Date creationDate;
-    private int balance;
+    private float balance;
+
 }
