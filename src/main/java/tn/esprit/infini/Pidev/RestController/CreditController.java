@@ -1,13 +1,9 @@
 package tn.esprit.infini.Pidev.RestController;
-
 import lombok.AllArgsConstructor;
 import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.*;
 import tn.esprit.infini.Pidev.Services.Icreditservice;
-import tn.esprit.infini.Pidev.entities.Credit;
-import tn.esprit.infini.Pidev.entities.Guarantor;
-import tn.esprit.infini.Pidev.entities.Statut;
-import tn.esprit.infini.Pidev.entities.Insurance;
+import tn.esprit.infini.Pidev.entities.*;
 
 import java.util.Date;
 import java.util.List;
@@ -50,9 +46,10 @@ public class CreditController {
             @RequestParam(value = "duration", required = false) Integer duration,
             @RequestParam(value = "statut", required = false) Statut statut,
             @RequestParam(value = "guarantor", required = false) Guarantor guarantor,
-            @RequestParam(value = "insurance", required = false) Insurance insurance
+            @RequestParam(value = "insurance", required = false) Insurance insurance,
+            @RequestParam(value = "typecredit", required = false) TypeCredit typeCredit
     ) {
-        return icreditservice.findBySearchParams(creditId, amount, date, duration, statut, guarantor,insurance);
+        return icreditservice.findBySearchParams(creditId, amount, date, duration, statut, guarantor,insurance,typeCredit);
     }
 }
 

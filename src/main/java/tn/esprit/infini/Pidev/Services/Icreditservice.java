@@ -14,7 +14,7 @@ public interface Icreditservice {
     Credit retrieveCredit (Long id);
 
     void deleteCredit( Long id);
-    List<Credit> findBySearchParams(Long creditId, Double amount, Date date, Integer duration, Statut statut, Guarantor guarantor, Insurance insurance);
+    List<Credit> findBySearchParams(Long creditId, Double amount, Date date, Integer duration, Statut statut, Guarantor guarantor, Insurance insurance, TypeCredit typecredit);
 }
 
 

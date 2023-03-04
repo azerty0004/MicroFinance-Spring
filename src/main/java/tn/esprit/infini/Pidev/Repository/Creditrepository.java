@@ -5,10 +5,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-import tn.esprit.infini.Pidev.entities.Credit;
-import tn.esprit.infini.Pidev.entities.Statut;
-import tn.esprit.infini.Pidev.entities.Guarantor;
-import tn.esprit.infini.Pidev.entities.Insurance;
+import tn.esprit.infini.Pidev.entities.*;
 
 import java.util.Date;
 import java.util.List;
@@ -24,13 +21,17 @@ public interface Creditrepository extends JpaRepository<Credit,Long>, JpaSpecifi
             "(:inputInteger is null or c.duration = :inputInteger) and " +
             "(:inputStatut is null or c.statut = :inputStatut) and " +
             "(:inputGuarantor is null or c.guarantor = :inputGuarantor) and" +
-            "(:inputInsurance is null or c.insurance = :inputInsurance)")
-    List<Credit> findBySearchParams(@Param("creditId") Long creditId,
+            "(:inputInsurance is null or c.insurance = :inputInsurance) and" +
+            "(:inputTypeCredit is null or c.typeCredit = :inputTypeCredit)")
+
+            List<Credit> findBySearchParams(@Param("creditId") Long creditId,
                                     @Param("inputDouble") Double amount,
                                     @Param("inputDate") Date date,
                                     @Param("inputInteger") Integer duration,
                                     @Param("inputStatut") Statut statut,
                                     @Param("inputGuarantor") Guarantor guarantor,
-                                    @Param("inputInsurance") Insurance insurance);
+                                    @Param("inputInsurance") Insurance insurance,
+                                    @Param("inputTypeCredit")TypeCredit typecredit
+    );
 
 }

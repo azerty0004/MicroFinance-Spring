@@ -12,7 +12,7 @@ import java.util.Date;
 public class Credit implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long idCredit;
     private Double amount;
     private Date dateofapplication;
     private Date dateofobtaining;
