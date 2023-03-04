@@ -7,5 +7,5 @@ import tn.esprit.infini.Pidev.entities.User;
 
 public interface UserRepository extends JpaRepository<User, Integer> {
     User findByLogin(String login);
-    User findByAccount(Account account);
+    //User findByAccount(Account account);
 }

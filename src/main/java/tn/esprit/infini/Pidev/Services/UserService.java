@@ -14,7 +14,7 @@ public class UserService implements IUser{
     //CRUD
     @Override
     public User addUser(User user) {
-        UR.findById(user.getId()).get().setType(TypeUser.Potential_Client);
+        //UR.findById(user.getId()).get().setType(TypeUser.Potential_Client);
         return UR.save(user);}
     @Override
     public List<User> retrieveAllUsers() {return (List<User>) UR.findAll();}
@@ -42,6 +42,16 @@ public class UserService implements IUser{
         }}
         else return false;
     }
+
+    @Override
+    public void changePassword(User user, String mdp) {user.setPassword(mdp);UR.save(user);}
+
+    @Override
+    public boolean veriyUserPassword(User user, String password) {
+        if (user.getPassword().matches(password)==true)return true;
+        else return false;
+    }
+
     @Override
     public void banUser(User user) {
 
