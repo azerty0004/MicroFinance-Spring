@@ -2,51 +2,127 @@ package tn.esprit.infini.Pidev.Services;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.data.repository.query.Param;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import tn.esprit.infini.Pidev.Repository.Investrepository;
+import tn.esprit.infini.Pidev.Repository.TransactionRepository;
 import tn.esprit.infini.Pidev.entities.Invest;
+import tn.esprit.infini.Pidev.entities.Statut;
+import tn.esprit.infini.Pidev.entities.Transaction;
+import tn.esprit.infini.Pidev.entities.User;
 
+import javax.persistence.criteria.Join;
+import javax.persistence.criteria.Predicate;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
-import java.util.Optional;
+
 @Service
 @Getter
 @Setter
 @AllArgsConstructor
 public class Investservice implements Iinvestservice {
-    Investrepository investrepostory;
+    Investrepository investrepository;
+    TransactionRepository transactionRepository;
 
     @Override
     public List<Invest> retrieveAllInvests() {
-        return (List<Invest>) investrepostory.findAll() ;
+        return (List<Invest>) investrepository.findAll() ;
     }
 
-    @Override
-    public List<Invest> retrieveByInterestRatelike(double i) {
-
-        return (List<Invest>) investrepostory.findByInterestrateLike(i);
-    }
 
     @Override
     public Invest addInvest(Invest i) {
-        return investrepostory.save(i);
+        return investrepository.save(i);
     }
 
     @Override
     public Invest updateInvest(Invest i) {
-        return investrepostory.save(i);
+        return investrepository.save(i);
     }
 
     @Override
     public Invest retrieveInvest(Long id) {
-        return investrepostory.findById(id).get();
+        return investrepository.findById(id).get();
     }
 
     @Override
     public void deleteInvest(Long id) {
-        investrepostory.deleteById(id);
+        investrepository.deleteById(id);
 
     }
+    @Override
+    public Invest assingInvestToTransaction(Long idInvest, Long idTransaction) {
+        Invest invest = investrepository.findById(idInvest).orElse(null);
+        Transaction transaction = transactionRepository.findById(idTransaction).orElse(null);
+        invest.setTransaction(transaction);
+        return investrepository.save(invest);
+    }
 
+    @Override
+    public User getuserByidinvest(Long investid) {
+        return investrepository.getuserByidinvest(investid);
+    }
+
+
+    @Override
+    public List<Invest> getInvestByiduser(Long userid) {
+        return investrepository.getInvestByiduser(userid);
+    }
+
+    @Override
+    public  Specification<Invest> searchInvests(Double minAmount, Double maxAmount, Date minDateOfApplication,
+                                                      Date maxDateOfApplication, Date minDateOfObtaining, Date maxDateOfObtaining,
+                                                      Date minDateOfFinish, Date maxDateOfFinish, Double minInterestRate,
+                                                      Double maxInterestRate, Integer minMonths, Integer maxMonths,
+                                                      Statut statut, Long transactionId) {
+        return (root, query, builder) -> {
+            List<Predicate> predicates = new ArrayList<>();
+            if (minAmount != null) {
+                predicates.add(builder.greaterThanOrEqualTo(root.get("amount"), minAmount));
+            }
+            if (maxAmount != null) {
+                predicates.add(builder.lessThanOrEqualTo(root.get("amount"), maxAmount));
+            }
+            if (minDateOfApplication != null) {
+                predicates.add(builder.greaterThanOrEqualTo(root.get("dateofapplication"), minDateOfApplication));
+            }
+            if (maxDateOfApplication != null) {
+                predicates.add(builder.lessThanOrEqualTo(root.get("dateofapplication"), maxDateOfApplication));
+            }
+            if (minDateOfObtaining != null) {
+                predicates.add(builder.greaterThanOrEqualTo(root.get("dateofobtaining"), minDateOfObtaining));
+            }
+            if (maxDateOfObtaining != null) {
+                predicates.add(builder.lessThanOrEqualTo(root.get("dateofobtaining"), maxDateOfObtaining));
+            }
+            if (minDateOfFinish != null) {
+                predicates.add(builder.greaterThanOrEqualTo(root.get("dateoffinish"), minDateOfFinish));
+            }
+            if (maxDateOfFinish != null) {
+                predicates.add(builder.lessThanOrEqualTo(root.get("dateoffinish"), maxDateOfFinish));
+            }
+            if (minInterestRate != null) {
+                predicates.add(builder.greaterThanOrEqualTo(root.get("interestrate"), minInterestRate));
+            }
+            if (maxInterestRate != null) {
+                predicates.add(builder.lessThanOrEqualTo(root.get("interestrate"), maxInterestRate));
+            }
+            if (minMonths != null) {
+                predicates.add(builder.greaterThanOrEqualTo(root.get("mounths"), minMonths));
+            }
+            if (maxMonths != null) {
+                predicates.add(builder.lessThanOrEqualTo(root.get("mounths"), maxMonths));
+            }
+            if (statut != null) {
+                predicates.add(builder.equal(root.get("statut"), statut));
+            }
+            if (transactionId != null) {
+                Join<Invest, Transaction> join = root.join("transaction");
+                predicates.add(builder.equal(join.get("id"), transactionId));
+            }
+            return builder.and(predicates.toArray(new Predicate[0]));
+        };
+    }
 
 }

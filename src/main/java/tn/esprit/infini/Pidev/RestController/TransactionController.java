@@ -25,7 +25,7 @@ public class TransactionController {
     }
 
     @GetMapping("/getTransactionById/{idTransaction}")
-    Transaction afficherAvecId(@PathVariable Integer idTransaction){
+    Transaction afficherAvecId(@PathVariable Long idTransaction){
         return iTransaction.retrieveTransaction(idTransaction);
     }
 
@@ -35,7 +35,7 @@ public class TransactionController {
     }
 
     @DeleteMapping("/deleteTransaction/{idTransaction}")
-    void  deleteTransaction(@PathVariable ("idTransaction") Integer idTransaction)
+    void  deleteTransaction(@PathVariable ("idTransaction") Long idTransaction)
     {
         iTransaction.deleteTransaction(idTransaction);
     }

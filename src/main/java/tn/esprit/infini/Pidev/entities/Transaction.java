@@ -24,11 +24,12 @@ public class Transaction implements Serializable {
     private long idUser;
     private long idobject;
     private Date date;
-    @OneToMany(mappedBy = "transaction")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "transaction")
     private Set<Invest> invests;
-    @OneToMany(mappedBy = "transaction")
+    @OneToMany(cascade = CascadeType.ALL,mappedBy = "transaction")
     private Set<Credit> credits;
-
+    @OneToMany(cascade = CascadeType.ALL,mappedBy = "transaction")
+    private Set<Account> accounts;
 
 
 

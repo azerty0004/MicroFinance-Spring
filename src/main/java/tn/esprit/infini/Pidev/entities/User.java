@@ -31,8 +31,9 @@ public class User implements Serializable {
     private String login;
     private String password;
     private Date lastBanDate;
-    //@OneToOne
-    //private Account account;
+    @OneToOne
+    private Account account;
+
 
 
 }

@@ -27,12 +27,12 @@ public class TransactionService implements ITransaction {
     }
 
     @Override
-    public Transaction retrieveTransaction(Integer idTransaction) {
+    public Transaction retrieveTransaction(Long idTransaction) {
         return transactionRepository.findById(idTransaction).get();
     }
 
     @Override
-    public void deleteTransaction(Integer idTransaction) {
+    public void deleteTransaction(Long idTransaction) {
         transactionRepository.deleteById(idTransaction);
 
     }

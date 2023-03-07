@@ -1,27 +1,22 @@
 package tn.esprit.infini.Pidev;
 
 import lombok.AllArgsConstructor;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import tn.esprit.infini.Pidev.Services.Creditservice;
-import tn.esprit.infini.Pidev.entities.Credit;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
-import java.util.List;
+
 
 @SpringBootApplication
+@EnableJpaRepositories(basePackages = "tn.esprit.infini.Pidev.Repository")
+
 @AllArgsConstructor
-public class PidevApplication implements CommandLineRunner {
-	private Creditservice creditservice;
+public class PidevApplication  {
 
 	public static void main(String[] args) {
 		SpringApplication.run(PidevApplication.class, args);
 	}
-	@Override
-	public void run(String...args) throws Exception{
-		List<Credit> credits = creditservice.retrieveAllCredits();
-		credits.forEach(credit -> System.out.println(credit.getAmount()));
-	}
+
 
 }
 

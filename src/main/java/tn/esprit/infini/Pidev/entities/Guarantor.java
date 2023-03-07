@@ -20,4 +20,6 @@ public class Guarantor implements Serializable {
     private int cinGuarantor ;
     private String salary ;
     private String job ;
+    @OneToOne
+    Guarantor guarantor;
    }
