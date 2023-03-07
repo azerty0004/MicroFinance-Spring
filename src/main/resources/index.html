@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Accept a card payment</title>
+  <meta name="description" content="A demo of a card payment on Stripe" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <link rel="stylesheet" href="global.css" />
+  <script src="Client.js" defer></script>
+</head>
+
+<body>
+<!-- Display a payment form -->
+<div class="container">
+  <div class="form-card">
+    <form id="payment-form" action="/" method="post">
+      <p><b>Payment details for a product</b></p>
+      <div class="form-control">
+        <input type="text" name="email" id="email" placeholder="Email address" required />
+        <p id="email-error" style="color: red;"></p>
+      </div>
+      <div class="form-control">
+        <input type="text" name="amount" id="amount" placeholder="Amount" required />
+        <p id="amount-error" style="color: red;"></p>
+      </div>
+      <div class="form-control">
+        <input type="text" name="featureRequest" id="featureRequest" placeholder="Feature Request" required />
+        <p id="featureRequest-error" style="color: red;"></p>
+      </div>
+      <p><input type="submit" id="submit-button" class="btn btn-primary"></p>
+    </form>
+  </div>
+</div>
+</body>
+
+<script>
+  // Add a listener to the form submit event
+  document.querySelector('#payment-form').addEventListener('submit', function(event) {
+    event.preventDefault(); // Prevent the form from submitting
+
+    // Get the form data
+    const email = document.querySelector('#email').value;
+    const amount = document.querySelector('#amount').value;
+    const featureRequest = document.querySelector('#featureRequest').value;
+
+    // Validate the form data
+    let hasError = false;
+    if (!email) {
+      document.querySelector('#email-error').textContent = 'Email is required';
+      hasError = true;
+    }
+    if (!amount) {
+      document.querySelector('#amount-error').textContent = 'Amount is required';
+      hasError = true;
+    }
+    if (!featureRequest) {
+      document.querySelector('#featureRequest-error').textContent = 'Feature request is required';
+      hasError = true;
+    }
+
+    // If there are errors, stop processing
+    if (hasError) {
+      return;
+    }
+
+    // If all data is valid, submit the form
+    document.querySelector('#submit-button').disabled = true; // Disable the submit button to prevent multiple submissions
+    this.submit(); // Submit the form
+  });
+</script>
+
+
+
+</html>

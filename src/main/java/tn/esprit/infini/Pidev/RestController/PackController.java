@@ -9,7 +9,6 @@ import java.util.List;
 
 @RestController
 @AllArgsConstructor
-
 public class PackController {
 
     private IPackService iPackService;

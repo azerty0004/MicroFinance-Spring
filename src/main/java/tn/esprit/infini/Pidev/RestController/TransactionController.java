@@ -9,7 +9,6 @@ import tn.esprit.infini.Pidev.entities.Transaction;
 import java.util.List;
 
 @RestController
-@Service
 @AllArgsConstructor
 public class TransactionController {
     private ITransaction iTransaction;
