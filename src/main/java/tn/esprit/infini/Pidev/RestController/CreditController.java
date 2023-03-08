@@ -3,7 +3,10 @@ import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.repository.query.Param;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import tn.esprit.infini.Pidev.Services.Creditservice;
 import tn.esprit.infini.Pidev.Services.Icreditservice;
 import tn.esprit.infini.Pidev.entities.*;
 
@@ -11,7 +14,6 @@ import java.util.Date;
 import java.util.List;
 @AllArgsConstructor
 @RestController
-@RequestMapping("/credit")
 public class CreditController {
     private Icreditservice icreditservice;
 
@@ -26,7 +28,7 @@ public class CreditController {
         return icreditservice.addCredit(credit);
     }
 
-    @GetMapping("/getCreditById/{id}")
+    @GetMapping("/getCreditById/{idCredit}")
     Credit afficherAvecId(@PathVariable Long idCredit) {
         return icreditservice.retrieveCredit(idCredit);
     }
@@ -41,20 +43,24 @@ public class CreditController {
         icreditservice.deleteCredit(idCredit);
     }
 
-    @GetMapping("/creditsbysearchparams")
-    public List<Credit> findCreditBySearchParams(
-            @RequestParam(value = "creditId", required = false) Long creditId,
-            @RequestParam(value = "amount", required = false) Double amount,
-            @RequestParam(value = "date", required = false) Date date,
-            @RequestParam(value = "duration", required = false) Integer duration,
-            @RequestParam(value = "statut", required = false) Statut statut,
-            @RequestParam(value = "guarantor", required = false) Guarantor guarantor,
-            @RequestParam(value = "insurance", required = false) Insurance insurance,
-            @RequestParam(value = "typecredit", required = false) TypeCredit typeCredit,
-            @RequestParam(value = "idtransaction", required = false) Long idtransaction,
-            @RequestParam(value = "idaccount", required = false) Long idaccount,
-            @RequestParam(value = "iduser", required = false) Long iduser) {
-        return icreditservice.findCreditBySearchParams(creditId, amount, date, duration, statut, guarantor, insurance, typeCredit, idtransaction, idaccount, iduser);
+    @GetMapping("/search")
+    public ResponseEntity<List<Credit>> searchCreditsByAttributes(
+            @RequestParam(name = "id", required = false) Long id,
+            @RequestParam(name = "amount", required = false) Double amount,
+            @RequestParam(name = "dateofapplication", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date dateofapplication,
+            @RequestParam(name = "dateofobtaining", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date dateofobtaining,
+            @RequestParam(name = "dateoffinish", required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date dateoffinish,
+            @RequestParam(name = "interestrate", required = false) Double interestrate,
+            @RequestParam(name = "duration", required = false) Integer duration,
+            @RequestParam(name = "statut", required = false) Statut statut,
+            @RequestParam(name = "guarantor", required = false) Guarantor guarantor,
+            @RequestParam(name = "typeCredit", required = false) TypeCredit typeCredit,
+            @RequestParam(name = "transaction", required = false) Transaction transaction,
+            @RequestParam(name = "insurance", required = false) Insurance insurance) {
+        List<Credit> credits = icreditservice.findCreditsByAttributes(id, amount, dateofapplication,
+                dateofobtaining, dateoffinish, interestrate, duration, statut, guarantor,
+                typeCredit, transaction, insurance);
+        return ResponseEntity.ok(credits);
     }
 
     @GetMapping("/getcreditsbyiduser")

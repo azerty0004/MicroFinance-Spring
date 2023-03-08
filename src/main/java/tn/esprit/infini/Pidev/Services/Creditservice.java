@@ -61,8 +61,10 @@ public class Creditservice implements Icreditservice {
     }
 
     @Override
-    public List<Credit> findCreditBySearchParams(Long creditId, Double amount, Date date, Integer duration, Statut statut, Guarantor guarantor, Insurance insurance, TypeCredit typecredit, Long idtransaction, Long idaccount, Long iduser) {
-        return creditrepository.findBySearchParams(creditId, amount, date, duration, statut, guarantor, insurance, typecredit, idtransaction, idaccount, iduser);
+    public List<Credit> findCreditsByAttributes(Long id, Double amount, Date dateofapplication,Date dateofobtaining, Date dateoffinish, Double interestrate, Integer duration,Statut statut, Guarantor guarantor, TypeCredit typeCredit, Transaction transaction,Insurance insurance) {
+        return creditrepository.findCreditsByAttributes(id, amount, dateofapplication,
+                dateofobtaining, dateoffinish, interestrate, duration, statut, guarantor,
+                typeCredit, transaction, insurance);
     }
 
     @Override

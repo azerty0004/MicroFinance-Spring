@@ -14,8 +14,8 @@ public interface Icreditservice {
     Credit retrieveCredit (Long id);
 
     void deleteCredit( Long id);
-    List<Credit> findCreditBySearchParams(Long creditId, Double amount, Date date, Integer duration, Statut statut, Guarantor guarantor, Insurance insurance, TypeCredit typecredit,Long transactionid,Long accountid,Long userid);
-     List<Credit> getCreditByiduser(Long userid);
+    List<Credit> findCreditsByAttributes(Long id, Double amount, Date dateofapplication,Date dateofobtaining, Date dateoffinish, Double interestrate, Integer duration,Statut statut, Guarantor guarantor, TypeCredit typeCredit, Transaction transaction,Insurance insurance);
+    List<Credit> getCreditByiduser(Long userid);
      User  getuserByidcredit(Long creditid);
     Float newCredit(Credit credit);
     Float TauxtypeCredit(Credit credit);
