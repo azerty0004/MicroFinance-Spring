@@ -5,5 +5,5 @@ import org.springframework.stereotype.Repository;
 import tn.esprit.infini.Pidev.entities.Transaction;
 
 @Repository
-public interface TransactionRepository extends JpaRepository<Transaction,Integer> {
+public interface TransactionRepository extends JpaRepository<Transaction,Long> {
 }

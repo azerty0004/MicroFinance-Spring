@@ -5,7 +5,7 @@ package tn.esprit.infini.Pidev.dto;
 public class CreatePayment {
 
 
-    private Integer amount;
+    private Long amount;
 
 
     private String featureRequest;
@@ -13,11 +13,11 @@ public class CreatePayment {
     public CreatePayment() {
     }
 
-    public Integer getAmount() {
+    public Long getAmount() {
         return amount;
     }
 
-    public void setAmount(Integer amount) {
+    public void setAmount(Long amount) {
         this.amount = amount;
     }
     public String getFeatureRequest() {
