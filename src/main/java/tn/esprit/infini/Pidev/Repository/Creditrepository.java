@@ -42,9 +42,13 @@ public interface Creditrepository extends JpaRepository<Credit,Long>, JpaSpecifi
             @Param("insurance") Insurance insurance);
 
 
+    @Query("SELECT c FROM Credit c "
+            + "INNER JOIN c.transaction t "
+            + "INNER JOIN t.accounts a "
+            + "INNER JOIN a.user u "
+            + "WHERE u.id = :userId")
 
-    @Query ("SELECT c FROM Credit c JOIN Transaction t ON c.transaction.id = t.id JOIN Account a ON  a.transaction.id =t.id JOIN User u ON a.user.id = u.id WHERE (:inputLong is null or a.user.id = :inputLong)")
-           List <Credit> getCreditByiduser(@Param("inputLong") Long userid);
+           List <Credit> getCreditByiduser(@Param("userId") Long userid);
     @Query ("SELECT u FROM User u JOIN Account a ON u.id = a.user.id JOIN Transaction t ON  a.transaction.id =t.id JOIN Credit c ON a.transaction.id = c.id WHERE (:inputLong is null or c.transaction.id = :inputLong)")
     User getuserByidcredit(@Param("inputLong") Long credit);
 

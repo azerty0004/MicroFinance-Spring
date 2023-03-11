@@ -22,7 +22,11 @@ public class Account implements Serializable {
     private Date creationDate;
     private float balance;
     @OneToOne
+    @JoinColumn(name = "user_id")
+
     private User user;
     @ManyToOne
+    @JoinColumn(name = "transaction_id")
+
     private Transaction transaction;
 }

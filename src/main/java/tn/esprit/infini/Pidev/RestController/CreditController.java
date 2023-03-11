@@ -63,15 +63,15 @@ public class CreditController {
         return ResponseEntity.ok(credits);
     }
 
-    @GetMapping("/getcreditsbyiduser")
-    public List<Credit> getCreditByiduser(@RequestParam(value = "userid", required = false) Long userid) {
-        return icreditservice.getCreditByiduser(userid);
+    @GetMapping("/getcreditsbyiduser/{userId}")
+    public List<Credit> getCreditByiduser(@PathVariable( "userId") Long userId) {
+        return icreditservice.getCreditByiduser(userId);
     }
 
 
     @PutMapping("/assignCreditTran/{creditId}/{transactionid}")
-    public Credit addandassingCreditToTransaction(@PathVariable("creditId") Long creditId, @PathVariable("transactionid") Long transactionid) {
-        return icreditservice.addandassingCreditToTransaction(creditId, transactionid);
+    public Credit addandassingCreditToTransaction(@PathVariable("creditId") Credit  credit, @PathVariable("transactionid") Long transactionid) {
+        return icreditservice.addandassingCreditToTransaction(credit, transactionid);
     }
     @GetMapping("/getuserbyidcredit")
     public User  getuserByidcredit(@RequestParam(value = "creditId", required = false) Long creditId) {

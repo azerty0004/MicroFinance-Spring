@@ -19,13 +19,14 @@ public interface Icreditservice {
      User  getuserByidcredit(Long creditid);
     Float newCredit(Credit credit);
     Float TauxtypeCredit(Credit credit);
-   Credit  addandassingCreditToTransaction(Long idCredit, Long idTransaction);
-    float CalculMensualité(Credit credit);
+   Credit  addandassingCreditToTransaction(Credit credit, Long idTransaction);
+    double CalculMensualitéfixe(Credit credit);
+    List<Double> CalculMensualitévariable(Credit credit);
+    List<Double> listetauxinterets(Credit credit);
+    void ValidateCredit(Credit c);
+     float calculateFicoScore(Credit credit);
 
-
-    public float calculateFicoScore(Credit credit);
-
-
+    double InterestRateCalculator(Credit credit);
 
 
     }

@@ -8,5 +8,7 @@ public enum Statut {
     EN_ATTENTE,
     EN_RETARDISSEMENT,
     REMBOURSE,
-    ANNULE
+    ANNULE,
+    Non_Approuvé,
+    Approuvé
 }

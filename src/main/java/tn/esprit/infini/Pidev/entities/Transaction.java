@@ -11,6 +11,7 @@ import javax.persistence.Id;
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 import java.util.Set;
 
 @Entity
@@ -25,11 +26,11 @@ public class Transaction implements Serializable {
     private long idobject;
     private Date date;
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "transaction")
-    private Set<Invest> invests;
+    private List<Invest> invests;
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "transaction")
-    private Set<Credit> credits;
+    private List<Credit> credits;
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "transaction")
-    private Set<Account> accounts;
+    private List<Account> accounts;
 
 
 
