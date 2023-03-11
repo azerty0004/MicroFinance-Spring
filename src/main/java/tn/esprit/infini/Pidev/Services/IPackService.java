@@ -23,4 +23,7 @@ public interface IPackService {
     Pack assignPackToCart(Integer idPack, Integer idCart);
 
     Set<Pack> PacksCart(Integer idCart);
+
+    List<Pack> findMostLikedPacks(int likes);
+    List<Pack> findMostDislikedPacks(int dislikes);
 }

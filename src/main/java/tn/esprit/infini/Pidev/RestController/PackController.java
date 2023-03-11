@@ -6,6 +6,7 @@ import tn.esprit.infini.Pidev.Repository.PackRepository;
 import tn.esprit.infini.Pidev.Services.IPackService;
 import tn.esprit.infini.Pidev.entities.Pack;
 
+import javax.websocket.server.PathParam;
 import java.util.List;
 import java.util.Set;
 
@@ -65,5 +66,16 @@ public class PackController {
     @PutMapping("/assignPackToCart/{idPack}/{idCart}") // affecte un pack au panier ( bouton ajouter au panier)
     public Pack assignPackToCart(@PathVariable Integer idPack, @PathVariable Integer idCart){
         return iPackService.assignPackToCart( idPack,  idCart);
+
+    }
+
+    @GetMapping("/mostLikedPacks")
+    public List<Pack> findMostLikedPacks(@PathVariable int likes) {
+        return iPackService.findMostLikedPacks(likes);
+    }
+
+    @GetMapping("/mostDislikedPacks")
+    public List<Pack> findMostDislikedProducts(@PathVariable int dislikes) {
+        return iPackService.findMostDislikedPacks(dislikes);
     }
 }

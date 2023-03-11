@@ -90,5 +90,16 @@ public class PackService implements IPackService {
         return cart.getPack();
     }
 
+    @Override
+    public List<Pack> findMostLikedPacks(int likes) {
+        return packRepository.findMostLikedPacks(likes);
+
+    }
+
+    @Override
+    public List<Pack> findMostDislikedPacks(int dislikes) {
+        return packRepository.findMostDislikedPacks(dislikes);
+
+    }
 
 }
