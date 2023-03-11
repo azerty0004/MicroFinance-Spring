@@ -3,6 +3,7 @@ package tn.esprit.infini.Pidev.Services;
 
 import tn.esprit.infini.Pidev.entities.Transaction;
 
+import java.util.Date;
 import java.util.List;
 
 public interface ITransaction {
@@ -15,5 +16,7 @@ public interface ITransaction {
    Transaction retrieveTransaction(Long idTransaction);
 
     void deleteTransaction(Long idTransaction);
+    List<Transaction>divideTransaction(Long amount,Integer numberOfMonthes);
+
 
 }
