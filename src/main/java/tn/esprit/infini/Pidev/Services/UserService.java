@@ -1,18 +1,20 @@
 package tn.esprit.infini.Pidev.Services;
 
+import lombok.AllArgsConstructor;
+import org.springframework.stereotype.Service;
 import tn.esprit.infini.Pidev.Repository.UserRepository;
 import tn.esprit.infini.Pidev.entities.TypeUser;
 import tn.esprit.infini.Pidev.entities.User;
-
-
 import java.util.List;
 
+@Service
+@AllArgsConstructor
 public class UserService implements IUser{
     UserRepository UR;
     //CRUD
     @Override
     public User addUser(User user) {
-        UR.findById(user.getId()).get().setType(TypeUser.Potential_Client);
+        //UR.findById(user.getId()).get().setType(TypeUser.Potential_Client);
         return UR.save(user);}
     @Override
     public List<User> retrieveAllUsers() {return (List<User>) UR.findAll();}
@@ -40,6 +42,16 @@ public class UserService implements IUser{
         }}
         else return false;
     }
+
+    @Override
+    public void changePassword(User user, String mdp) {user.setPassword(mdp);UR.save(user);}
+
+    @Override
+    public boolean veriyUserPassword(User user, String password) {
+        if (user.getPassword().matches(password)==true)return true;
+        else return false;
+    }
+
     @Override
     public void banUser(User user) {
 
