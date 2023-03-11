@@ -1,8 +1,6 @@
 package tn.esprit.infini.Pidev.Services;
 
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tn.esprit.infini.Pidev.Repository.TransactionRepository;
 import tn.esprit.infini.Pidev.entities.Transaction;
@@ -11,10 +9,8 @@ import java.util.List;
 
 @Service
 @AllArgsConstructor
-@NoArgsConstructor
 public class TransactionService implements ITransaction {
-    @Autowired
-    private TransactionRepository transactionRepository;
+    TransactionRepository transactionRepository;
     @Override
     public Transaction addTransaction(Transaction transaction) {
         return transactionRepository.save(transaction);
@@ -31,12 +27,12 @@ public class TransactionService implements ITransaction {
     }
 
     @Override
-    public Transaction retrieveTransaction(Long idTransaction) {
+    public Transaction retrieveTransaction(Integer idTransaction) {
         return transactionRepository.findById(idTransaction).get();
     }
 
     @Override
-    public void deleteTransaction(Long idTransaction) {
+    public void deleteTransaction(Integer idTransaction) {
         transactionRepository.deleteById(idTransaction);
 
     }

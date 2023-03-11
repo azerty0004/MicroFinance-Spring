@@ -1,7 +1,5 @@
 package tn.esprit.infini.Pidev.RestController;
 
-import lombok.AllArgsConstructor;
-import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 import tn.esprit.infini.Pidev.entities.Cart;
 import tn.esprit.infini.Pidev.entities.Pack;
@@ -9,8 +7,6 @@ import tn.esprit.infini.Pidev.Services.ICartService;
 
 import java.util.List;
 
-@RestController
-@AllArgsConstructor
 public class CartController {
 
     private ICartService iCartService;
@@ -30,12 +26,12 @@ public class CartController {
         return iCartService.retrieveCart(idCart);
     }
 
-    @PutMapping("/updateCart")
+    @PutMapping("/updatePack")
     public Cart updatePack(@RequestBody Cart cart) {
         return iCartService.updateCart(cart);
     }
 
-    @DeleteMapping("/deleteCart/{idCart}")
+    @DeleteMapping("/deletePack/{idPack}")
     void deletePack(@PathVariable ("idGuarantor") Integer idPack)
     {
         iCartService.deleteCart(idPack);

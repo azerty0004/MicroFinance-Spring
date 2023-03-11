@@ -1,7 +1,0 @@
-{
-  "name": "PiDev",
-  "version": "1.0.0",
-  "dependencies": {
-    "stripe": "^11.13.0"
-  }
-}

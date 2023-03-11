@@ -1,9 +1,7 @@
 package tn.esprit.infini.Pidev.RestController;
 
 
-import com.google.gson.Gson;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 import tn.esprit.infini.Pidev.Services.ITransaction;
@@ -11,11 +9,10 @@ import tn.esprit.infini.Pidev.entities.Transaction;
 import java.util.List;
 
 @RestController
+@Service
 @AllArgsConstructor
 public class TransactionController {
-    @Autowired
     private ITransaction iTransaction;
-    private static Gson gson = new Gson();
 
     @GetMapping("/getTransactions")
     List<Transaction> afficher() {
@@ -24,12 +21,11 @@ public class TransactionController {
 
     @PostMapping("/addTransaction")
     Transaction ajouter(@RequestBody Transaction transaction) {
-        System.out.println(gson.toJson(transaction));
         return iTransaction.addTransaction(transaction);
     }
 
     @GetMapping("/getTransactionById/{idTransaction}")
-    Transaction afficherAvecId(@PathVariable Long idTransaction){
+    Transaction afficherAvecId(@PathVariable Integer idTransaction){
         return iTransaction.retrieveTransaction(idTransaction);
     }
 
@@ -39,7 +35,7 @@ public class TransactionController {
     }
 
     @DeleteMapping("/deleteTransaction/{idTransaction}")
-    void  deleteTransaction(@PathVariable ("idTransaction") Long idTransaction)
+    void  deleteTransaction(@PathVariable ("idTransaction") Integer idTransaction)
     {
         iTransaction.deleteTransaction(idTransaction);
     }

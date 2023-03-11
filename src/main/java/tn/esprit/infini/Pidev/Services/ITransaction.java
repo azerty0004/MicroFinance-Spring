@@ -12,8 +12,8 @@ public interface ITransaction {
 
   Transaction updateTransaction(Transaction transaction);
 
-   Transaction retrieveTransaction(Long idTransaction);
+   Transaction retrieveTransaction(Integer idTransaction);
 
-    void deleteTransaction(Long idTransaction);
+    void deleteTransaction(Integer idTransaction);
 
 }
