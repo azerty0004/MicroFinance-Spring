@@ -18,8 +18,8 @@ public interface Icreditservice {
     List<Credit> getCreditByiduser(Long userid);
      User  getuserByidcredit(Long creditid);
     Float newCredit(Credit credit);
-    Float TauxtypeCredit(Credit credit);
-   Credit  addandassingCreditToTransaction(Credit credit, Long idTransaction);
+    Integer TauxtypeCredit(Credit credit);
+    Credit  addCreditToTransaction(Credit credit,Transaction transaction);
     double CalculMensualitéfixe(Credit credit);
     List<Double> CalculMensualitévariable(Credit credit);
     List<Double> listetauxinterets(Credit credit);

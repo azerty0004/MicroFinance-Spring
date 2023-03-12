@@ -7,6 +7,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import tn.esprit.infini.Pidev.Services.Creditservice;
+import tn.esprit.infini.Pidev.Services.ITransaction;
 import tn.esprit.infini.Pidev.Services.Icreditservice;
 import tn.esprit.infini.Pidev.entities.*;
 
@@ -16,6 +17,7 @@ import java.util.List;
 @RestController
 public class CreditController {
     private Icreditservice icreditservice;
+    private ITransaction iTransaction;
 
 
     @GetMapping("/getCredit")
@@ -69,17 +71,16 @@ public class CreditController {
     }
 
 
-    @PutMapping("/assignCreditTran/{creditId}/{transactionid}")
-    public Credit addandassingCreditToTransaction(@PathVariable("creditId") Credit  credit, @PathVariable("transactionid") Long transactionid) {
-        return icreditservice.addandassingCreditToTransaction(credit, transactionid);
-    }
+
     @GetMapping("/getuserbyidcredit")
     public User  getuserByidcredit(@RequestParam(value = "creditId", required = false) Long creditId) {
                 return icreditservice.getuserByidcredit(creditId);
         }
-
-
-}
+    @GetMapping("/newcredit")
+    public Float newCredit(@RequestBody Credit credit){
+        return icreditservice.newCredit(credit);
+    }
+    }
 
 
 

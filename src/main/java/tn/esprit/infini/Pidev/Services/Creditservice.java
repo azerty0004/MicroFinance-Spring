@@ -76,25 +76,34 @@ public class Creditservice implements Icreditservice {
     }
 
 
-    @Override
-    public Credit addandassingCreditToTransaction(Credit credit, Long idTransaction) {
-        Credit c = creditrepository.save(credit);
-        Transaction transaction = transactionRepository.findById(idTransaction).orElse(null);
+    public Credit addCreditToTransaction(Credit credit, Transaction transaction) {
         credit.setTransaction(transaction);
         transaction.getCredits().add(credit);
         return creditrepository.save(credit);
-
     }
 
 
     @Override
     public Float newCredit(Credit c) {
         float s = 0;
+        int  numberOfCreditsIretardé= 0;
+        int numberOfCreditsremboursé=0;
+
         Long userid = Long.valueOf(getuserByidcredit(c.getId()).getId());
         if (getCreditByiduser(userid).isEmpty()) {
             return s;}
          else {
-            s = getCreditByiduser(userid).size();
+            for (Credit credit:getCreditByiduser(userid)
+                 ) {  if (credit.getStatut() == Statut.EN_RETARDISSEMENT) {
+                numberOfCreditsIretardé++;
+            }
+                if (credit.getStatut() == Statut.REMBOURSE) {
+                    numberOfCreditsremboursé++;
+                }
+
+
+                s=numberOfCreditsremboursé- numberOfCreditsIretardé;
+            }
 
             return s;
 
@@ -110,19 +119,19 @@ public class Creditservice implements Icreditservice {
     }
 
     @Override
-    public Float TauxtypeCredit(Credit c) {
-        float t = 0;
+    public Integer TauxtypeCredit(Credit c) {
+
         if ((c.getTypeCredit()) == TypeCredit.CREDITConsommation) {
 
-            return t = 1;
+            return 1 ;
         } else if ((c.getTypeCredit()) == TypeCredit.CREDITInvestissement) {
 
-            return t = 2;
+            return 2;
         } else if ((c.getTypeCredit()) == TypeCredit.CREDITEtudiant) {
 
-            return t = 3;
+            return  3;
         } else {
-            return t = 4;
+            return  4;
         }
 
     }
