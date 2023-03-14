@@ -57,11 +57,10 @@ public class CreditController {
             @RequestParam(name = "statut", required = false) Statut statut,
             @RequestParam(name = "guarantor", required = false) Guarantor guarantor,
             @RequestParam(name = "typeCredit", required = false) TypeCredit typeCredit,
-            @RequestParam(name = "transaction", required = false) Transaction transaction,
             @RequestParam(name = "insurance", required = false) Insurance insurance) {
         List<Credit> credits = icreditservice.findCreditsByAttributes(id, amount, dateofapplication,
                 dateofobtaining, dateoffinish, interestrate, duration, statut, guarantor,
-                typeCredit, transaction, insurance);
+                typeCredit, insurance);
         return ResponseEntity.ok(credits);
     }
 
@@ -70,17 +69,28 @@ public class CreditController {
         return icreditservice.getCreditByiduser(userId);
     }
 
-
-
-    @GetMapping("/getuserbyidcredit")
-    public User  getuserByidcredit(@RequestParam(value = "creditId", required = false) Long creditId) {
-                return icreditservice.getuserByidcredit(creditId);
-        }
-    @GetMapping("/newcredit")
-    public Float newCredit(@RequestBody Credit credit){
-        return icreditservice.newCredit(credit);
+    @GetMapping("/newcredit/{creditId}")
+    public Float newCredit(@PathVariable( "creditId") Long creditId){
+        return icreditservice.newCredit(creditId);
     }
+        @GetMapping("/TauxtypeCredit")
+    public Integer TauxtypeCredit(@RequestBody Credit c) {return icreditservice.TauxtypeCredit(c);}
+    @GetMapping("/calculateFicoScore")
+    public float calculateFicoScore(@RequestBody Credit c){return icreditservice.calculateFicoScore(c);}
+    @GetMapping("/CalculMensualitévariable")
+    public List<Double> CalculMensualitévariable(@RequestBody Credit c){return icreditservice.CalculMensualitévariable(c);}
+    @GetMapping("/CalculMensualitéfixe")
+    public double CalculMensualitéfixe(@RequestBody Credit c){return icreditservice.CalculMensualitéfixe(c);}
+    @GetMapping("/InterestRateCalculator")
+
+    public double InterestRateCalculator(@RequestBody Credit credit){return icreditservice.InterestRateCalculator(credit);}
+    @GetMapping("/listetauxinterets")
+     public List<Double> listetauxinterets(@RequestBody Credit c){return icreditservice.listetauxinterets(c);}
+    @PutMapping("/validatecredit")
+    public void ValidateCredit(@RequestBody Credit c){
+        icreditservice.ValidateCredit(c);
     }
+}
 
 
 

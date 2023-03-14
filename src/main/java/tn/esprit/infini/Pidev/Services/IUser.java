@@ -19,4 +19,6 @@ public interface IUser {
     void changePassword(User user, String mdp);
     boolean veriyUserPassword(User user, String password);
     void banUser(User user);
-}
+     User findUserByCreditId(Long creditId);
+
+    }

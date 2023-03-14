@@ -46,14 +46,6 @@ public class TransactionController {
     {
         iTransaction.deleteTransaction(idTransaction);
     }
-    @PostMapping("/assign/{transactionId}/credit")
-    public ResponseEntity<Credit> addCreditToTransaction(@PathVariable Long transactionId, @RequestBody Credit credit) {
-        Transaction transaction = transactionRepository.findById(transactionId).orElse(null);
-        if (transaction == null) {
-            return ResponseEntity.notFound().build();
-        }
-        Credit newCredit = icreditService.addCreditToTransaction(credit, transaction);
-        return ResponseEntity.ok(newCredit);
-    }
+
 
 }

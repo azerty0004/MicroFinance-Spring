@@ -25,7 +25,6 @@ public interface Creditrepository extends JpaRepository<Credit,Long>, JpaSpecifi
             + "(:statut IS NULL OR c.statut = :statut) AND "
             + "(:guarantor IS NULL OR c.guarantor = :guarantor) AND "
             + "(:typeCredit IS NULL OR c.typeCredit = :typeCredit) AND "
-            + "(:transaction IS NULL OR c.transaction = :transaction) AND "
             + "(:insurance IS NULL OR c.insurance = :insurance)")
     List<Credit> findCreditsByAttributes(
             @Param("id") Long id,
@@ -38,19 +37,12 @@ public interface Creditrepository extends JpaRepository<Credit,Long>, JpaSpecifi
             @Param("statut") Statut statut,
             @Param("guarantor") Guarantor guarantor,
             @Param("typeCredit") TypeCredit typeCredit,
-            @Param("transaction") Transaction transaction,
             @Param("insurance") Insurance insurance);
 
 
-    @Query("SELECT c FROM Credit c "
-            + "INNER JOIN c.transaction t "
-            + "INNER JOIN t.accounts a "
-            + "INNER JOIN a.user u "
-            + "WHERE u.id = :userId")
 
+    @Query("SELECT c FROM Credit c JOIN c.transactions t WHERE t.idUser = :userId")
            List <Credit> getCreditByiduser(@Param("userId") Long userid);
-    @Query ("SELECT u FROM User u JOIN Account a ON u.id = a.user.id JOIN Transaction t ON  a.transaction.id =t.id JOIN Credit c ON a.transaction.id = c.id WHERE (:inputLong is null or c.transaction.id = :inputLong)")
-    User getuserByidcredit(@Param("inputLong") Long credit);
 
 
 }

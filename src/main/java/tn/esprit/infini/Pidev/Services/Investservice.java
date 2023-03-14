@@ -51,18 +51,7 @@ public class Investservice implements Iinvestservice {
         investrepository.deleteById(id);
 
     }
-    @Override
-    public Invest assingInvestToTransaction(Long idInvest, Long idTransaction) {
-        Invest invest = investrepository.findById(idInvest).orElse(null);
-        Transaction transaction = transactionRepository.findById(idTransaction).orElse(null);
-        invest.setTransaction(transaction);
-        return investrepository.save(invest);
-    }
 
-    @Override
-    public User getuserByidinvest(Long investid) {
-        return investrepository.getuserByidinvest(investid);
-    }
 
 
     @Override
@@ -75,7 +64,7 @@ public class Investservice implements Iinvestservice {
                                                       Date maxDateOfApplication, Date minDateOfObtaining, Date maxDateOfObtaining,
                                                       Date minDateOfFinish, Date maxDateOfFinish, Double minInterestRate,
                                                       Double maxInterestRate, Integer minMonths, Integer maxMonths,
-                                                      Statut statut, Long transactionId) {
+                                                      Statut statut) {
         return (root, query, builder) -> {
             List<Predicate> predicates = new ArrayList<>();
             if (minAmount != null) {
@@ -117,11 +106,8 @@ public class Investservice implements Iinvestservice {
             if (statut != null) {
                 predicates.add(builder.equal(root.get("statut"), statut));
             }
-            if (transactionId != null) {
-                Join<Invest, Transaction> join = root.join("transaction");
-                predicates.add(builder.equal(join.get("id"), transactionId));
-            }
-            return builder.and(predicates.toArray(new Predicate[0]));
+
+            return builder.and(predicates.toArray(new Predicate[1]));
         };
     }
 

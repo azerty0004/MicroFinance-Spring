@@ -27,7 +27,7 @@ public class InvestController {
         return iinvestservice.addInvest(invest);
     }
 
-    @GetMapping("/getInvestById/{id}")
+    @GetMapping("/getInvestById/{idInvest}")
     Invest afficherAvecId(@PathVariable Long idInvest){
         return iinvestservice.retrieveInvest(idInvest);
     }
@@ -42,10 +42,6 @@ public class InvestController {
     {
         iinvestservice.deleteInvest(idInvest);
     }
-    @PutMapping("/assignInvestTran/{investId}/{transactionid}")
-    public Invest assingInvestToTransaction(@PathVariable("investId") Long investId, @PathVariable("transactionid") Long transactionid){
-        return iinvestservice.assingInvestToTransaction(investId,transactionid);
-    }
     @GetMapping("/getInvestByparams/")
     Specification<Invest> searchInvests(@RequestParam(required = false) Double minAmount,
                                         @RequestParam(required = false) Double maxAmount,
@@ -59,24 +55,20 @@ public class InvestController {
                                         @RequestParam(required = false) Double maxInterestRate,
                                         @RequestParam(required = false) Integer minMonths,
                                         @RequestParam(required = false) Integer maxMonths,
-                                        @RequestParam(required = false) Statut statut,
-                                        @RequestParam(required = false) Long transactionId)
+                                        @RequestParam(required = false) Statut statut)
 
 
 
 
 
-    { return iinvestservice.searchInvests(minAmount,maxAmount,minDateOfApplication,maxDateOfApplication,minDateOfObtaining,maxDateOfObtaining,minDateOfFinish,maxDateOfFinish,minInterestRate,maxInterestRate,minMonths,maxMonths,statut,transactionId);
+    { return iinvestservice.searchInvests(minAmount,maxAmount,minDateOfApplication,maxDateOfApplication,minDateOfObtaining,maxDateOfObtaining,minDateOfFinish,maxDateOfFinish,minInterestRate,maxInterestRate,minMonths,maxMonths,statut);
 
 
     }
-    @GetMapping("/getinvestsbyiduser")
-    public List<Invest> getInvestByiduser(@RequestParam(value = "userid", required = false) Long userid) {
+    @GetMapping("/getinvestsbyiduser/userid")
+    public List<Invest> getInvestByiduser(@PathVariable( "userid") Long userid) {
         return iinvestservice.getInvestByiduser(userid);
     }
-    @GetMapping("/getuserbyidinvest")
-    public User getuserByidinvest(@RequestParam(value = "investId", required = false) Long investId) {
-        return iinvestservice.getuserByidinvest(investId);
-    }
+
 }
 

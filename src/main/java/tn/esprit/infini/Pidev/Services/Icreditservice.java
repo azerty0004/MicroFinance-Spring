@@ -14,12 +14,10 @@ public interface Icreditservice {
     Credit retrieveCredit (Long id);
 
     void deleteCredit( Long id);
-    List<Credit> findCreditsByAttributes(Long id, Double amount, Date dateofapplication,Date dateofobtaining, Date dateoffinish, Double interestrate, Integer duration,Statut statut, Guarantor guarantor, TypeCredit typeCredit, Transaction transaction,Insurance insurance);
+    List<Credit> findCreditsByAttributes(Long id, Double amount, Date dateofapplication,Date dateofobtaining, Date dateoffinish, Double interestrate, Integer duration,Statut statut, Guarantor guarantor, TypeCredit typeCredit,Insurance insurance);
     List<Credit> getCreditByiduser(Long userid);
-     User  getuserByidcredit(Long creditid);
-    Float newCredit(Credit credit);
+    Float newCredit(Long idcredit);
     Integer TauxtypeCredit(Credit credit);
-    Credit  addCreditToTransaction(Credit credit,Transaction transaction);
     double CalculMensualitéfixe(Credit credit);
     List<Double> CalculMensualitévariable(Credit credit);
     List<Double> listetauxinterets(Credit credit);

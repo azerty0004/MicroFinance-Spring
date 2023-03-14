@@ -1,11 +1,15 @@
     package tn.esprit.infini.Pidev.entities;
+    import com.fasterxml.jackson.annotation.JsonIgnore;
     import lombok.AllArgsConstructor;
     import lombok.Getter;
     import lombok.NoArgsConstructor;
     import lombok.Setter;
     import javax.persistence.*;
     import java.io.Serializable;
+    import java.util.ArrayList;
     import java.util.Date;
+    import java.util.List;
+    import java.util.Set;
 
     @Entity
     @Getter
@@ -30,10 +34,10 @@
         Guarantor guarantor;
         @Enumerated(EnumType.STRING)
         private TypeCredit typeCredit;
-        @ManyToOne
-        @JoinColumn(name = "transaction_id")
 
-        private Transaction transaction;
+        @OneToMany(mappedBy = "credit", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+        @JsonIgnore
+        private List<Transaction> transactions=new ArrayList<>();
         @OneToOne
         Insurance insurance;
         @Enumerated(EnumType.STRING)

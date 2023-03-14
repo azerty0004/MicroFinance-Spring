@@ -2,6 +2,7 @@ package tn.esprit.infini.Pidev.Services;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import tn.esprit.infini.Pidev.Repository.Creditrepository;
 import tn.esprit.infini.Pidev.Repository.UserRepository;
 import tn.esprit.infini.Pidev.entities.TypeUser;
 import tn.esprit.infini.Pidev.entities.User;
@@ -11,6 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 public class UserService implements IUser{
     UserRepository UR;
+    Creditrepository cr;
     //CRUD
     @Override
     public User addUser(User user) {
@@ -56,4 +58,10 @@ public class UserService implements IUser{
     public void banUser(User user) {
 
     }
+    @Override
+    public User findUserByCreditId(Long creditId) {
+        return UR.findUserByCreditId(creditId);
+    }
+
+
 }

@@ -1,6 +1,7 @@
 
 package tn.esprit.infini.Pidev.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,7 +9,9 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Getter
@@ -30,8 +33,9 @@ public class Invest implements Serializable {
 
     @Enumerated(EnumType.STRING)
     private Statut statut;
-    @ManyToOne
-    Transaction transaction;
+    @OneToMany(mappedBy = "invest", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<Transaction> transactions=new ArrayList<>();
 
 
 

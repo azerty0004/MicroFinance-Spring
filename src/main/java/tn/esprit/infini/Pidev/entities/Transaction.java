@@ -1,5 +1,6 @@
 package tn.esprit.infini.Pidev.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -17,6 +18,7 @@ import java.util.Set;
 @Entity
 @Getter
 @Setter
+@Table( name = "Transaction")
 public class Transaction implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,10 +27,11 @@ public class Transaction implements Serializable {
     private long idUser;
     private long idobject;
     private Date date;
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "transaction")
-    private List<Invest> invests;
-    @OneToMany(cascade = CascadeType.ALL,mappedBy = "transaction")
-    private List<Credit> credits;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Invest invest;
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Credit credit;
+
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "transaction")
     private List<Account> accounts;
 
