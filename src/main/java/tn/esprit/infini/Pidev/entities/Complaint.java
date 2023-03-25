@@ -18,10 +18,10 @@ public class Complaint implements Serializable {
     private Date dateofcomplaint;
     @Enumerated(EnumType.STRING)
     private Stateofcomplaint stateofcomplaint;
-    private String description;
+    public String description;
     @Enumerated(EnumType.STRING)
     private Typecomplaint typecomplaint;
 
-     // @ManyToOne
-    //User user;
+    @ManyToOne
+    User user;
 }

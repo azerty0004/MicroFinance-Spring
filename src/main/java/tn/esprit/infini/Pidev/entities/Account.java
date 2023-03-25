@@ -21,4 +21,7 @@ public class Account implements Serializable {
     private float balance;
     @OneToOne
     private User user;
+    @ManyToOne
+    Transaction transaction;
+
 }

@@ -2,15 +2,28 @@ package tn.esprit.infini.Pidev.Services;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import tn.esprit.infini.Pidev.entities.Insurance;
+import tn.esprit.infini.Pidev.Repository.AccountRepository;
 import tn.esprit.infini.Pidev.Repository.InsuranceRepository;
+import tn.esprit.infini.Pidev.Repository.PackRepository;
+import tn.esprit.infini.Pidev.Repository.UserRepository;
+import tn.esprit.infini.Pidev.entities.Account;
+import tn.esprit.infini.Pidev.entities.Insurance;
+import tn.esprit.infini.Pidev.entities.Pack;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Service
 @AllArgsConstructor
 public class InsuranceService implements IInsuranceService {
     InsuranceRepository insuranceRepository;
+    PackRepository packRepository;
+    UserRepository userRepository;
+    AccountRepository accountRepository;
 
     @Override
     public List<Insurance> retrieveAllinsurances() {
@@ -19,10 +32,13 @@ public class InsuranceService implements IInsuranceService {
 
     @Override
     public Insurance addInsurance(Insurance i) {
+        // User user = userRepository.findById(idUser).get();
+
+        // System.out.println(getMonthsBetweenDates(i.getStartinsurance(),i.getEndinsurance()));
+        // i.setUser(user);
+        // System.out.println(calculateFicoScore(i));
         return insuranceRepository.save(i);
-
     }
-
 
     @Override
     public Insurance updateInsurance(Insurance i) {
@@ -30,14 +46,77 @@ public class InsuranceService implements IInsuranceService {
     }
 
     @Override
-    public Insurance retrieveInsurance(Long idinsurance) {
-        return insuranceRepository.findById(Math.toIntExact(idinsurance)).get();
+    public Insurance retrieveInsurance(int idinsurance) {
+        return insuranceRepository.findById(idinsurance).get();
     }
 
     @Override
-    public void deleteInsurance(Long idinsurance)
-    {
-        insuranceRepository.deleteById(Math.toIntExact(idinsurance));
+    public Insurance assignInsuranceToPack(int idinsurance, int idPack) {
+        Insurance insurance = insuranceRepository.findById(idinsurance).orElse(null);
+        Pack pack = packRepository.findById(idPack).orElse(null);
+        insurance.setPack(pack);
+        pack.getInsurances().add(insurance);
+        return insuranceRepository.save(insurance);
+    }
+    public List<Insurance> archiveInsurances(List<Insurance> insurances) {
+        LocalDate currentDate = LocalDate.now();
+        List<Insurance> archivedInsurances = new ArrayList<>();
+
+        for (Insurance insurance : insurances) {
+            if (insurance.getEndinsurance().after(Date.from(currentDate.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()))) {
+                insurance.setEndinsurance(Date.from(currentDate.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()));
+                archivedInsurances.add(insurance);
+            }
+        }
+
+        return archivedInsurances;
     }
 
+
+
+
+    /* public float calculateFicoScore(Insurance i) {
+         float ficoscore= 0;
+         ficoscore += (i.getInsuredAmount() * 5 / 100) +
+                 (getMonthsBetweenDates(i.getStartinsurance(), i.getEndinsurance()) * 30 / 100)+
+                 (insuranceRepository.numberofinsurancebyuser(i.getUser().getId())*20/100)+
+                 (i.getLevelofrisk()*35/100);
+         return ficoscore;
+     } */
+    @Override
+    public double calculateInsuranceCost(Insurance insurance) {
+        double insuredAmount = insurance.getInsuredAmount();
+        double riskFactor = insurance.getLevelofrisk() / 100.0;
+        LocalDate startDate = insurance.getStartinsurance().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        LocalDate endDate = insurance.getEndinsurance().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        long policyDuration = ChronoUnit.DAYS.between(startDate, endDate) + 1;
+        double deductiblePercent = insurance.getDeductible() / 100.0;
+        double fixedFee = 350.0;
+
+        double totalCost = insuredAmount * (1 + riskFactor) * policyDuration * (1 + deductiblePercent) + fixedFee;
+        return totalCost;
+    }
+
+
+    public static int getMonthsBetweenDates(Date startDate, Date endDate) {
+        LocalDate startLocalDate = startDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        LocalDate endLocalDate = endDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+        long years = ChronoUnit.YEARS.between(startLocalDate, endLocalDate);
+        long months = ChronoUnit.MONTHS.between(startLocalDate.plusYears(years), endLocalDate);
+
+        return (int) (years * 12 + months);
+    }
+
+    @Override
+    public double calculateInsuranceCostWithDiscount(Insurance insurance) {
+        double totalCost = calculateInsuranceCost(insurance);
+        List<Account> accounts = insuranceRepository.findAccountsByNumberOfInsurances();
+
+        if (accounts.contains(insurance.getCredit().getTransaction().getAccounts()) && accounts.size() > 5 ) {  //&& accounts.size() > 5
+
+            totalCost *= 0.9;
+        }
+        return totalCost;
+    }
 }

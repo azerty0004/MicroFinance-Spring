@@ -8,6 +8,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.Set;
 
 
 @Entity
@@ -38,6 +39,8 @@ import java.io.Serializable;
     @JsonIgnore
     Transaction transaction;
 
+    @OneToMany( mappedBy="pack")
+    private Set<Insurance> Insurances;
 
 }
 

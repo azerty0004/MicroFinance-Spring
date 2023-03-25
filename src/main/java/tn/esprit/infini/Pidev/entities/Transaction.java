@@ -45,7 +45,8 @@ public class Transaction implements Serializable {
     @Column(name = "credits")
     @OneToMany(mappedBy = "transaction")
     private Set<Credit> credits;
-
+    @OneToMany(mappedBy = "transaction")
+    private  Set<Account> accounts;
 
 
     public Transaction(TypeTransaction typeTransaction, long idUser, long idObject, Date date, Long amount, String stripeId, String paymentMethod) {

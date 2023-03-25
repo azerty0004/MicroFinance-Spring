@@ -14,21 +14,19 @@ import java.util.Date;
 public class Insurance implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idinsurance;
-
+    private int idinsurance;
     private String insured;
+    private Double insuredAmount;
     private Date startinsurance;
     private Date endinsurance;
-    private Double premium;
     private String coverage;
     private Double deductible;
     private String claimsHistory;
-   // @ManyToOne
-  //  Pack pack;
-     @OneToOne
+    private Integer levelofrisk;
+    @ManyToOne
+    Pack pack;
+    @OneToOne
     Credit credit;
-
-
 
 }
 
