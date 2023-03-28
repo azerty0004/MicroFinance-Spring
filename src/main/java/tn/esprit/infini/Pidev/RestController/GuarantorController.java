@@ -1,4 +1,4 @@
-package tn.esprit.infini.Pidev.RestController;
+/*package tn.esprit.infini.Pidev.RestController;
 
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -37,3 +37,4 @@ public class GuarantorController {
          iGuarantorService.deleteGuarantor(idGuarantor);
     }
 }
+*/

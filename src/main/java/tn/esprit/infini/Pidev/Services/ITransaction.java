@@ -17,6 +17,9 @@ public interface ITransaction {
 
     void deleteTransaction(Long idTransaction);
     List<Transaction>divideTransaction(Long amount,Integer numberOfMonthes);
+    List<Date> extractDates(List<Transaction> transactionList);
+    List<String> DatesToCronExpressions (List<Date> dates);
+
 
 
 }

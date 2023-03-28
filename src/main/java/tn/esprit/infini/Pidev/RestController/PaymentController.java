@@ -45,26 +45,30 @@ public class PaymentController {
 
 
     @PostMapping("/create-payment-intent")
-    public PaymentIntent createPaymentIntent(@NotNull @RequestBody  CreatePayment createPayment)throws StripeException {
-
+    public void createPaymentIntent(@NotNull @RequestBody  CreatePayment createPayment)throws StripeException {
+        Stripe.apiKey=this.stripePublicKey;
         PaymentIntentCreateParams createParams = new
                 PaymentIntentCreateParams.Builder()
                 .setCurrency("usd")
                 .putMetadata("featureRequest", createPayment.getFeatureRequest())
-                .setAmount(createPayment.getAmount())
+                .setAmount(createPayment.getAmount()*100L)
                 .build();
 
         PaymentIntent intent = PaymentIntent.create(createParams);
 
-        return intent;
+
     }
     @PostMapping("confirm-payment-intent")
-    public PaymentIntent confimPayment(@RequestBody String intentId) throws StripeException {
-        PaymentIntent intent = PaymentIntent.retrieve(intentId);
+    public void confimPayment(@RequestBody String intentId) throws StripeException {
+        Stripe.apiKey=this.stripePublicKey;
+        Gson gson = new Gson();
+        JsonObject jsonObject = gson.fromJson(intentId, JsonObject.class);
+        String id = jsonObject.get("intentId").getAsString();
+        PaymentIntent intent = PaymentIntent.retrieve(id);
         Map<String, Object> params = new HashMap<>();
         params.put("payment_method", "pm_card_visa");
         intent.confirm(params);
-           return intent;
+
         }
 
         @PostMapping("/persist-payment-base")
@@ -73,7 +77,6 @@ public class PaymentController {
             Gson gson = new Gson();
             JsonObject jsonObject = gson.fromJson(intentId, JsonObject.class);
 
-            // Retrieve a string using a key
             String id = jsonObject.get("id").getAsString();
             PaymentIntent paymentIntent = PaymentIntent.retrieve(id);
             String status =paymentIntent.getStatus();
@@ -91,9 +94,9 @@ public class PaymentController {
             if (status.equals("succeeded"))
             {
                 Transaction transaction =new Transaction(typeTransaction,userId,idObject, date,amount,stripeid,paymentMethod);
-                System.out.println(gson.toJson(transaction));
+
                 transactionService.addTransaction(transaction);
-                System.out.println("Success ajout");
+
 
 
             }
