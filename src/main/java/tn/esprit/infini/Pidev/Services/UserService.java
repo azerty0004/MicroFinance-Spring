@@ -3,8 +3,10 @@ package tn.esprit.infini.Pidev.Services;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import tn.esprit.infini.Pidev.Repository.UserRepository;
-import tn.esprit.infini.Pidev.entities.TypeUser;
+import tn.esprit.infini.Pidev.entities.Pack;
 import tn.esprit.infini.Pidev.entities.User;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -24,7 +26,7 @@ public class UserService implements IUser{
     public void deleteUser(Integer idUser) {UR.deleteById(idUser);}
     //Advanced functions
     @Override
-    public User retrieveUser(int idUser) {return UR.findById(idUser).get();}
+    public User retrieveUser(int idUser) {return UR.findById(idUser);}
 
     @Override
     public User retrieveUserByLogin(String login) {return UR.findByLogin(login);}
@@ -56,4 +58,18 @@ public class UserService implements IUser{
     public void banUser(User user) {
 
     }
+
+
+   /* FavorisRepository favorisRepository;
+
+    @Override
+    public List<Pack> getLikedPacks(int idUser) {
+        List<Favoris> favorisList = favorisRepository.findByIdUser(idUser);
+        List<Pack> likedPacks = new ArrayList<>();
+        for (Favoris favoris : favorisList) {
+            likedPacks.add(favoris.getPack());
+        }
+        return likedPacks;
+
+    }*/
 }

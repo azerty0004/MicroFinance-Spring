@@ -44,4 +44,5 @@ public class Creditservice implements Icreditservice {
         return creditrepository.findBySearchParams(creditId, amount, date, duration, statut, guarantor,insurance);
     }
 
+
 }

@@ -1,13 +1,23 @@
 package tn.esprit.infini.Pidev.RestController;
 
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import tn.esprit.infini.Pidev.Repository.CartRepository;
 import tn.esprit.infini.Pidev.Repository.PackRepository;
+import tn.esprit.infini.Pidev.Repository.ReactionRepository;
 import tn.esprit.infini.Pidev.Services.IPackService;
+import tn.esprit.infini.Pidev.Services.PackService;
+import tn.esprit.infini.Pidev.Services.UserService;
+import tn.esprit.infini.Pidev.entities.Cart;
 import tn.esprit.infini.Pidev.entities.Pack;
+import tn.esprit.infini.Pidev.entities.Reaction;
+import tn.esprit.infini.Pidev.entities.TypeReaction;
 
 import javax.websocket.server.PathParam;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @RestController
@@ -16,7 +26,12 @@ public class PackController {
 
     IPackService iPackService;
     PackRepository packRepository;
+    UserService userService;
+    PackService packService;
+    CartRepository cartRepository;
 
+
+   // CRUD:
     @GetMapping("/getPack")
     List<Pack> afficher() {
         return iPackService.retrieveAllPacks();
@@ -27,55 +42,83 @@ public class PackController {
 
         return iPackService.addPack(pack);
     }
-
-    @GetMapping("/getPackById/{id}")
+    @GetMapping("/getPackById/{idPack}")
     Pack afficherAvecId(@PathVariable int idPack){
 
         return iPackService.retrievePack(idPack);
     }
-
     @PutMapping("/updatePack")
     public Pack updatePack(@RequestBody Pack pack) {
-        return
-                iPackService.updatePack(pack);
+        return iPackService.updatePack(pack);
     }
-
     @DeleteMapping("/deletePack/{idPack}")
     void  deletePack(@PathVariable ("idPack") Integer idPack)
     {
         iPackService.deletePack(idPack);
     }
 
-    @PutMapping("/like/{idPack}")
-    public Pack likePack(@PathVariable int idPack) {
+    // rating = like et dislike
 
-        return iPackService.likePack(idPack);
-    }
 
-    @PutMapping("/dislike/{idPack}")
-    public Pack dislikePack(@PathVariable int idPack) {
-        return iPackService.dislikePack(idPack);
-    }
-
-    @GetMapping("/CartPack/{idCart}") // affiche les packs d'une carte
+    // affiche les packs d'une panier
+    @GetMapping("/CartPacks/{idCart}") // affiche les packs d'une carte
     public Set<Pack> CartPack (@PathVariable ("idCart") Integer idCart)
     {
         return iPackService.PacksCart(idCart);
     }
 
+    // affecter un pack au panier
     @PutMapping("/assignPackToCart/{idPack}/{idCart}") // affecte un pack au panier ( bouton ajouter au panier)
     public Pack assignPackToCart(@PathVariable Integer idPack, @PathVariable Integer idCart){
         return iPackService.assignPackToCart( idPack,  idCart);
 
     }
+    // rating:
+
+    @PostMapping("/addReactionToPack/{idPack}/reaction")
+    public void addReactionToPack(@PathVariable int idPack, @RequestBody Reaction reaction) {
+        // récupérer les informations du formulaire
+        int idUser = reaction.getIdUser();
+        TypeReaction type = reaction.getType();
+
+        // appeler le service pour ajouter la réaction au pack
+        packService.addReaction(idPack, idUser, type);
+
+    }
+
+    @GetMapping("/average-rating/{idPack}")
+    public double getAverageRating(@PathVariable int idPack) {
+
+        return packService.getAverageRating(idPack);
+    }
 
     @GetMapping("/mostLikedPacks")
-    public List<Pack> findMostLikedPacks(@PathVariable int likes) {
-        return iPackService.findMostLikedPacks(likes);
+    public Pack findMostLikedPacks() {
+
+        return packService.getMostLikedPack();
     }
 
     @GetMapping("/mostDislikedPacks")
-    public List<Pack> findMostDislikedProducts(@PathVariable int dislikes) {
-        return iPackService.findMostDislikedPacks(dislikes);
+    public Pack findMostDislikedProducts() {
+
+        return iPackService.getMostDislikedPack();
     }
+
+    @GetMapping("/byPriceRange")
+    public List<Pack> getPacksByPriceRange(@RequestParam("minPrice") double minPrice,
+                                           @RequestParam("maxPrice") double maxPrice) {
+        return packService.getPacksByPriceRange(minPrice, maxPrice);
+    }
+
+    @GetMapping("/orderByPriceAsc")
+    public List<Pack> getPacksOrderByPriceAsc() {
+        return packRepository.findByOrderByPriceAsc();
+    }
+
+    @GetMapping("/orderByPriceDesc")
+    public List<Pack> getPacksOrderByPriceDesc() {
+        return packRepository.findByOrderByPriceDesc();
+    }
+
+
 }

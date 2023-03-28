@@ -45,6 +45,8 @@ public class Transaction implements Serializable {
     @Column(name = "credits")
     @OneToMany(mappedBy = "transaction")
     private Set<Credit> credits;
+    @OneToMany(mappedBy = "transaction")
+    private Set<Pack> packs;
 
 
 

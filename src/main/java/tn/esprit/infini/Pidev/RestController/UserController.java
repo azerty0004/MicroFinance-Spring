@@ -1,9 +1,13 @@
 package tn.esprit.infini.Pidev.RestController;
 
 import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import tn.esprit.infini.Pidev.Services.IUser;
+import tn.esprit.infini.Pidev.Services.UserService;
 import tn.esprit.infini.Pidev.entities.Cart;
+import tn.esprit.infini.Pidev.entities.Pack;
 import tn.esprit.infini.Pidev.entities.User;
 
 import java.util.List;
@@ -11,6 +15,8 @@ import java.util.List;
 @AllArgsConstructor
 public class UserController {
     private IUser iUser;
+
+    UserService userService;
     @GetMapping("/getUsers")
     List<User> afficher() {
         return iUser.retrieveAllUsers();
@@ -42,4 +48,15 @@ public class UserController {
         if(iUser.veriyUserPassword(iUser.retrieveUser(idUser),password)==false) {return false;}
         else return true;
     }
+
+
+    /*@GetMapping("/{userId}/likedPacks")
+    public ResponseEntity<?> getLikedPacks(@PathVariable("userId") int userId) {
+        try {
+            List<Pack> likedPacks = userService.getLikedPacks(userId);
+            return ResponseEntity.ok(likedPacks);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+        }
+    }*/
 }

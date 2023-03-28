@@ -2,6 +2,7 @@ package tn.esprit.infini.Pidev.Services;
 
 
 
+import tn.esprit.infini.Pidev.entities.Pack;
 import tn.esprit.infini.Pidev.entities.User;
 
 import java.util.List;
@@ -19,4 +20,6 @@ public interface IUser {
     void changePassword(User user, String mdp);
     boolean veriyUserPassword(User user, String password);
     void banUser(User user);
+
+    //List<Pack> getLikedPacks(int idUser);
 }

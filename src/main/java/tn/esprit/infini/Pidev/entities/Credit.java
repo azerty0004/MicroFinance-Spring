@@ -21,14 +21,16 @@ public class Credit implements Serializable {
     private Integer duration;
     @Enumerated(EnumType.STRING)
     private Statut statut;
-    @OneToOne
-    Guarantor guarantor;
+
     @Enumerated(EnumType.STRING)
     private TypeCredit typeCredit;
     @ManyToOne
     Transaction transaction;
     @OneToOne
     Insurance insurance;
+
+    @OneToOne
+    Guarantor guarantor;
 
 
 

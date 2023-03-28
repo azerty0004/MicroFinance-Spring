@@ -32,7 +32,7 @@ import java.io.Serializable;
 
     @ManyToOne
     @JsonIgnore
-    Cart cart;
+    public Cart cart;
 
     @ManyToOne
     @JsonIgnore

@@ -27,11 +27,10 @@ public class Cart implements Serializable {
         private int idCart;
         private int quantity;
         private int nbreMounths;
-        private double mounthlyAmount;
 
          @OneToMany(mappedBy = "cart")
          @JsonIgnore
-         private Set<Pack> pack;
+         public Set<Pack> pack;
 
 
 }

@@ -8,5 +8,6 @@ import tn.esprit.infini.Pidev.entities.Cart;
 
 public interface CartRepository extends JpaRepository<Cart, Integer> {
     Cart findByIdCart(Integer idCart);
+    //Cart findByIdCartAndIdPack(Integer idCart, Integer idPack);
 
 }
