@@ -1,6 +1,7 @@
 package tn.esprit.infini.Pidev.Services;
 
 import lombok.AllArgsConstructor;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import tn.esprit.infini.Pidev.Repository.CartRepository;
 import tn.esprit.infini.Pidev.Repository.PackRepository;
@@ -9,6 +10,7 @@ import tn.esprit.infini.Pidev.entities.Pack;
 import tn.esprit.infini.Pidev.entities.TypePack;
 
 import javax.persistence.EntityNotFoundException;
+import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
@@ -56,7 +58,7 @@ import java.util.stream.Collectors;
         double totalAmount = 0.0;
         Set<Pack> packs = cart.getPack();
         for (Pack p : packs) {
-            totalAmount += p.getPrice() * cart.getQuantity()  ;
+            totalAmount += p.getPrice() ;
         }
         return totalAmount;
     }
@@ -65,7 +67,7 @@ import java.util.stream.Collectors;
         Cart cart = cartRepository.findById(idCart).orElse(null);
 
         double totalAmount = cart.getPack().stream()
-                .mapToDouble(pack -> pack.getPrice() * cart.getQuantity() * cart.getNbreMounths())
+                .mapToDouble(pack -> pack.getPrice() )
                 .sum();
         double interestRate = 0.0;
         if (totalAmount < 1000) {
@@ -154,9 +156,18 @@ import java.util.stream.Collectors;
 
 
 
+    @Override
+    @Scheduled(cron = "0 0 12 * * ?") // exécution à midi chaque jour
+    public void clearCart() {
+        LocalDate threeMonthsAgo = LocalDate.now().minusMonths(3);
+        List<Pack> expiredPacks = packRepository.findByCreatedAtBefore(threeMonthsAgo);
+        expiredPacks.forEach(pack -> {
+            pack.setCart(null);
+            packRepository.save(pack);
+        });
 
 
-
+    }
 
 }
 
