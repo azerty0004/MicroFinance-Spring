@@ -19,10 +19,15 @@ public class InsuranceController {
     public void addinsurance(@RequestBody Insurance insurance) {
         insuranceService.addInsurance(insurance);
     }
-    @GetMapping("/displayinsurance")
+    @GetMapping("/displaycurrentinsurance")
     public List<Insurance> displayinsurance() {
         return insuranceService.retrieveAllinsurances();
     }
+    @GetMapping("/displayArchivedinsurance")
+    public List<Insurance> displayArchivedinsurance() {
+        return insuranceService.retrieveArchivedinsurance();
+    }
+
 
     @GetMapping("/displaywithId/{idinsurance}")
     public Insurance displaywithidinsurance(@PathVariable int idinsurance) {
@@ -44,4 +49,9 @@ public class InsuranceController {
     public double calculateCostWithDiscount(@RequestBody Insurance insurance) {
         return insuranceService.calculateInsuranceCostWithDiscount(insurance);
     }
+ /*   @PostMapping("/archive-expired")
+    public String archiveExpiredInsurances() {
+        insuranceService.archiveExpiredInsurances();
+        return "Les assurances expirées ont été archivées.";
+    }*/
 }

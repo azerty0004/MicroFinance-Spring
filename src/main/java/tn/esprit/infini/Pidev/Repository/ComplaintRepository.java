@@ -14,11 +14,11 @@ public interface ComplaintRepository extends CrudRepository<Complaint,Long> {
 
     @Query("select i From Complaint i where i.user.id = :iddonne")
     List<Complaint> getComplaintsByUser(@Param("iddonne") int id);
-
+  //  List<Complaint> findByStateOfComplaint(Stateofcomplaint stateofcomplaint);
+}
 
    /*  Long findByTypecomplaint(Typecomplaint typecomplaint); */
    /* List<Complaint>findAllByTypecomplaint(String type);
     int countByTypecomplaint();
     */
 
-}

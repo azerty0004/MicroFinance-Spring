@@ -10,27 +10,26 @@ public interface IComplaintService {
     List<Complaint> retrieveAllcomplaints();
 
 
-  /*  boolean complaintContainsBadWords(Complaint complaint); */
+    /*  boolean complaintContainsBadWords(Complaint complaint); */
 
     Complaint updateComplaint(Complaint c);
 
     Complaint retrieveComplaint(Long idcomplaint);
 
     void deleteComplaint(Long idcomplaint);
-     // List<Complaint> getComplaintByUser(int idUser);
+    // List<Complaint> getComplaintByUser(int idUser);
 
     List<Object[]> getComplaintByType();
 
     HashMap<Typecomplaint, Double> getComplaintStatistics();
 
 
-
     Complaint addComplaint(Complaint complaint, int id);
 
     Complaint filterBadWords(Complaint complaint);
+
+
 }
-
-
 /* Complaint assignComplaintToUser(Long idcomplaint, int id); */
    /* List<Object[]> getComplaintByType(); */
 

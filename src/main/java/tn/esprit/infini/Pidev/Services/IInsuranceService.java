@@ -6,6 +6,9 @@ import java.util.List;
 
 public interface IInsuranceService {
     List<Insurance>  retrieveAllinsurances();
+
+    List<Insurance> retrieveArchivedinsurance();
+
     Insurance addInsurance(Insurance i);
 
     Insurance updateInsurance (Insurance i);
@@ -13,6 +16,10 @@ public interface IInsuranceService {
     Insurance retrieveInsurance (int idinsurance);
 
     Insurance assignInsuranceToPack(int idinsurance, int idPack);
+
+
+
+
 
     double calculateInsuranceCost(Insurance insurance);
 

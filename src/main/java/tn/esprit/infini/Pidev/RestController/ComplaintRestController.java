@@ -2,6 +2,7 @@ package tn.esprit.infini.Pidev.RestController;
 
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
+import tn.esprit.infini.Pidev.Services.ComplaintService;
 import tn.esprit.infini.Pidev.Services.IComplaintService;
 import tn.esprit.infini.Pidev.entities.Complaint;
 import tn.esprit.infini.Pidev.entities.Typecomplaint;
@@ -12,6 +13,8 @@ import java.util.List;
 @RestController
 @AllArgsConstructor
 public class ComplaintRestController {
+
+    private ComplaintService complaintService;
     private IComplaintService iComplaintService;
 
     @GetMapping("/displayComplaint")
@@ -60,6 +63,11 @@ public class ComplaintRestController {
      return   iComplaintService.addComplaint(complaint);
 
     } */
+   /*  @GetMapping("/complaints/sendResolvedEmails")
+     public String sendResolvedEmails() {
+         complaintService.sendResolvedComplaintsEmails();
+         return "Resolved complaints emails sent successfully";
+     } */
 
 }
 

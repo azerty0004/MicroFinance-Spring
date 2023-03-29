@@ -16,6 +16,8 @@ import java.util.Map;
 @Service
 @AllArgsConstructor
 public  class ComplaintService implements IComplaintService {
+
+  private EmailService emailService;
     ComplaintRepository complaintRepository;
     UserRepository userRepository;
 
@@ -136,7 +138,45 @@ public  class ComplaintService implements IComplaintService {
         return complaintRepository.findById(idcomplaint).get();
     }
 
+ /*   public void updateComplaintState(Long complaintId, Stateofcomplaint newState) {
+        Complaint complaint = complaintRepository.findById(complaintId).orElseThrow(() -> new EntityNotFoundException("Complaint not found"));
+        Stateofcomplaint oldState = complaint.getStateofcomplaint();
+        complaint.setStateofcomplaint(newState);
+        complaintRepository.save(complaint);
+
+        if (oldState != Stateofcomplaint.complaintresolved && newState == Stateofcomplaint.complaintresolved) {
+            String recipientEmail = complaint.getUser().getEmail();
+            String subject = "Votre réclamation a été traitée";
+            String body = "Bonjour,\n\nNous sommes heureux de vous informer que votre réclamation a été traitée avec succès.\n\nCordialement,\nL'équipe de support";
+            emailService.sendEmail(recipientEmail, subject, body);
+        }
+    } */
+ /*public void resolveComplaint(Long complaintId) {
+     Complaint complaint = complaintRepository.findById(complaintId).get();
+     if (complaint.getStateofcomplaint() == Stateofcomplaint.complaintresolved) {
+         // Envoyer un courriel au client
+         String to = complaint.getUser().getEmail();
+         String subject = "Votre plainte a été résolue";
+         String text = "Votre plainte a été résolue. Merci d'avoir contacté notre service clientèle.";
+         emailService.sendEmail(to, subject, text);
+     }
+     // Mettre à jour l'état de la plainte dans la base de données
+     complaint.setStateofcomplaint(Stateofcomplaint.complaintresolved);
+     complaintRepository.save(complaint);
+ }*/
+ /*  public void sendResolvedComplaintsEmails() {
+     List<Complaint> resolvedComplaints = complaintRepository.findByStateOfComplaint(Stateofcomplaint.complaintresolved);
+     for (Complaint complaint : resolvedComplaints) {
+         // envoyer l'e-mail à l'utilisateur correspondant ici
+         User user = complaint.getUser();
+         String userEmail = user.getEmail();
+         String emailBody = "Votre réclamation a été traitée avec succès.";
+         emailService.sendEmail(userEmail, "Réclamation traitée", emailBody);
+     }
+ } */
 }
+
+
 
 
 

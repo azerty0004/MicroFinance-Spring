@@ -1,6 +1,7 @@
 package tn.esprit.infini.Pidev.Services;
 
 import lombok.AllArgsConstructor;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import tn.esprit.infini.Pidev.Repository.AccountRepository;
 import tn.esprit.infini.Pidev.Repository.InsuranceRepository;
@@ -13,12 +14,13 @@ import tn.esprit.infini.Pidev.entities.Pack;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+
 @Service
 @AllArgsConstructor
+
 public class InsuranceService implements IInsuranceService {
     InsuranceRepository insuranceRepository;
     PackRepository packRepository;
@@ -27,18 +29,25 @@ public class InsuranceService implements IInsuranceService {
 
     @Override
     public List<Insurance> retrieveAllinsurances() {
-        return (List<Insurance>) insuranceRepository.findAll();
+        return (List<Insurance>) insuranceRepository.retrieveinsurance();
+    }
+    @Override
+    public List<Insurance> retrieveArchivedinsurance() {
+        return (List<Insurance>) insuranceRepository.retrieveArchivedinsurance();
     }
 
     @Override
     public Insurance addInsurance(Insurance i) {
-        // User user = userRepository.findById(idUser).get();
-
-        // System.out.println(getMonthsBetweenDates(i.getStartinsurance(),i.getEndinsurance()));
-        // i.setUser(user);
-        // System.out.println(calculateFicoScore(i));
+        i.setArchived(false);
         return insuranceRepository.save(i);
     }
+  /*  @Override
+public Insurance addInsurance(Insurance i) {
+    double totalCost = calculateInsuranceCostWithDiscount(i);
+    i.setDeductible(totalCost);
+    return insuranceRepository.save(i);
+} */
+
 
     @Override
     public Insurance updateInsurance(Insurance i) {
@@ -58,20 +67,23 @@ public class InsuranceService implements IInsuranceService {
         pack.getInsurances().add(insurance);
         return insuranceRepository.save(insurance);
     }
-    public List<Insurance> archiveInsurances(List<Insurance> insurances) {
-        LocalDate currentDate = LocalDate.now();
-        List<Insurance> archivedInsurances = new ArrayList<>();
 
-        for (Insurance insurance : insurances) {
-            if (insurance.getEndinsurance().after(Date.from(currentDate.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()))) {
-                insurance.setEndinsurance(Date.from(currentDate.atStartOfDay().atZone(ZoneId.systemDefault()).toInstant()));
-                archivedInsurances.add(insurance);
-            }
+    //fixedRate = 5000
+   @Scheduled(cron = "0 0 0 * * *")
+    public void archiveExpiredInsurances() {
+        // Récupérer les assurances dont la date de fin est dépassée
+        List<Insurance> expiredInsurances = insuranceRepository.findByEndinsuranceBefore(new Date());
+
+
+        for (Insurance insurance : expiredInsurances) {
+            System.out.println(insurance.getIdinsurance());
+            // Mettre à jour la date de fin d'assurance avec la date actuelle
+           // insurance.setEndinsurance(new Date());
+            insurance.setArchived(true);
+            // Enregistrer la modification dans la base de données
+            insuranceRepository.save(insurance);
         }
-
-        return archivedInsurances;
     }
-
 
 
 
