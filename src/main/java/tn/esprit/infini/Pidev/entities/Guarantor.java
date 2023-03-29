@@ -21,5 +21,5 @@ public class Guarantor implements Serializable {
     private String salary ;
     private String job ;
     @OneToOne
-    Guarantor guarantor;
+    Credit credit;
    }

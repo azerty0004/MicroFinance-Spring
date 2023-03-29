@@ -42,32 +42,23 @@ public class InvestController {
     {
         iinvestservice.deleteInvest(idInvest);
     }
-    @GetMapping("/getInvestByparams/")
-    Specification<Invest> searchInvests(@RequestParam(required = false) Double minAmount,
-                                        @RequestParam(required = false) Double maxAmount,
-                                        @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date minDateOfApplication,
-                                        @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date maxDateOfApplication,
-                                        @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date minDateOfObtaining,
-                                        @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date maxDateOfObtaining,
-                                        @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date minDateOfFinish,
-                                        @RequestParam(required = false) @DateTimeFormat(pattern = "yyyy-MM-dd") Date maxDateOfFinish,
-                                        @RequestParam(required = false) Double minInterestRate,
-                                        @RequestParam(required = false) Double maxInterestRate,
-                                        @RequestParam(required = false) Integer minMonths,
-                                        @RequestParam(required = false) Integer maxMonths,
-                                        @RequestParam(required = false) Statut statut)
 
-
-
-
-
-    { return iinvestservice.searchInvests(minAmount,maxAmount,minDateOfApplication,maxDateOfApplication,minDateOfObtaining,maxDateOfObtaining,minDateOfFinish,maxDateOfFinish,minInterestRate,maxInterestRate,minMonths,maxMonths,statut);
-
-
-    }
     @GetMapping("/getinvestsbyiduser/userid")
     public List<Invest> getInvestByiduser(@PathVariable( "userid") Long userid) {
         return iinvestservice.getInvestByiduser(userid);
+    }
+
+    @GetMapping("/searchs")
+    public List<Invest> searchInvests(
+            @RequestParam(required = false) Long id,
+            @RequestParam(required = false) Double amount,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date dateofapplication ,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date dateofobtaining,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date dateoffinish,
+            @RequestParam(required = false) Double interestrate,
+            @RequestParam(required = false) Integer mounths,
+            @RequestParam(required = false) Statut statut) {
+            return iinvestservice.searchInvests(id,amount,dateofapplication,dateofobtaining,dateoffinish,interestrate,mounths,statut);
     }
 
 }

@@ -19,9 +19,5 @@ public interface Iinvestservice  {
 
     List<Invest> getInvestByiduser(Long userid);
 
-    Specification<Invest> searchInvests(Double minAmount, Double maxAmount, Date minDateOfApplication,
-                                         Date maxDateOfApplication, Date minDateOfObtaining, Date maxDateOfObtaining,
-                                         Date minDateOfFinish, Date maxDateOfFinish, Double minInterestRate,
-                                         Double maxInterestRate, Integer minMonths, Integer maxMonths,
-                                         Statut statut);
+    List<Invest> searchInvests(Long id,Double amount, Date dateofapplication, Date dateofobtaining,Date dateoffinish, Double interestRate,Integer mounths,Statut statut);
 }

@@ -7,6 +7,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import tn.esprit.infini.Pidev.entities.*;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -17,7 +18,7 @@ public interface Creditrepository extends JpaRepository<Credit,Long>, JpaSpecifi
     @Query("SELECT c FROM Credit c WHERE "
             + "(:id IS NULL OR c.id = :id) AND "
             + "(:amount IS NULL OR c.amount = :amount) AND "
-            + "(:dateofapplication IS NULL OR c.dateofapplication = :dateofapplication) AND "
+            + "(:dateOfApplication IS NULL OR c.dateOfApplication = :dateOfApplication) AND "
             + "(:dateofobtaining IS NULL OR c.dateofobtaining = :dateofobtaining) AND "
             + "(:dateoffinish IS NULL OR c.dateoffinish = :dateoffinish) AND "
             + "(:interestrate IS NULL OR c.interestrate = :interestrate) AND "
@@ -29,9 +30,9 @@ public interface Creditrepository extends JpaRepository<Credit,Long>, JpaSpecifi
     List<Credit> findCreditsByAttributes(
             @Param("id") Long id,
             @Param("amount") Double amount,
-            @Param("dateofapplication") Date dateofapplication,
-            @Param("dateofobtaining") Date dateofobtaining,
-            @Param("dateoffinish") Date dateoffinish,
+            @Param("dateOfApplication") LocalDate dateOfApplication,
+            @Param("dateofobtaining") LocalDate dateofobtaining,
+            @Param("dateoffinish") LocalDate dateoffinish,
             @Param("interestrate") Double interestrate,
             @Param("duration") Integer duration,
             @Param("statut") Statut statut,

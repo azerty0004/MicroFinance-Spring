@@ -11,8 +11,9 @@ import tn.esprit.infini.Pidev.entities.Statut;
 import tn.esprit.infini.Pidev.entities.Transaction;
 import tn.esprit.infini.Pidev.entities.User;
 
-import javax.persistence.criteria.Join;
-import javax.persistence.criteria.Predicate;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.criteria.*;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -22,6 +23,8 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 public class Investservice implements Iinvestservice {
+    @PersistenceContext
+    EntityManager entityManager;
     Investrepository investrepository;
     TransactionRepository transactionRepository;
 
@@ -60,55 +63,45 @@ public class Investservice implements Iinvestservice {
     }
 
     @Override
-    public  Specification<Invest> searchInvests(Double minAmount, Double maxAmount, Date minDateOfApplication,
-                                                      Date maxDateOfApplication, Date minDateOfObtaining, Date maxDateOfObtaining,
-                                                      Date minDateOfFinish, Date maxDateOfFinish, Double minInterestRate,
-                                                      Double maxInterestRate, Integer minMonths, Integer maxMonths,
-                                                      Statut statut) {
-        return (root, query, builder) -> {
-            List<Predicate> predicates = new ArrayList<>();
-            if (minAmount != null) {
-                predicates.add(builder.greaterThanOrEqualTo(root.get("amount"), minAmount));
-            }
-            if (maxAmount != null) {
-                predicates.add(builder.lessThanOrEqualTo(root.get("amount"), maxAmount));
-            }
-            if (minDateOfApplication != null) {
-                predicates.add(builder.greaterThanOrEqualTo(root.get("dateofapplication"), minDateOfApplication));
-            }
-            if (maxDateOfApplication != null) {
-                predicates.add(builder.lessThanOrEqualTo(root.get("dateofapplication"), maxDateOfApplication));
-            }
-            if (minDateOfObtaining != null) {
-                predicates.add(builder.greaterThanOrEqualTo(root.get("dateofobtaining"), minDateOfObtaining));
-            }
-            if (maxDateOfObtaining != null) {
-                predicates.add(builder.lessThanOrEqualTo(root.get("dateofobtaining"), maxDateOfObtaining));
-            }
-            if (minDateOfFinish != null) {
-                predicates.add(builder.greaterThanOrEqualTo(root.get("dateoffinish"), minDateOfFinish));
-            }
-            if (maxDateOfFinish != null) {
-                predicates.add(builder.lessThanOrEqualTo(root.get("dateoffinish"), maxDateOfFinish));
-            }
-            if (minInterestRate != null) {
-                predicates.add(builder.greaterThanOrEqualTo(root.get("interestrate"), minInterestRate));
-            }
-            if (maxInterestRate != null) {
-                predicates.add(builder.lessThanOrEqualTo(root.get("interestrate"), maxInterestRate));
-            }
-            if (minMonths != null) {
-                predicates.add(builder.greaterThanOrEqualTo(root.get("mounths"), minMonths));
-            }
-            if (maxMonths != null) {
-                predicates.add(builder.lessThanOrEqualTo(root.get("mounths"), maxMonths));
-            }
-            if (statut != null) {
-                predicates.add(builder.equal(root.get("statut"), statut));
-            }
+    public List<Invest> searchInvests(Long id,Double amount, Date dateofapplication, Date dateofobtaining, Date dateoffinish, Double interestRate,Integer mounths,Statut statut) {
 
-            return builder.and(predicates.toArray(new Predicate[1]));
-        };
+        CriteriaBuilder builder = entityManager.getCriteriaBuilder();
+
+        CriteriaQuery<Invest> query = builder.createQuery(Invest.class);
+        Root<Invest> root = query.from(Invest.class);
+
+        List<Predicate> predicates = new ArrayList<>();
+        if (id!= null) {
+            predicates.add(builder.equal(root.get("id"), id));
+        }
+        if (amount != null) {
+            predicates.add(builder.equal(root.get("amount"), amount));
+        }
+        if (dateofapplication != null) {
+            predicates.add(builder.greaterThanOrEqualTo(root.get("dateofapplication"), dateofapplication));
+        }
+        if (dateofobtaining != null) {
+            predicates.add(builder.lessThanOrEqualTo(root.get("dateofobtaining"), dateofobtaining));
+        }
+        if (dateoffinish!= null) {
+            predicates.add(builder.equal(root.get("dateoffinish"), dateoffinish));
+        }
+        if (interestRate != null) {
+            predicates.add(builder.equal(root.get("interestrate"), interestRate));
+        }
+        if (mounths != null) {
+            predicates.add(builder.equal(root.get("mounths"), mounths));
+        }
+        if (statut != null) {
+            predicates.add(builder.equal(root.get("statut"), statut));
+        }
+
+        if (!predicates.isEmpty()) {
+            query.where(builder.and(predicates.toArray(new Predicate[predicates.size()])));
+        }
+
+        return entityManager.createQuery(query).getResultList();
     }
+
 
 }
