@@ -1,12 +1,7 @@
 package tn.esprit.infini.Pidev.Services;
-import com.opencsv.CSVReader;
-import com.opencsv.exceptions.CsvValidationException;
-import com.sun.javafx.font.FontConstants;
+
+
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-import org.aspectj.weaver.ast.And;
-import org.python.util.PythonInterpreter;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import tn.esprit.infini.Pidev.Repository.Creditrepository;
 import tn.esprit.infini.Pidev.Repository.SettingsRepository;
@@ -15,15 +10,9 @@ import tn.esprit.infini.Pidev.Repository.UserRepository;
 import tn.esprit.infini.Pidev.entities.*;
 import tn.esprit.infini.Pidev.exceptions.ResourceNotFoundException;
 
-import java.awt.*;
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.util.List;
-
-import tn.esprit.infini.Pidev.entities.Credit;
-
-
-import javax.swing.text.Document;
-import java.io.*;
+import java.io.InputStreamReader;
 import java.time.LocalDate;
 import java.util.*;
 

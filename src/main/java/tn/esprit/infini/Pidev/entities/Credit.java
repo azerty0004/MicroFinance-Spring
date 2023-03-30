@@ -1,12 +1,13 @@
 package tn.esprit.infini.Pidev.entities;
 
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
 import javax.persistence.*;
-import javax.validation.constraints.AssertTrue;
 import javax.validation.constraints.FutureOrPresent;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -80,5 +81,7 @@ public class Credit implements Serializable {
 
         }
     }
+
+     
 
 }

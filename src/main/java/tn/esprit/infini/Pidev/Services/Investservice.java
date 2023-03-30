@@ -1,19 +1,20 @@
 package tn.esprit.infini.Pidev.Services;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import tn.esprit.infini.Pidev.Repository.Investrepository;
 import tn.esprit.infini.Pidev.Repository.TransactionRepository;
 import tn.esprit.infini.Pidev.entities.Invest;
 import tn.esprit.infini.Pidev.entities.Statut;
-import tn.esprit.infini.Pidev.entities.Transaction;
-import tn.esprit.infini.Pidev.entities.User;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
-import javax.persistence.criteria.*;
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -63,7 +64,7 @@ public class Investservice implements Iinvestservice {
     }
 
     @Override
-    public List<Invest> searchInvests(Long id,Double amount, Date dateofapplication, Date dateofobtaining, Date dateoffinish, Double interestRate,Integer mounths,Statut statut) {
+    public List<Invest> searchInvests(Long id, Double amount, Date dateofapplication, Date dateofobtaining, Date dateoffinish, Double interestRate, Integer mounths, Statut statut) {
 
         CriteriaBuilder builder = entityManager.getCriteriaBuilder();
 
