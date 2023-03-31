@@ -1,5 +1,7 @@
 package tn.esprit.infini.Pidev.Services;
 
+import tn.esprit.infini.Pidev.dto.InvestRequestDTO;
+import tn.esprit.infini.Pidev.dto.InvestResponseDTO;
 import tn.esprit.infini.Pidev.entities.Invest;
 import tn.esprit.infini.Pidev.entities.Statut;
 
@@ -8,7 +10,7 @@ import java.util.List;
 
 public interface Iinvestservice  {
     List<Invest> retrieveAllInvests();
-    Invest addInvest(Invest i);
+    InvestResponseDTO addInvest(InvestRequestDTO i);
 
     Invest updateInvest (Invest i);
 

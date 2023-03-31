@@ -5,6 +5,8 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 import tn.esprit.infini.Pidev.Services.Iinvestservice;
+import tn.esprit.infini.Pidev.dto.InvestRequestDTO;
+import tn.esprit.infini.Pidev.dto.InvestResponseDTO;
 import tn.esprit.infini.Pidev.entities.Credit;
 import tn.esprit.infini.Pidev.entities.Invest;
 import tn.esprit.infini.Pidev.entities.Statut;
@@ -23,8 +25,8 @@ public class InvestController {
     }
 
     @PostMapping("/addInvest")
-    Invest ajouter(@RequestBody Invest invest) {
-        return iinvestservice.addInvest(invest);
+    InvestResponseDTO ajouter(@RequestBody InvestRequestDTO investRequestDTO) {
+        return iinvestservice.addInvest(investRequestDTO);
     }
 
     @GetMapping("/getInvestById/{idInvest}")

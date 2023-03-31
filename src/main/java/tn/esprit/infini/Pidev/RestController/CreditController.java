@@ -1,16 +1,27 @@
 package tn.esprit.infini.Pidev.RestController;
 
 
+import com.lowagie.text.Document;
+import com.lowagie.text.DocumentException;
+import com.lowagie.text.Element;
+import com.lowagie.text.Paragraph;
 import lombok.AllArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.*;
 import tn.esprit.infini.Pidev.Services.ITransaction;
 import tn.esprit.infini.Pidev.Services.Icreditservice;
+import tn.esprit.infini.Pidev.dto.CreditRequestDTO;
+import tn.esprit.infini.Pidev.dto.CreditResponseDTO;
 import tn.esprit.infini.Pidev.entities.*;
 
-import java.io.IOException;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,27 +33,27 @@ public class CreditController {
     private ITransaction iTransaction;
 
 
-    @GetMapping("/getCredit")
+    @GetMapping("/Credits")
     List<Credit> afficher() {
         return icreditservice.retrieveAllCredits();
     }
 
-    @PostMapping("/addCredit")
-    Credit ajouter(@RequestBody Credit credit) {
-        return icreditservice.addCredit(credit);
+    @PostMapping("/Credits")
+    CreditResponseDTO ajouterr(@RequestBody CreditRequestDTO creditRequestDTO) {
+        return icreditservice.addCredits(creditRequestDTO);
     }
 
-    @GetMapping("/getCreditById/{idCredit}")
+    @GetMapping("/CreditById/{idCredit}")
     Credit afficherAvecId(@PathVariable Long idCredit) {
         return icreditservice.retrieveCredit(idCredit);
     }
 
-    @PutMapping("/updateCredit")
+    @PutMapping("/Credits/{id}")
     public Credit updateCredit(@RequestBody Credit credit) {
         return icreditservice.updateCredit(credit);
     }
 
-    @DeleteMapping("/deleteCredit/{idCredit}")
+    @DeleteMapping("/Credits/{idCredit}")
     void deleteCredit(@PathVariable("idCredit") Long idCredit) {
         icreditservice.deleteCredit(idCredit);
     }
@@ -86,14 +97,14 @@ public class CreditController {
         return icreditservice.calculateFicoScore(c);
     }
 
-    @GetMapping("/CalculMensualitévariable")
-    public List<Double> CalculMensualitévariable(@RequestBody Credit c) {
-        return icreditservice.CalculMensualitévariable(c);
+    @GetMapping("/CalculMensualitevariable")
+    public List<Double> CalculMensualitevariable(@RequestBody Credit c) {
+        return icreditservice.CalculMensualitevariable(c);
     }
 
-    @GetMapping("/CalculMensualitéfixe")
-    public double CalculMensualitéfixe(@RequestBody Credit c) {
-        return icreditservice.CalculMensualitéfixe(c);
+    @GetMapping("/CalculMensualite0fixe")
+    public double CalculMensualitefixe(@RequestBody Credit c) {
+        return icreditservice.CalculMensualitefixe(c);
     }
 
     @GetMapping("/InterestRateCalculator")
@@ -102,14 +113,14 @@ public class CreditController {
         return icreditservice.InterestRateCalculator(credit);
     }
 
-    @GetMapping("/listetauxinterets")
-    public List<Double> listetauxinterets(@RequestBody Credit c) {
-        return icreditservice.listetauxinterets(c);
+    @GetMapping("/listetauxinterets/{id}")
+    public List<Double> listetauxinterets(@PathVariable Long id) {
+        return icreditservice.listetauxinterets(id);
     }
 
-    @PutMapping("/validatecredit")
-    public void ValidateCredit(@RequestBody Credit c) throws IOException {
-        icreditservice.ValidateCredit(c);
+@PutMapping("/validatecredit/{id}")
+    public void ValidateCredit(@PathVariable Long id) throws IOException {
+        icreditservice.ValidateCredit(id);
     }
 
 
@@ -117,16 +128,17 @@ public class CreditController {
     public String runPythonScript() throws Exception {
         return icreditservice.getmm();
     }
-        @GetMapping("/percentageByStatus")
-        public ResponseEntity<Map<String, Double>> PercentageOfCreditsByStatus() {
-            List<Credit> credits =icreditservice.retrieveAllCredits();
-            Map<Statut, Double> percentageOfCreditsByStatus = icreditservice.percentageOfCreditsByStatus(credits);
-            Map<String, Double> response = new HashMap<>();
-            for (Map.Entry<Statut, Double> entry : percentageOfCreditsByStatus.entrySet()) {
-                response.put(entry.getKey().name(), entry.getValue());
-            }
-            return ResponseEntity.ok(response);
+
+    @GetMapping("/percentageByStatus")
+    public ResponseEntity<Map<String, Double>> PercentageOfCreditsByStatus() {
+        List<Credit> credits = icreditservice.retrieveAllCredits();
+        Map<Statut, Double> percentageOfCreditsByStatus = icreditservice.percentageOfCreditsByStatus(credits);
+        Map<String, Double> response = new HashMap<>();
+        for (Map.Entry<Statut, Double> entry : percentageOfCreditsByStatus.entrySet()) {
+            response.put(entry.getKey().name(), entry.getValue());
         }
+        return ResponseEntity.ok(response);
+    }
 
     @GetMapping("/averageInterestRate")
     public Double getAverageInterestRate() {
@@ -134,7 +146,7 @@ public class CreditController {
         return icreditservice.averageInterestRate(credits);
     }
 
-    @GetMapping("</totalNumberOfLoans>")
+    @GetMapping("/totalNumberOfLoans")
     public Integer getTotalNumberOfLoans() {
         List<Credit> credits = icreditservice.retrieveAllCredits();
         return icreditservice.totalNumberOfLoans(credits);
@@ -145,13 +157,20 @@ public class CreditController {
         List<Credit> credits = icreditservice.retrieveAllCredits();
         return icreditservice.totalAmountOfLoans(credits);
     }
+
     @GetMapping("/repayment-rates")
     public ResponseEntity<Map<TypeRemboursement, Double>> getRepaymentRates() {
         List<Credit> credits = icreditservice.retrieveAllCredits();
-        Map<TypeRemboursement, Double> repaymentRates =icreditservice.averageRepaymentRateByType(credits);
+        Map<TypeRemboursement, Double> repaymentRates = icreditservice.averageRepaymentRateByType(credits);
         return ResponseEntity.ok(repaymentRates);
     }
 
+    @GetMapping("/pdf/generates")
+    public void exportpdf(HttpServletResponse response, @RequestParam("creditId") long creditId) throws DocumentException, IOException {
+        response.setContentType("application/pdf");
+        response.setHeader("Content-disposition", "attachment; filename=details_credit.pdf");
+        icreditservice.exportpdf(response, creditId);
+    }
 
 }
 

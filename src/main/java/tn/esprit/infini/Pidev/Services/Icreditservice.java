@@ -1,20 +1,28 @@
 package tn.esprit.infini.Pidev.Services;
 
 
+import com.lowagie.text.DocumentException;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import tn.esprit.infini.Pidev.dto.CreditRequestDTO;
+import tn.esprit.infini.Pidev.dto.CreditResponseDTO;
 import tn.esprit.infini.Pidev.entities.*;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
-
+@Configuration
+@EnableScheduling
 @Service
 public interface Icreditservice {
     List<Credit> retrieveAllCredits();
-    Credit addCredit(Credit c);
-
-    Credit updateCredit (Credit c);
+    CreditResponseDTO addCredits(CreditRequestDTO creditDTO);
+        Credit updateCredit (Credit c);
 
     Credit retrieveCredit (Long id);
 
@@ -23,10 +31,10 @@ public interface Icreditservice {
     List<Credit> getCreditByiduser(Long userid);
     Float newCredit(Long idcredit);
     Integer TauxtypeCredit(Credit credit);
-    double CalculMensualitéfixe(Credit credit);
-    List<Double> CalculMensualitévariable(Credit credit);
-    List<Double> listetauxinterets(Credit credit);
-    void ValidateCredit(Credit c) throws IOException;
+    double CalculMensualitefixe(Credit credit);
+    List<Double> CalculMensualitevariable(Credit credit);
+    List<Double> listetauxinterets(Long id);
+    void ValidateCredit(Long id) throws IOException;
      float calculateFicoScore(Credit credit);
 
     double InterestRateCalculator(Credit credit) throws IOException;
@@ -36,8 +44,12 @@ public interface Icreditservice {
      Integer totalNumberOfLoans(List<Credit> credits);
     Double totalAmountOfLoans(List<Credit> credits);
     Map<Statut, Double> percentageOfCreditsByStatus(List<Credit> credits);
+
     Map<TypeRemboursement, Double> averageRepaymentRateByType(List<Credit> credits);
-}
+
+    void exportpdf(HttpServletResponse response, Long idCredit) throws IOException, DocumentException;
+
+    }
 
 
 

@@ -1,12 +1,9 @@
 package tn.esprit.infini.Pidev.entities;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
 import javax.persistence.*;
-import java.io.Serializable;
 
 
 @Getter
@@ -15,7 +12,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @Entity
 @Table(name = "settings")
-public class Settings implements Serializable {
+public class Settings  {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

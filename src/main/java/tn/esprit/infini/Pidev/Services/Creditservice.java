@@ -1,40 +1,84 @@
 package tn.esprit.infini.Pidev.Services;
 
 
+import com.lowagie.text.*;
+import com.lowagie.text.pdf.PdfPCell;
+import com.lowagie.text.pdf.PdfPTable;
+import com.lowagie.text.pdf.PdfWriter;
 import lombok.AllArgsConstructor;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import tn.esprit.infini.Pidev.Repository.Creditrepository;
 import tn.esprit.infini.Pidev.Repository.SettingsRepository;
-import tn.esprit.infini.Pidev.Repository.TransactionRepository;
 import tn.esprit.infini.Pidev.Repository.UserRepository;
+import tn.esprit.infini.Pidev.dto.CreditRequestDTO;
+import tn.esprit.infini.Pidev.dto.CreditResponseDTO;
 import tn.esprit.infini.Pidev.entities.*;
 import tn.esprit.infini.Pidev.exceptions.ResourceNotFoundException;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import tn.esprit.infini.Pidev.mappers.CreditMapper;
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 import java.util.*;
+import java.util.List;
+
 
 @Service
+@Configuration
+@EnableScheduling
 @AllArgsConstructor
 public class Creditservice implements Icreditservice {
-
+    private CreditMapper creditMapper;
     private Creditrepository creditrepository;
-    private TransactionRepository transactionRepository;
     private SettingsRepository settingsRepository;
     private UserRepository userRepository;
 
     @Override
     public List<Credit> retrieveAllCredits() {
-        return (List<Credit>) creditrepository.findAll();
+        return  creditrepository.findAll();
 
     }
 
     @Override
-    public Credit addCredit(Credit c) {
-        return creditrepository.save(c);
+    public CreditResponseDTO addCredits(CreditRequestDTO creditDTO) {
+        if (creditDTO.getDuration() == null || creditDTO.getDuration() == 0 ) {
+            Credit credit = Credit.builder()
+                    .amount(creditDTO.getAmount())
+                    .duration((int) ChronoUnit.MONTHS.between(creditDTO.getDateofobtaining().withDayOfMonth(1), creditDTO.getDateoffinish().withDayOfMonth(1)))
+                    .dateOfApplication(creditDTO.getDateOfApplication())
+                    .dateofobtaining(creditDTO.getDateofobtaining())
+                    .dateoffinish(creditDTO.getDateoffinish())
+                    .statut(creditDTO.getStatut())
+                    .typeRemboursement(creditDTO.getTypeRemboursement())
+                    .typeCredit(creditDTO.getTypeCredit())
+                    .build();
+            Credit savedCredit = creditrepository.save(credit);
+            CreditResponseDTO creditResponseDTO = creditMapper.fromCredit(savedCredit);
+            return creditResponseDTO;
+
+        } else {
+            Credit credit = Credit.builder()
+                    .amount(creditDTO.getAmount())
+                    .duration(creditDTO.getDuration())
+                    .dateOfApplication(creditDTO.getDateOfApplication())
+                    .dateofobtaining(creditDTO.getDateofobtaining())
+                    .dateoffinish(creditDTO.getDateofobtaining().plusMonths(creditDTO.getDuration()))
+                    .statut(creditDTO.getStatut())
+                    .typeRemboursement(creditDTO.getTypeRemboursement())
+                    .typeCredit(creditDTO.getTypeCredit())
+                    .build();
+
+            Credit savedCredit = creditrepository.save(credit);
+            CreditResponseDTO creditResponseDTO = creditMapper.fromCredit(savedCredit);
+            return creditResponseDTO;
+
+        }
     }
+
+
 
     @Override
     public Credit updateCredit(Credit c) {
@@ -146,7 +190,7 @@ public class Creditservice implements Icreditservice {
 
         for (Settings rate : settings) {
             if (score >= rate.getMinScore() && score <= rate.getMaxScore()) {
-                interestrate = TMM + rate.getRate();
+                interestrate = (TMM + rate.getRate())*0.1;
                 credit.setInterestrate(interestrate);
                 creditrepository.save(credit);
                 return interestrate;
@@ -175,20 +219,20 @@ public class Creditservice implements Icreditservice {
     }
 
     @Override
-    public double CalculMensualitéfixe(Credit c) {
-        double mensualite = 0;
-        double a = 0;
-        double b = 0;
-        a = (c.getAmount() * (c.getInterestrate() / 12));
+    public double CalculMensualitefixe(Credit c) {
+        double mensualite;
+        double a=0 ;
+        double b=0 ;
+        a = c.getAmount() *((c.getInterestrate() / 12));
 
-        b = 1 - Math.pow(1 + (c.getInterestrate() / 12), -c.getDuration());
+        b = 1 - (Math.pow(1 + (c.getInterestrate() / 12), -c.getDuration()));
         mensualite = a / b;
 
         return mensualite;
     }
 
     @Override
-    public List<Double> CalculMensualitévariable(Credit c) {
+    public List<Double> CalculMensualitevariable(Credit c) {
         double montantrestant = c.getAmount();
         double amortissement = (c.getAmount() / c.getDuration());
         double interestrateformounth = 0;
@@ -204,7 +248,8 @@ public class Creditservice implements Icreditservice {
     }
 
     @Override
-    public List<Double> listetauxinterets(Credit c) {
+    public List<Double> listetauxinterets(Long id) {
+        Credit c=creditrepository.findById(id).orElseThrow(()-> new RuntimeException(String.format("Credit not found")));
         double montantrestant = c.getAmount();
         double amortissement = (c.getAmount() / c.getDuration());
         double interestrateformounth = 0;
@@ -225,31 +270,29 @@ public class Creditservice implements Icreditservice {
     }
 
     @Override
-    public void ValidateCredit(Credit c) throws IOException {
-        float score = 0;
-        score = calculateFicoScore(c);
-
-        if (Optional.ofNullable(c.getGuarantor()).isPresent()) {
-
+    public void ValidateCredit(Long id) throws IOException {
+        Credit c=creditrepository.findById(id).orElseThrow(()-> new RuntimeException(String.format("Credit not found")));
+        float score = calculateFicoScore(c);
+         if (Optional.ofNullable(c.getGuarantor()).isPresent()) {
             if (score < 580) {
                 c.setStatut(Statut.Non_Approuvé);
                 creditrepository.save(c);
             } else if ((score >= 580 && score <= 669) /*bank.amount*/) {
-                c.setAmount(c.getAmount() * 0.80);
+               c.setAmount(c.getAmount() * 0.80);
                 c.setStatut(Statut.Approuvé);
                 creditrepository.save(c);
             } else if ((score >= 670 && score <= 739)) {
                 c.setStatut(Statut.Approuvé);
                 c.setAmount(c.getAmount() * 0.90);
-
                 creditrepository.save(c);
             } else if ((score >= 740 && score <= 799)) {
-                c.setAmount(c.getAmount() * 0.95);
+                  c.setAmount(c.getAmount() * 0.95);
                 c.setStatut(Statut.Approuvé);
                 creditrepository.save(c);
             } else c.setStatut(Statut.Approuvé);
             creditrepository.save(c);
-        } else c.setStatut(Statut.Non_Approuvé);
+        }
+         else c.setStatut(Statut.Non_Approuvé);
         creditrepository.save(c);
     }
 
@@ -305,56 +348,76 @@ public class Creditservice implements Icreditservice {
         }
         return results;
     }
-    /*/
+     @Override
+        public void exportpdf(HttpServletResponse response, Long idCredit) throws IOException, DocumentException {
+        Document document = new Document(PageSize.A4);
+        PdfWriter.getInstance(document, response.getOutputStream());
+        document.open();
+        Font fontTitle = FontFactory.getFont(FontFactory.HELVETICA_BOLD);
+        fontTitle.setSize(18);
+        Paragraph paragraph = new Paragraph("Voici les détails de votre crédit.", fontTitle);
+        paragraph.setAlignment(Paragraph.ALIGN_CENTER);
+        document.add(paragraph);
+        Credit credit = retrieveCredit(idCredit);
+        List<Double> mensualites = CalculMensualitevariable(credit);
+        List<Double> tauxInterets = listetauxinterets(idCredit);
+        Font fontParagraph = FontFactory.getFont(FontFactory.HELVETICA);
+        fontParagraph.setSize(12);
+        PdfPTable table = new PdfPTable(3);
+        table.setWidthPercentage(100);
+        table.setHorizontalAlignment(Element.ALIGN_LEFT);
+        PdfPCell cellNumero = new PdfPCell(new Phrase("Mensualité numéro", fontTitle));
+        cellNumero.setHorizontalAlignment(Element.ALIGN_CENTER);
+        table.addCell(cellNumero);
+        PdfPCell cellMensualites = new PdfPCell(new Phrase("Montant du mensualité", fontTitle));
+        cellMensualites.setHorizontalAlignment(Element.ALIGN_CENTER);
+        table.addCell(cellMensualites);
+        PdfPCell cellTaux = new PdfPCell(new Phrase("montant  d'interets", fontTitle));
+        cellTaux.setHorizontalAlignment(Element.ALIGN_CENTER);
+        table.addCell(cellTaux);
+        for (int i = 0; i < mensualites.size(); i++) {
+            PdfPCell cellNumeroValue = new PdfPCell(new Phrase(Integer.toString(i+1), fontParagraph));
+            cellNumeroValue.setHorizontalAlignment(Element.ALIGN_LEFT);
+            table.addCell(cellNumeroValue);
 
-    public void generatePDF(List<Double> mensualites, List<Double> tauxInterets) throws IOException {
-        PDDocument document = new PDDocument();
-        PDPage page = new PDPage();
-        document.addPage(page);
+            PdfPCell cellMensualitesValue = new PdfPCell(new Phrase(Double.toString(mensualites.get(i)), fontParagraph));
+            cellMensualitesValue.setHorizontalAlignment(Element.ALIGN_LEFT);
+            table.addCell(cellMensualitesValue);
 
-        PDPageContentStream contentStream = new PDPageContentStream(document, page);
-        contentStream.beginText();
-        contentStream.setFont(PDType1Font.HELVETICA_BOLD, 14);
-        contentStream.newLineAtOffset(100, 700);
-        contentStream.showText("Tableau d'amortissement");
-        contentStream.endText();
-
-        PDTable table = new PDTable();
-        int numColumns = 3;
-        int numRows = mensualites.size();
-        float[] columnWidths = {100f, 100f, 100f};
-        float rowHeight = 20f;
-        table.addColumnsOfWidth(columnWidths);
-        table.addRows(numRows, rowHeight);
-
-        // Populate table cells
-        for (int i = 0; i < numRows; i++) {
-            table.addCell(createCell(String.valueOf(i + 1)));
-            table.addCell(createCell(String.valueOf(mensualites.get(i))));
-            table.addCell(createCell(String.valueOf(tauxInterets.get(i))));
+            PdfPCell cellTauxValue = new PdfPCell(new Phrase(Double.toString(tauxInterets.get(i)), fontParagraph));
+            cellTauxValue.setHorizontalAlignment(Element.ALIGN_LEFT);
+            table.addCell(cellTauxValue);
         }
-
-        // Add table to content stream
-        PDPageContentStream tableContentStream = new PDPageContentStream(document, page);
-        table.draw(tableContentStream, 100, 650);
-
-        contentStream.close();
-        document.save("Mensualites.pdf");
+        document.add(table);
         document.close();
     }
-
-    private PDCell createCell(String text) {
-        PDCell cell = new PDCell();
-        cell.setPadding(5);
-        cell.setHorizontalAlignment(PDHorizontalAlignment.CENTER);
-        cell.setVerticalAlignment(PDVerticalAlignment.CENTER);
-        cell.setLineHeight(20f);
-        cell.setFont(PDType1Font.HELVETICA);
-        cell.addParagraph(new PDParagraphBuilder().addText(text).build());
-        return cell;
+    @Scheduled(cron = "0 0 1 1 * *")
+    public void generateCreditReport() {
+        List<Credit> credits = creditrepository.findAll();
+        Map<TypeCredit, List<Credit>> creditsByType = new HashMap<>();
+        for (Credit credit : credits) {
+            TypeCredit type = credit.getTypeCredit();
+            List<Credit> creditsOfType = creditsByType.get(type);
+            if (creditsOfType == null) {
+                creditsOfType = new ArrayList<>();
+                creditsByType.put(type, creditsOfType);
+            }
+            creditsOfType.add(credit);
+        }
+        for (Map.Entry<TypeCredit, List<Credit>> entry : creditsByType.entrySet()) {
+            TypeCredit type = entry.getKey();
+            List<Credit> creditsOfType = entry.getValue();
+            int numCredits = creditsOfType.size();
+            double totalAmount = creditsOfType.stream().mapToDouble(Credit::getAmount).sum();
+            System.out.println("Type of credit: " + type);
+            System.out.println("Number of credits: " + numCredits);
+            System.out.println("Total amount: " + totalAmount);
+            System.out.println();
+        }
     }
-
-     */
 }
+
+
+
 
 

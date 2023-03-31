@@ -6,15 +6,18 @@ import lombok.Setter;
 import org.springframework.stereotype.Service;
 import tn.esprit.infini.Pidev.Repository.Investrepository;
 import tn.esprit.infini.Pidev.Repository.TransactionRepository;
+import tn.esprit.infini.Pidev.dto.InvestRequestDTO;
+import tn.esprit.infini.Pidev.dto.InvestResponseDTO;
 import tn.esprit.infini.Pidev.entities.Invest;
 import tn.esprit.infini.Pidev.entities.Statut;
-
+import tn.esprit.infini.Pidev.mappers.InvestMapper;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -26,8 +29,9 @@ import java.util.List;
 public class Investservice implements Iinvestservice {
     @PersistenceContext
     EntityManager entityManager;
-    Investrepository investrepository;
-    TransactionRepository transactionRepository;
+    private Investrepository investrepository;
+    private TransactionRepository transactionRepository;
+    private InvestMapper investMapper;
 
     @Override
     public List<Invest> retrieveAllInvests() {
@@ -36,8 +40,36 @@ public class Investservice implements Iinvestservice {
 
 
     @Override
-    public Invest addInvest(Invest i) {
-        return investrepository.save(i);
+    public InvestResponseDTO addInvest(InvestRequestDTO investRequestDTO) {
+        if (investRequestDTO.getMounths() == null || investRequestDTO.getMounths() == 0 ) {
+            Invest invest = Invest.builder()
+                    .amount(investRequestDTO.getAmount())
+                    .mounths((int) ChronoUnit.MONTHS.between(investRequestDTO.getDateofobtaining().withDayOfMonth(1), investRequestDTO.getDateoffinish().withDayOfMonth(1)))
+                    .dateofapplication(investRequestDTO.getDateOfApplication())
+                    .dateofobtaining(investRequestDTO.getDateofobtaining())
+                    .dateoffinish(investRequestDTO.getDateoffinish())
+                    .statut(investRequestDTO.getStatut())
+                    .build();
+            Invest savedInvest = investrepository.save(invest);
+            InvestResponseDTO investResponseDTO = investMapper.fromInvest(savedInvest);
+            return investResponseDTO;
+
+        } else {
+            Invest invest = Invest.builder()
+                    .amount(investRequestDTO.getAmount())
+                    .mounths(investRequestDTO.getMounths())
+                    .dateofapplication(investRequestDTO.getDateOfApplication())
+                    .dateofobtaining(investRequestDTO.getDateofobtaining())
+                    .dateoffinish(investRequestDTO.getDateofobtaining().plusMonths(investRequestDTO.getMounths()))
+                    .statut(investRequestDTO.getStatut())
+                    .build();
+
+            Invest savedInvest = investrepository.save(invest);
+           InvestResponseDTO investResponseDTO = investMapper.fromInvest(savedInvest);
+            return investResponseDTO;
+
+        }
+
     }
 
     @Override

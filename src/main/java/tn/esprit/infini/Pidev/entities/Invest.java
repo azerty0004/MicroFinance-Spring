@@ -2,13 +2,11 @@
 package tn.esprit.infini.Pidev.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -18,26 +16,31 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Data
+@Builder
 @Table( name = "Invest")
 public class Invest implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Double amount;
-    private Date dateofapplication;
-    private Date dateofobtaining;
-    private Date dateoffinish;
+    private LocalDate dateofapplication;
+    private LocalDate dateofobtaining;
+    private LocalDate dateoffinish;
     private double interestrate;
     private Integer mounths;
-
-
     @Enumerated(EnumType.STRING)
-    private Statut statut;
+    private Statut statut = Statut.EN_ATTENTE;
     @OneToMany(mappedBy = "invest", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JsonIgnore
     private List<Transaction> transactions=new ArrayList<>();
 
-
+    @PrePersist
+    public void validateDates() {
+        if (dateoffinish.isBefore(dateofobtaining) || dateofobtaining.isEqual(dateoffinish)) {
+            throw new IllegalArgumentException("Date of obtaining cannot be before or equal to date of finish");
+        }
+    }
 
 }
 
