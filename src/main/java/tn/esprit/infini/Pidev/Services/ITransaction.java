@@ -18,7 +18,12 @@ public interface ITransaction {
     Transaction retrieveTransactionByStripeId(String stripeId);
 
     void deleteTransaction(Long idTransaction);
+
    List<Transaction>divideTransaction(Long amount,Integer numberOfMonthes) throws StripeException;
+
+    List<Transaction>divideTransaction(Long amount,Integer numberOfMonthes);
+
+
 
     public List<Transaction> getTransactionsRequiringPayment() ;
 

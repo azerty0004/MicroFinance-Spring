@@ -58,5 +58,12 @@ public class TransactionController {
 
 
 
+    @GetMapping("/GetPaymentModel/{amount}/{numberOfMonths}")
+    List<Transaction> ajouter(@PathVariable Long amount, @PathVariable Integer numberOfMonths) {
+        return iTransaction.divideTransaction(amount, numberOfMonths);
+
+    }
+
+
 
 }

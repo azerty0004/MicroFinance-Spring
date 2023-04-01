@@ -2,7 +2,6 @@ package tn.esprit.infini.Pidev.Services;
 
 import tn.esprit.infini.Pidev.entities.Account;
 
-
 import java.util.List;
 
 public interface IAccount {
@@ -15,5 +14,6 @@ public interface IAccount {
     Account retrieveAccount (int idAccount);
     void addBalance(Account account, float amount);
     void substractBalance(Account account, float amount);
+    int countAccounts();
 
 }

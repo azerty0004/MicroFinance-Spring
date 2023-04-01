@@ -8,6 +8,8 @@ import lombok.Setter;
 
 
 
+import jakarta.persistence.*;
+
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;

@@ -1,6 +1,7 @@
 package tn.esprit.infini.Pidev.Services;
 
 import com.google.gson.Gson;
+
 import com.google.gson.JsonObject;
 import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
@@ -63,6 +64,7 @@ public class TransactionService implements ITransaction {
     }
 
     @Override
+
     public List<Transaction> divideTransaction(Long amount, Integer numberOfMonths) {
         List<Transaction> transactionList = new ArrayList<>();
 
@@ -90,10 +92,6 @@ public class TransactionService implements ITransaction {
 
 
 
-
-
-
-
     @Override
     public List<Transaction> getTransactionsRequiringPayment() {
         return transactionRepository.findByStatus("requires_payment_method");
@@ -111,6 +109,24 @@ public class TransactionService implements ITransaction {
 
     }
 
+
+    public List<Transaction> divideTransaction(Long amount,Integer numberOfMonths) {
+        List<Transaction> transactionList=new ArrayList<>();
+
+            BigDecimal loanAmountInBigDecimal = BigDecimal.valueOf(amount);
+            BigDecimal monthlyPayment = loanAmountInBigDecimal.divide(BigDecimal.valueOf(numberOfMonths), 2, RoundingMode.HALF_UP);
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(new Date());
+            System.out.println();
+            for (int i = 1; i <= numberOfMonths; i++) {
+                Transaction payment = new Transaction();
+                payment.setAmount(monthlyPayment.longValue());
+                payment.setDate(calendar.getTime());
+                calendar.add(Calendar.MONTH, 1);
+                transactionList.add(payment);
+            }
+            return (transactionList);
+        }
 
 }
 

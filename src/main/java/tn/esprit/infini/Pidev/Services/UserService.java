@@ -1,16 +1,22 @@
 package tn.esprit.infini.Pidev.Services;
 
-import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tn.esprit.infini.Pidev.Repository.UserRepository;
-import tn.esprit.infini.Pidev.entities.TypeUser;
 import tn.esprit.infini.Pidev.entities.User;
+
+import java.sql.Date;
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.List;
 
 @Service
-@AllArgsConstructor
+//@AllArgsConstructor
 public class UserService implements IUser{
+    @Autowired
     UserRepository UR;
+    @Autowired
+    IUser iUser;
     //CRUD
     @Override
     public User addUser(User user) {
@@ -26,12 +32,12 @@ public class UserService implements IUser{
     @Override
     public User retrieveUser(int idUser) {return UR.findById(idUser).get();}
 
-    @Override
-    public User retrieveUserByLogin(String login) {return UR.findByLogin(login);}
+   // @Override
+    //public User retrieveUserByLogin(String login) {return UR.findByLogin(login);}
 
     @Override
     public Boolean login(String login, String mdp) {
-        if (UR.findByLogin(login)!=null){if (UR.findByLogin(login).getPassword()==mdp) {
+        /*if (UR.findByLogin(login)!=null){if (UR.findByLogin(login).getPassword()==mdp) {
             UR.findByLogin(login).setNombreTentatives(0);
             return true;
         }
@@ -40,7 +46,7 @@ public class UserService implements IUser{
             UR.findByLogin(login).setNombreTentatives(UR.findByLogin(login).getNombreTentatives()+1);
                 return false;
         }}
-        else return false;
+        else */return false;
     }
 
     @Override
@@ -50,6 +56,25 @@ public class UserService implements IUser{
     public boolean veriyUserPassword(User user, String password) {
         if (user.getPassword().matches(password)==true)return true;
         else return false;
+    }
+
+    @Override
+    public int countUsers() {
+        Long nbr= UR.count();
+        return nbr.intValue();
+
+    }
+
+    @Override
+    public int countAge(int idUser) {
+        User u=iUser.retrieveUser(idUser);
+        LocalDate birthdateLocal = new Date(u.getBirthdate().getTime()).toLocalDate();
+        return Period.between(birthdateLocal, LocalDate.now()).getYears();
+    }
+
+    @Override
+    public List<User> findAllByTypeEndingWith(String s) {
+        return UR.findAll();
     }
 
     @Override

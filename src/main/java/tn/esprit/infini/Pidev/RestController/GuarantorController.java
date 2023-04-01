@@ -2,8 +2,8 @@
 
 import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
-import tn.esprit.infini.Pidev.entities.Guarantor;
 import tn.esprit.infini.Pidev.Services.IGuarantorService;
+import tn.esprit.infini.Pidev.entities.Guarantor;
 
 import java.util.List;
 
@@ -26,7 +26,7 @@ public class GuarantorController {
         return iGuarantorService.retrieveGuarantor(id);
     }
 
-    @PutMapping("/updateGuarantor")
+    @PutMapping("/updateGuarantor/{id}")
     public Guarantor updateGuarantor(@RequestBody Guarantor guarantor) {
         return iGuarantorService.updateGuarantor(guarantor);
     }

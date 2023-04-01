@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import jakarta.persistence.*;
 
 import java.io.Serializable;
 
@@ -19,6 +20,6 @@ public class Guarantor implements Serializable {
     private String firstNameGuarantor ;
     private String lastNameGuarantor ;
     private int cinGuarantor ;
-    private String salary ;
+    private double salary ;
     private String job ;
    }
