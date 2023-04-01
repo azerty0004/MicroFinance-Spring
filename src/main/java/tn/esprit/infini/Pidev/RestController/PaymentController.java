@@ -17,7 +17,9 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import tn.esprit.infini.Pidev.Repository.TransactionRepository;
+import tn.esprit.infini.Pidev.Services.IPayment;
 import tn.esprit.infini.Pidev.Services.ITransaction;
+import tn.esprit.infini.Pidev.Services.PaymentService;
 import tn.esprit.infini.Pidev.Services.TransactionService;
 import tn.esprit.infini.Pidev.dto.CreatePayment;
 import tn.esprit.infini.Pidev.dto.CreatePaymentResponse;
@@ -28,6 +30,7 @@ import tn.esprit.infini.Pidev.entities.TypeTransaction;
 import java.time.LocalDate;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -40,94 +43,63 @@ public class PaymentController {
     private static Gson gson = new Gson();
     @Autowired
     private ITransaction transactionService;
+    @Autowired
+    private IPayment paymentService;
 
 
 
 
     @PostMapping("/create-payment-intent")
-    public void createPaymentIntent(@NotNull @RequestBody  CreatePayment createPayment)throws StripeException {
+    public String createPaymentIntent(@NotNull @RequestBody  Transaction transaction)throws StripeException {
         Stripe.apiKey=this.stripePublicKey;
-        PaymentIntentCreateParams createParams = new
-                PaymentIntentCreateParams.Builder()
-                .setCurrency("usd")
-                .putMetadata("featureRequest", createPayment.getFeatureRequest())
-                .setAmount(createPayment.getAmount()*100L)
-                .build();
+       String IntentId =paymentService.createPaymentIntent(transaction);
+       paymentService.persistTransaction(IntentId);
+       return IntentId;
 
-        PaymentIntent intent = PaymentIntent.create(createParams);
+
+
 
 
     }
     @PostMapping("confirm-payment-intent")
     public void confimPayment(@RequestBody String intentId) throws StripeException {
         Stripe.apiKey=this.stripePublicKey;
-        Gson gson = new Gson();
-        JsonObject jsonObject = gson.fromJson(intentId, JsonObject.class);
-        String id = jsonObject.get("intentId").getAsString();
-        PaymentIntent intent = PaymentIntent.retrieve(id);
-        Map<String, Object> params = new HashMap<>();
-        params.put("payment_method", "pm_card_visa");
-        intent.confirm(params);
+        paymentService.confimPayment(intentId);
+        transactionService.confirmTransaction(intentId);
+
 
         }
 
         @PostMapping("/persist-payment-base")
         public  void persistTransaction(@RequestBody String intentId) throws StripeException {
             Stripe.apiKey=this.stripePublicKey;
-            Gson gson = new Gson();
-            JsonObject jsonObject = gson.fromJson(intentId, JsonObject.class);
-
-            String id = jsonObject.get("id").getAsString();
-            PaymentIntent paymentIntent = PaymentIntent.retrieve(id);
-            String status =paymentIntent.getStatus();
-            Long userId = 1l;
-            Date date = new Date();
-
-            Long idObject = 1l;
-            Long amount = paymentIntent.getAmount();
-            String stripeid=paymentIntent.getId();
-            String paymentMethod=paymentIntent.getPaymentMethod();
+            paymentService.persistTransaction(intentId);
 
 
-            TypeTransaction typeTransaction = TypeTransaction.Invest;
-
-            if (status.equals("succeeded"))
-            {
-                Transaction transaction =new Transaction(typeTransaction,userId,idObject, date,amount,stripeid,paymentMethod);
-
-                transactionService.addTransaction(transaction);
-
-
-
-            }
 
 
 
         }
+    @GetMapping("/GetPaymentModel/{amount}/{numberOfMonths}")
+    public void divideTransaction(@PathVariable Long amount, @PathVariable Integer numberOfMonths) throws StripeException {
+        List<Transaction> maListe =transactionService.divideTransaction(amount, numberOfMonths);
+        for (Transaction transaction:maListe)
+        {
+           String intent= paymentService.createPaymentIntent(transaction);
+           transaction.setStripeId(intent);
+           transaction.setStatus("requires_payment_method");
+           transaction.setTypeTransaction(TypeTransaction.Invest);
+            transactionService.addTransaction(transaction);
 
-
-
-
-
-
-    @GetMapping("/pay")
-    public String home(Model model){
-        model.addAttribute("checkoutForm",new CheckoutForm());
-        return "index";
-    }
-    @PostMapping("/pay")
-    public String checkout(@ModelAttribute
-                          CheckoutForm checkoutForm,
-                           BindingResult bindingResult,
-                           Model model){
-        if (bindingResult.hasErrors()){
-            return "index.html";
         }
 
-        model.addAttribute("stripePublicKey",stripePublicKey);
-        model.addAttribute("amount",checkoutForm.getAmount());
-        model.addAttribute("email", checkoutForm.getEmail());
-        model.addAttribute("featureRequest", checkoutForm.getFeatureRequest());
-        return "checkout.html";
+
     }
+
+
+
+
+
+
+
 }

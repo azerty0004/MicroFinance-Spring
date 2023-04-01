@@ -1,6 +1,7 @@
 package tn.esprit.infini.Pidev.Services;
 
 
+import com.stripe.exception.StripeException;
 import tn.esprit.infini.Pidev.entities.Transaction;
 
 import java.util.Date;
@@ -14,12 +15,14 @@ public interface ITransaction {
   Transaction updateTransaction(Transaction transaction);
 
    Transaction retrieveTransaction(Long idTransaction);
+    Transaction retrieveTransactionByStripeId(String stripeId);
 
     void deleteTransaction(Long idTransaction);
-    List<Transaction>divideTransaction(Long amount,Integer numberOfMonthes);
-    List<Date> extractDates(List<Transaction> transactionList);
-    List<String> DatesToCronExpressions (List<Date> dates);
+   List<Transaction>divideTransaction(Long amount,Integer numberOfMonthes) throws StripeException;
+
+    public List<Transaction> getTransactionsRequiringPayment() ;
 
 
 
+    void confirmTransaction(String intentId);
 }

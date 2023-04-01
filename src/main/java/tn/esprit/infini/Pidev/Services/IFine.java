@@ -15,9 +15,9 @@ public interface IFine {
 
     Fine updateFine(Fine fine);
 
-    Fine retrieveFine(Integer idFine);
+    Fine retrieveFine(Long idFine);
 
-    void deleteFine(Integer idFine);
+    void deleteFine(Long idFine);
     List<Fine> searchFines(Map<String, Object> criteria, int numCriteria);
 
 

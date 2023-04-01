@@ -1,9 +1,13 @@
 package tn.esprit.infini.Pidev.Services;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.stripe.Stripe;
+import com.stripe.exception.StripeException;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import tn.esprit.infini.Pidev.Repository.TransactionRepository;
 import tn.esprit.infini.Pidev.entities.Transaction;
@@ -20,8 +24,11 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class TransactionService implements ITransaction {
+    @Value("${stripe.api.key}")
+    private String stripePublicKey;
     @Autowired
     private TransactionRepository transactionRepository;
+
     private static Gson gson = new Gson();
     @Override
     public Transaction addTransaction(Transaction transaction) {
@@ -44,69 +51,66 @@ public class TransactionService implements ITransaction {
     }
 
     @Override
+    public Transaction retrieveTransactionByStripeId(String stripeId) {
+        return transactionRepository.findByStripeId(stripeId);
+    }
+
+
+    @Override
     public void deleteTransaction(Long idTransaction) {
         transactionRepository.deleteById(idTransaction);
 
     }
 
     @Override
-    public List<Transaction> divideTransaction(Long amount,Integer numberOfMonths) {
-        List<Transaction> transactionList=new ArrayList<>();
+    public List<Transaction> divideTransaction(Long amount, Integer numberOfMonths) {
+        List<Transaction> transactionList = new ArrayList<>();
 
-            BigDecimal loanAmountInBigDecimal = BigDecimal.valueOf(amount);
-            BigDecimal monthlyPayment = loanAmountInBigDecimal.divide(BigDecimal.valueOf(numberOfMonths), 2, RoundingMode.HALF_UP);
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(new Date());
-            System.out.println();
-            for (int i = 1; i <= numberOfMonths; i++) {
-                Transaction payment = new Transaction();
-                payment.setAmount(monthlyPayment.longValue());
-                payment.setDate(calendar.getTime());
-                calendar.add(Calendar.MONTH, 1);
-                transactionList.add(payment);
-            }
-            return (transactionList);
+        BigDecimal loanAmountInBigDecimal = BigDecimal.valueOf(amount);
+        BigDecimal monthlyPayment = loanAmountInBigDecimal.divide(BigDecimal.valueOf(numberOfMonths), 2, RoundingMode.HALF_UP);
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date());
+
+        for (int i = 1; i <= numberOfMonths; i++) {
+            Transaction payment = new Transaction();
+            payment.setAmount(monthlyPayment.longValue());
+
+            // Set date for each transaction with a 1-minute increment
+            calendar.add(Calendar.SECOND, 40);
+            System.out.println(calendar.getTime());
+            payment.setDate(calendar.getTime());
+
+            transactionList.add(payment);
         }
 
+        return transactionList;
+    }
+
+
+
+
+
+
+
+
     @Override
-    public List<Date> extractDates(List<Transaction> transactionList) {
-            List<Date> dates = new ArrayList<>();
-            for (Transaction transaction : transactionList) {
-                dates.add(transaction.getDate());
-            }
-            return dates;
-
+    public List<Transaction> getTransactionsRequiringPayment() {
+        return transactionRepository.findByStatus("requires_payment_method");
     }
 
     @Override
-    public List<String> DatesToCronExpressions(List<Date> dates) {
-        List<String> cronExpressions = new ArrayList<>();
+    public void confirmTransaction(String intentId) {
+       /* JsonObject jsonObject = gson.fromJson(intentId, JsonObject.class);
 
-        for (Date date : dates) {
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(date);
+        String id = jsonObject.get("intentId").getAsString();*/
 
-            int minutes = calendar.get(Calendar.MINUTE);
-            int hours = calendar.get(Calendar.HOUR_OF_DAY);
-            int dayOfMonth = calendar.get(Calendar.DAY_OF_MONTH);
-            int month = calendar.get(Calendar.MONTH) + 1;
-            int dayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
-
-            SimpleDateFormat dateFormat = new SimpleDateFormat("ss");
-            String seconds = dateFormat.format(date);
-
-            String cronExpression = String.format("%s %s %s %s %s ?",
-                    seconds, minutes, hours, dayOfMonth, month);
-            if (dayOfWeek != 0) {
-                cronExpression += " " + dayOfWeek;
-            }
-
-            cronExpressions.add(cronExpression);
-        }
-
-        return cronExpressions;
-    }
+        transactionRepository.updateTransactionStatusByStripeId("Succeded",intentId);
+        transactionRepository.updateTransactionPaymentMethodByStripeId("visa_credit_card",intentId);
 
 
     }
+
+
+}
 

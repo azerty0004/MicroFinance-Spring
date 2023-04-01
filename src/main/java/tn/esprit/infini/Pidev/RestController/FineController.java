@@ -28,10 +28,25 @@ public class FineController {
     Fine ajouter(@RequestBody Fine fine) {
         return iFine.addFine(fine);
     }
+    @GetMapping("/getFineById/{idFine}")
+    Fine afficherAvecId(@PathVariable Long idFine){
+        return iFine.retrieveFine(idFine);
+    }
+
+    @PutMapping("/updateFine")
+    public Fine updateFine(@RequestBody Fine fine) {
+        return iFine.updateFine(fine);
+    }
+
+    @DeleteMapping("/deleteFine/{idFine}")
+    void deleteFine(@PathVariable ("idFine") Long idFine)
+    {
+        iFine.deleteFine(idFine);
+    }
 
 
     @GetMapping("/fines/search")
-    public List<Fine> searchFines(@RequestBody Map<String, String> params) {
+     List<Fine> searchFines(@RequestBody Map<String, String> params) {
 
         // convert request params to map of Object values
         Map<String, Object> criteria = new HashMap<>();
@@ -56,9 +71,8 @@ public class FineController {
         }
 
         // call service method to search for fines
-        List<Fine> fines = iFine.searchFines(criteria,criteria.size());
 
-        return fines;
+        return iFine.searchFines(criteria,criteria.size());
     }
 
 }

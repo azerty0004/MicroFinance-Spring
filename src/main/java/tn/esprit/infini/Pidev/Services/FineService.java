@@ -40,12 +40,12 @@ public class FineService implements  IFine {
     }
 
     @Override
-    public Fine retrieveFine(Integer idFine) {
+    public Fine retrieveFine(Long idFine) {
         return fineRepository.findById(idFine).get();
     }
 
     @Override
-    public void deleteFine(Integer idFine) {
+    public void deleteFine(Long idFine) {
         fineRepository.deleteById(idFine);
 
     }

@@ -2,6 +2,7 @@ package tn.esprit.infini.Pidev.RestController;
 
 
 import com.google.gson.Gson;
+import com.stripe.exception.StripeException;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -45,11 +46,14 @@ public class TransactionController {
     {
         iTransaction.deleteTransaction(idTransaction);
     }
-    @GetMapping("/GetPaymentModel/{amount}/{numberOfMonths}")
-    List<Transaction> ajouter(@PathVariable Long amount, @PathVariable Integer numberOfMonths) {
-        return iTransaction.divideTransaction(amount, numberOfMonths);
+    @PostMapping("/confirmTransaction")
+    void confirmTransaction(@RequestBody String intentId)
+    {
+        iTransaction.confirmTransaction(intentId);
+
 
     }
+
 
 
 

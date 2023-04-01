@@ -11,7 +11,7 @@ import java.util.List;
 
 @Repository
 
-public interface FineRepository extends JpaRepository<Fine,Integer> {
+public interface FineRepository extends JpaRepository<Fine,Long> {
     @Query("SELECT f FROM Fine f WHERE " +
             "(:idCustomer is null or f.idCustomer = :idCustomer) and " +
             "(:totalAmount is null or f.totalAmount >= :totalAmount) and " +
