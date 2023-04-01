@@ -2,8 +2,8 @@ package tn.esprit.infini.Pidev.entities;
 
 import lombok.Getter;
 import lombok.Setter;
-import javax.persistence.*;
 import java.io.Serializable;
+import jakarta.persistence.*;
 
 
 @Entity

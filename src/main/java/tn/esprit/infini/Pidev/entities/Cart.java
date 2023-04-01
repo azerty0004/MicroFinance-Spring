@@ -1,11 +1,11 @@
 package tn.esprit.infini.Pidev.entities;
 
 
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.util.Set;
-import javax.persistence.*;
 import java.io.Serializable;
 @Entity
 @Getter

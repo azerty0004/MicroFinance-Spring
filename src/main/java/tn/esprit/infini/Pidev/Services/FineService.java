@@ -1,17 +1,16 @@
 package tn.esprit.infini.Pidev.Services;
 
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import tn.esprit.infini.Pidev.Repository.FineRepository;
 import tn.esprit.infini.Pidev.entities.Fine;
 import tn.esprit.infini.Pidev.entities.FineType;
 
-import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import jakarta.persistence.*;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;

@@ -1,5 +1,11 @@
 package tn.esprit.infini.Pidev.Services;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.TypedQuery;
+import jakarta.persistence.criteria.CriteriaBuilder;
+import jakarta.persistence.criteria.CriteriaQuery;
+import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Root;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import tn.esprit.infini.Pidev.Repository.BillRepository;
@@ -7,12 +13,7 @@ import tn.esprit.infini.Pidev.entities.Account;
 import tn.esprit.infini.Pidev.entities.Bill;
 import tn.esprit.infini.Pidev.entities.BillType;
 
-import javax.persistence.EntityManager;
-import javax.persistence.TypedQuery;
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
