@@ -1,12 +1,15 @@
 package tn.esprit.infini.Pidev.entities;
 
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 
+
 import jakarta.persistence.*;
+
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
@@ -41,10 +44,12 @@ public class Transaction implements Serializable {
     @Column(name = "credits")
     @OneToMany(mappedBy = "transaction")
     private Set<Credit> credits;
+    @Column
+    private String status;
 
 
 
-    public Transaction(TypeTransaction typeTransaction, long idUser, long idObject, Date date, Long amount, String stripeId, String paymentMethod) {
+    public Transaction(TypeTransaction typeTransaction, long idUser, long idObject, Date date, Long amount, String stripeId, String paymentMethod,String status) {
         this.typeTransaction = typeTransaction;
         this.idUser = idUser;
         this.idObject = idObject;
@@ -52,6 +57,7 @@ public class Transaction implements Serializable {
         this.amount = amount;
         this.stripeId=stripeId;
         this.paymentMethod=paymentMethod;
+        this.status=status;
 
     }
 }

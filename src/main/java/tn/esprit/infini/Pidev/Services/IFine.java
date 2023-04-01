@@ -2,8 +2,11 @@ package tn.esprit.infini.Pidev.Services;
 
 
 import tn.esprit.infini.Pidev.entities.Fine;
+import tn.esprit.infini.Pidev.entities.FineType;
 
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 public interface IFine {
     Fine addFine(Fine fine);
@@ -12,8 +15,10 @@ public interface IFine {
 
     Fine updateFine(Fine fine);
 
-    Fine retrieveFine(Integer idFine);
+    Fine retrieveFine(Long idFine);
 
-    void deleteFine(Integer idFine);
+    void deleteFine(Long idFine);
+    List<Fine> searchFines(Map<String, Object> criteria, int numCriteria);
+
 
 }

@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.0.1</version> <!-- old is 2.7.8 -->
+		<version>3.0.1</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>tn.esprit.infini</groupId>
@@ -14,7 +14,9 @@
 	<name>PIDEV</name>
 	<description>Pidev project</description>
 	<properties>
-		<java.version>17</java.version><!-- old is 1.8-->
+
+		<java.version>17</java.version>
+
 	</properties>
 	<dependencies>
 		<dependency>
@@ -97,6 +99,12 @@
             <version>13.0</version>
             <scope>compile</scope>
         </dependency>
+		<dependency>
+			<groupId>org.awaitility</groupId>
+			<artifactId>awaitility</artifactId>
+			<version>3.1.2</version>
+			<scope>test</scope>
+		</dependency>
     </dependencies>
 
 	<build>
