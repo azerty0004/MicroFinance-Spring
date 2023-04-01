@@ -1,6 +1,9 @@
 package tn.esprit.infini.Pidev.Services;
 
 import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import tn.esprit.infini.Pidev.Repository.*;
 import tn.esprit.infini.Pidev.entities.*;
@@ -17,7 +20,7 @@ public class PackService implements IPackService {
     UserRepository userRepository;
     UserService userService;
 
-
+    @Autowired
     ReactionRepository reactionRepository;
     TransactionRepository transactionRepository;
 
@@ -93,48 +96,52 @@ public class PackService implements IPackService {
         */
 
     @Override
-    public void addReaction(int idPack, int idUser, TypeReaction TypeReaction) {
+    public String addReaction(int idPack, int idUser, TypeReaction type) {
         Pack pack = packRepository.findByIdPack(idPack);
-        Reaction existingReaction = reactionRepository.findByIdUserAndPackIdPack(idUser, idPack);
-        if (existingReaction != null) {
-            if (existingReaction.getType() == TypeReaction) {
-                System.out.println("l'utilisateur a déjà réagi de la même manière");
-                //rien à faire
+        Reaction reaction = reactionRepository.findByIdUserAndPackIdPack(idUser, idPack);
 
+        if (reaction != null) {
+            if (reaction.getTP() == type) {
+                System.out.println("L'utilisateur a déjà réagi de la même manière");
+                // rien à faire
             } else {
-                Reaction newReaction = new Reaction();
-                newReaction.setType(TypeReaction);
-                newReaction.setIdUser(idUser);
-                newReaction.setPack(pack);
-                reactionRepository.save(newReaction);
-                packRepository.save(pack);
+                // l'utilisateur a réagi différemment, on met à jour la réaction existante
 
+                if (type == TypeReaction.like) {
+                    pack.setLikes(pack.getLikes() + 1);
+                    reaction.setTP(type);
+                    packRepository.save(pack);
+
+                } else {
+                    pack.setDislikes(pack.getDislikes() + 1);
+                    reaction.setTP(type);
+                    packRepository.save(pack);
+
+                }
                 System.out.println("L'utilisateur a réagi différemment");
-
             }
         } else {
-            // l'utilisateur n'a pas encore réagi, on crée deux nouvelles réactions
-            Reaction reaction1 = new Reaction();
-            reaction1.setType(TypeReaction.like);
-            reaction1.setIdUser(idUser);
-            reaction1.setPack(pack);
-            reactionRepository.save(reaction1);
+            // l'utilisateur n'a pas encore réagi, on crée une nouvelle réaction
+            Reaction newReaction = new Reaction();
+            newReaction.setTP(type);
+            newReaction.setIdUser(idUser);
+            newReaction.setPack(pack);
+            reactionRepository.save(newReaction);
 
-            Reaction reaction2 = new Reaction();
-            reaction2.setType(TypeReaction.dislike);
-            reaction2.setIdUser(idUser);
-            reaction2.setPack(pack);
-            reactionRepository.save(reaction2);
+            if (type == TypeReaction.like) {
+                pack.setLikes(pack.getLikes() + 1);
+            } else {
+                pack.setDislikes(pack.getDislikes() + 1);
+            }
 
-            pack.setLikes(pack.getLikes() + 1);
-            pack.setDislikes(pack.getDislikes() + 1);
             packRepository.save(pack);
-
-            System.out.println("L'utilisateur a réagi différemment");
+            System.out.println("L'utilisateur a réagi pour la première fois");
         }
+
+        return null;
     }
 
-
+    @Override
     public double getAverageRating(int idPack) {
         Pack pack = packRepository.findByIdPack(idPack);
         int totalReactions = pack.getLikes() + pack.getDislikes();
@@ -187,6 +194,13 @@ public class PackService implements IPackService {
             return packRepository.findByOrderByPriceDesc();
         }
     }
+
+    @Override
+    public Page<Pack> getAllPacks(int pageNumber, int pageSize) {
+        PageRequest pageable = PageRequest.of(pageNumber, pageSize);
+        return packRepository.findAll((org.springframework.data.domain.Pageable) pageable);
+    }
+
 
 }
 

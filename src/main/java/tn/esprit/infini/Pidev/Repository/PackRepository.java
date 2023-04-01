@@ -9,6 +9,7 @@ import tn.esprit.infini.Pidev.entities.TypePack;
 import tn.esprit.infini.Pidev.entities.User;
 
 import java.awt.print.Pageable;
+import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
@@ -28,6 +29,8 @@ public interface PackRepository extends JpaRepository<Pack, Integer> {
     List<Pack> findByOrderByPriceDesc();
 
     List<Pack> findByTypePack(TypePack typePack);
+
+    List<Pack> findByCreatedAtBefore(LocalDate threeMonthsAgo);
 
     // @Query(value = "select p from Pack p order by p.likes desc")
     //List<Pack> findMostLikedPack();

@@ -2,13 +2,10 @@ package tn.esprit.infini.Pidev.Services;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 import tn.esprit.infini.Pidev.Repository.GuarantorRepository;
 import tn.esprit.infini.Pidev.entities.Guarantor;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -61,38 +58,11 @@ public class GuarantorService implements IGuarantorService{
         return cinString.matches("\\d{8}");
     }
 
-        @Override
-        public boolean checkGuarantorSalary(MultipartFile payslip, double requestedCreditAmount) {
+   
 
-            // Parsing the payslip to extract the salary information
-            double guarantorSalary = parsePayslip(payslip);
 
-            // Comparing the guarantor's salary with the requested credit amount
-            return guarantorSalary >= requestedCreditAmount;
-        }
 
-        @Override // najamch ntesteha f postman
-        public double parsePayslip(MultipartFile payslip) {
-
-            // Extracting the salary information from the payslip
-            // This is an example of how to parse the payslip, you should implement your own parser based on your file format
-            double salary = 0.0;
-            try {
-                BufferedReader reader = new BufferedReader(new InputStreamReader(payslip.getInputStream()));
-                String line;
-                while ((line = reader.readLine()) != null) {
-                    if (line.startsWith("Salary:")) {
-                        salary = Double.parseDouble(line.split(":")[1]);
-                        break;
-                    }
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            return salary;
-        }
-    }
+}
 
 
 

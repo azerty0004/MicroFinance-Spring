@@ -27,11 +27,11 @@ public interface ICartService {
 
     Cart findMostExpensiveCart();
 
-    Cart simulatePayment(int idCart, double totalAmountWithInterest, int numberOfMonths) ;
 
     List<Pack> getRecommendedPacks(Integer idCart);
 
     List<Pack> getRecommendedPacksByType(Integer idCart);
+
 
     @Scheduled(cron = "0 0 12 * * ?") // exécution à midi chaque jour
     void clearCart();

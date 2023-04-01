@@ -22,11 +22,11 @@ public class Reaction implements Serializable {
     private int id;
 
     @Enumerated(EnumType.STRING)
-    public TypeReaction Type;
+    public TypeReaction TP;
 
     private int idUser;
 
     @ManyToOne
-    private Pack pack;
+    public Pack pack;
 
 }

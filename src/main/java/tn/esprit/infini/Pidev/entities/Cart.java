@@ -25,7 +25,6 @@ public class Cart implements Serializable {
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         @Column(name = "idCart")
         private int idCart;
-        private int quantity;
         private int nbreMounths;
 
          @OneToMany(mappedBy = "cart")

@@ -1,23 +1,22 @@
 package tn.esprit.infini.Pidev.RestController;
 
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
+import org.apache.pdfbox.pdmodel.PDDocument;
+import org.springframework.data.domain.Page;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import tn.esprit.infini.Pidev.Repository.CartRepository;
 import tn.esprit.infini.Pidev.Repository.PackRepository;
-import tn.esprit.infini.Pidev.Repository.ReactionRepository;
 import tn.esprit.infini.Pidev.Services.IPackService;
 import tn.esprit.infini.Pidev.Services.PackService;
 import tn.esprit.infini.Pidev.Services.UserService;
-import tn.esprit.infini.Pidev.entities.Cart;
 import tn.esprit.infini.Pidev.entities.Pack;
 import tn.esprit.infini.Pidev.entities.Reaction;
 import tn.esprit.infini.Pidev.entities.TypeReaction;
 
-import javax.websocket.server.PathParam;
+import java.io.ByteArrayOutputStream;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 @RestController
@@ -29,7 +28,6 @@ public class PackController {
     UserService userService;
     PackService packService;
     CartRepository cartRepository;
-
 
    // CRUD:
     @GetMapping("/getPack")
@@ -75,16 +73,28 @@ public class PackController {
     }
     // rating:
 
-    @PostMapping("/addReactionToPack/{idPack}/reaction")
-    public void addReactionToPack(@PathVariable int idPack, @RequestBody Reaction reaction) {
+   /* @PostMapping("/addReactionToPack/{idPack}/reaction")
+    public void addReactionToPack(@PathVariable int idPack,
+                                  @RequestBody Reaction reaction) {
         // récupérer les informations du formulaire
         int idUser = reaction.getIdUser();
-        TypeReaction type = reaction.getType();
+        TypeReaction type = reaction.getTP();
 
         // appeler le service pour ajouter la réaction au pack
         packService.addReaction(idPack, idUser, type);
 
+    }*/
+
+    @PostMapping("/{idPack}/{idUser}/{type}")
+    public String addReaction(
+            @PathVariable("idPack") int idPack,
+            @PathVariable("idUser") int idUser,
+            @PathVariable("type") TypeReaction type) {
+
+        return packService.addReaction(idPack, idUser, type);
+
     }
+
 
     @GetMapping("/average-rating/{idPack}")
     public double getAverageRating(@PathVariable int idPack) {
@@ -120,5 +130,11 @@ public class PackController {
         return packRepository.findByOrderByPriceDesc();
     }
 
+    @GetMapping("/packs")
+    public Page<Pack> getAllPacks(@RequestParam("page") int page,
+                                  @RequestParam("size") int size) {
+        Page<Pack> packs = packService.getAllPacks(page, size);
+        return packs;
+    }
 
 }

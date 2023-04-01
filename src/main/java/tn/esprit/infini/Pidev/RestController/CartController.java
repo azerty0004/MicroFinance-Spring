@@ -1,6 +1,7 @@
 package tn.esprit.infini.Pidev.RestController;
 
 import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import tn.esprit.infini.Pidev.Repository.CartRepository;
 import tn.esprit.infini.Pidev.Repository.PackRepository;
@@ -80,13 +81,6 @@ public class CartController {
         return mostExpensiveCart ;
     }
 
-    @PostMapping("/{cartId}/simulate-payment")
-    public Cart simulatePayment(@PathVariable int cartId,
-                                @RequestParam double monthlyPrice,
-                                @RequestParam int numberOfMonths) {
-        return cartService.simulatePayment(cartId, monthlyPrice, numberOfMonths);
-    }
-
     @GetMapping("/recommended-packs/{idCart}")
     public List<Pack> getRecommendedPacks(@PathVariable Integer idCart) {
         List<Pack> recommendedPacks = cartService.getRecommendedPacks(idCart);
@@ -98,4 +92,11 @@ public class CartController {
         List<Pack> recommendedPacks = cartService.getRecommendedPacksByType(idCart);
         return recommendedPacks;
     }
+
+    @PostMapping("/clearExpiredPacks")
+    public String clearExpiredPacks() {
+        cartService.clearCart();
+        return ("Expired packs have been cleared from cart");
+    }
+
 }

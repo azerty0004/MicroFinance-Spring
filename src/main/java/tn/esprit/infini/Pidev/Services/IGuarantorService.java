@@ -12,18 +12,15 @@ public interface IGuarantorService {
 
     Guarantor addGuarantor(Guarantor g) throws Exception;
 
-    Guarantor updateGuarantor (Guarantor g );
+    Guarantor updateGuarantor(Guarantor g);
 
-    Guarantor retrieveGuarantor (Integer idGurantor);
+    Guarantor retrieveGuarantor(Integer idGurantor);
 
-    void deleteGuarantor( Integer idGurantor);
+    void deleteGuarantor(Integer idGurantor);
 
     boolean VerifyGuarantor(Guarantor guarantor, double amount);
 
 
     boolean ValidCin(int cin);
 
-    boolean checkGuarantorSalary(MultipartFile payslip, double requestedCreditAmount);
-
-    double parsePayslip(MultipartFile payslip);
 }

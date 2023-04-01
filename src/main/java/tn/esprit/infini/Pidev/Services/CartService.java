@@ -1,20 +1,25 @@
 package tn.esprit.infini.Pidev.Services;
 
+import com.twilio.Twilio;
+import com.twilio.type.PhoneNumber;
+import com.twilio.rest.api.v2010.account.Message;
 import lombok.AllArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import tn.esprit.infini.Pidev.Repository.CartRepository;
 import tn.esprit.infini.Pidev.Repository.PackRepository;
+import tn.esprit.infini.Pidev.Repository.UserRepository;
 import tn.esprit.infini.Pidev.entities.Cart;
 import tn.esprit.infini.Pidev.entities.Pack;
 import tn.esprit.infini.Pidev.entities.TypePack;
+import tn.esprit.infini.Pidev.entities.User;
 
-import javax.persistence.EntityNotFoundException;
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+
 
 @Service
 @AllArgsConstructor
@@ -23,6 +28,7 @@ import java.util.stream.Collectors;
     public class CartService implements ICartService {
 
         CartRepository cartRepository;
+        UserRepository userRepository;
     private final PackRepository packRepository;
 
     @Override
@@ -115,16 +121,6 @@ import java.util.stream.Collectors;
         return monthlyPrice;
     }
 
-    @Override
-    public Cart simulatePayment(int cartId, double monthlyPrice, int numberOfMonths) {
-        double totalAmount = monthlyPrice * numberOfMonths;
-        Cart cart = cartRepository.findById(cartId)
-                .orElseThrow(() -> new EntityNotFoundException("Cart not found with id " + cartId));
-        cart.setNbreMounths(numberOfMonths);
-        cart.setQuantity((int) totalAmount);
-        return cartRepository.save(cart);
-    }
-
 
     @Override
     public List<Pack> getRecommendedPacks(Integer idCart) {
@@ -154,8 +150,6 @@ import java.util.stream.Collectors;
                 .collect(Collectors.toList());
     }
 
-
-
     @Override
     @Scheduled(cron = "0 0 12 * * ?") // exécution à midi chaque jour
     public void clearCart() {
@@ -168,6 +162,8 @@ import java.util.stream.Collectors;
 
 
     }
+
+
 
 }
 

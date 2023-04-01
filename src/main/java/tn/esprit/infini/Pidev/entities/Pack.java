@@ -8,6 +8,8 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.time.LocalDate;
+import java.util.Set;
 
 
 @Entity
@@ -27,6 +29,7 @@ import java.io.Serializable;
     private double price ;
     private int likes;
     private int dislikes;
+    private LocalDate createdAt;
     @Enumerated(EnumType.STRING)
     private TypePack typePack;
 
@@ -37,6 +40,12 @@ import java.io.Serializable;
     @ManyToOne
     @JsonIgnore
     Transaction transaction;
+
+    @OneToMany (mappedBy = "pack")
+    Set<Reaction> reaction;
+
+    @OneToMany(mappedBy = "pack")
+    Set<Insurance> insurance;
 
 
 }
