@@ -5,6 +5,7 @@ import org.springframework.stereotype.Component;
 import tn.esprit.infini.Pidev.dto.CreditRequestDTO;
 import tn.esprit.infini.Pidev.dto.CreditResponseDTO;
 import tn.esprit.infini.Pidev.entities.Credit;
+import jakarta.persistence.*;
 
 @Component
 

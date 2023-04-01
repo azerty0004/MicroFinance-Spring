@@ -1,17 +1,16 @@
 package tn.esprit.infini.Pidev.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.validation.constraints.FutureOrPresent;
+import lombok.*;
+import jakarta.persistence.*;
 import tn.esprit.infini.Pidev.entities.Statut;
-import tn.esprit.infini.Pidev.entities.TypeCredit;
-import tn.esprit.infini.Pidev.entities.TypeRemboursement;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 import java.time.LocalDate;
-
+import java.util.ArrayList;
+import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -21,10 +20,10 @@ public class InvestResponseDTO {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Double amount;
-    private LocalDate dateofapplication;
+    private LocalDate dateofapplication=LocalDate.now();
     private LocalDate dateofobtaining;
     private LocalDate dateoffinish;
-    private double interestrate=0.06;
+    private  double interestrate;
     private Integer mounths;
     @Enumerated(EnumType.STRING)
     private Statut statut = Statut.EN_ATTENTE;

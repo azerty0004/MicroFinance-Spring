@@ -5,25 +5,34 @@ import com.lowagie.text.*;
 import com.lowagie.text.pdf.PdfPCell;
 import com.lowagie.text.pdf.PdfPTable;
 import com.lowagie.text.pdf.PdfWriter;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartUtils;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.labels.StandardPieToolTipGenerator;
+import org.jfree.chart.plot.PiePlot;
+import org.jfree.data.general.DefaultPieDataset;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
-import tn.esprit.infini.Pidev.Repository.Creditrepository;
-import tn.esprit.infini.Pidev.Repository.SettingsRepository;
-import tn.esprit.infini.Pidev.Repository.UserRepository;
+import tn.esprit.infini.Pidev.Repository.*;
 import tn.esprit.infini.Pidev.dto.CreditRequestDTO;
 import tn.esprit.infini.Pidev.dto.CreditResponseDTO;
 import tn.esprit.infini.Pidev.entities.*;
 import tn.esprit.infini.Pidev.exceptions.ResourceNotFoundException;
 import tn.esprit.infini.Pidev.mappers.CreditMapper;
-import javax.servlet.http.HttpServletResponse;
 import java.io.*;
+import java.text.DecimalFormat;
 import java.time.LocalDate;
+import java.time.Period;
+import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.List;
+import jakarta.persistence.*;
+
 
 
 @Service
@@ -35,7 +44,8 @@ public class Creditservice implements Icreditservice {
     private Creditrepository creditrepository;
     private SettingsRepository settingsRepository;
     private UserRepository userRepository;
-
+    private AccountRepository accountRepository;
+    private TransactionRepository transactionRepository;
     @Override
     public List<Credit> retrieveAllCredits() {
         return  creditrepository.findAll();
@@ -152,22 +162,72 @@ public class Creditservice implements Icreditservice {
 
 
     }
+    @Override
+    public int calculateLengthOfCreditHistoryScore(Credit credit) {
+        LocalDate oldestTransactionDate = LocalDate.now();
+        int ageOfOldestTransactionInMonths = 0;
 
+        List<Transaction> transactions = credit.getTransactions();
+
+        if (transactions.isEmpty()) {
+            return 0;
+        }
+
+        for (Transaction transaction : transactions) {
+            LocalDate transactionDate = transaction.getDate().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+
+            if (transactionDate.isBefore(oldestTransactionDate)) {
+                oldestTransactionDate = transactionDate;
+            }
+        }
+
+        ageOfOldestTransactionInMonths = Period.between(oldestTransactionDate, LocalDate.now()).getYears() * 12
+                + Period.between(oldestTransactionDate, LocalDate.now()).getMonths();
+
+        if (ageOfOldestTransactionInMonths >= 300) {
+            return 850;
+        } else if (ageOfOldestTransactionInMonths >= 240) {
+            return 750;
+        } else if (ageOfOldestTransactionInMonths >= 180) {
+            return 650;
+        } else {
+            return 500;
+        }
+    }
+
+    @Override
+    public double calculatePaymentHistoryScore(Long id) {
+        Credit c=creditrepository.findById(id).orElseThrow(()-> new RuntimeException(String.format("Credit not found")));
+
+        List<Transaction> transactions = transactionRepository.getTransactionBycredit(c);
+        int latePayments = 0;
+        for (Transaction transaction : transactions) {
+            if (transaction.getStatut() == Statut.EN_RETARDISSEMENT && transaction.getDate().compareTo(new Date()) < 0) {
+                latePayments++;
+            }
+        }
+        List<Settings> settings = settingsRepository.findAll();
+        for (Settings setting : settings) {
+            if (setting.getId()-1 == latePayments) {
+                return setting.getMaxScore();
+            }
+        }
+        return 400;
+    }
 
     @Override
     public Integer TauxtypeCredit(Credit c) {
 
         if ((c.getTypeCredit()) == TypeCredit.CREDITConsommation) {
 
-            return 1;
-        } else if ((c.getTypeCredit()) == TypeCredit.CREDITInvestissement) {
+            return 500;
+        } else if ((c.getTypeCredit()) == TypeCredit.CreditImmobilier) {
 
-            return 2;
+            return 650;
         } else if ((c.getTypeCredit()) == TypeCredit.CREDITEtudiant) {
-
-            return 3;
+            return 750;
         } else {
-            return 4;
+            return 850;
         }
 
     }
@@ -175,22 +235,55 @@ public class Creditservice implements Icreditservice {
 
     @Override
     public float calculateFicoScore(Credit c) {
+        User user = userRepository.findUserByCreditId(c.getId());
         float ficoscore = 0;
-        ficoscore += (c.getAmount() * 0.3) + (c.getDuration() * 0.15) + (TauxtypeCredit(c) * 0.1);
-
+        ficoscore += (TauxtypeCredit(c) * 0.1)+(calculatePaymentHistoryScore(c.getId()) * 0.35)+(calculateLengthOfCreditHistoryScore(c)*0.15)+(calculateAmountsOwedScore(c)*0.3);
         return ficoscore;
     }
+    @Override
+    public double calculateAmountsOwedScore(Credit credit) {
+        double totalBalance = 0.0;
+        double totalCredit = 0.0;
+
+        List<Transaction> transactions = credit.getTransactions();
+        for (Transaction transaction : transactions) {
+            if (transaction.getTypeTransaction() == TypeTransaction.Credit) {
+                if (transaction.getStatut() == Statut.ACTIF){
+
+                totalCredit += transaction.getAmount();
+            } }
+            else if (transaction.getTypeTransaction() == TypeTransaction.Invest) {
+                    totalBalance += transaction.getAmount();
+                }
+
+        }
+        if (totalCredit == 0) {
+            return 500;
+        } else {
+            double creditUtilizationRatio = totalBalance / totalCredit;
+            if (creditUtilizationRatio <= 0.3) {
+                return 850;
+            } else if (creditUtilizationRatio <= 0.5) {
+                return 750;
+            } else if (creditUtilizationRatio <= 0.7) {
+                return 650;
+            } else {
+                return 500;
+            }
+        }
+    }
+
 
     @Override
     public double InterestRateCalculator(Credit credit) throws IOException {
-        double TMM = Double.parseDouble(getmm());
+        double TMM = Double.parseDouble(getmm())*0.1;
         double interestrate = 0;
         float score = calculateFicoScore(credit);
         List<Settings> settings = settingsRepository.findAll();
 
         for (Settings rate : settings) {
             if (score >= rate.getMinScore() && score <= rate.getMaxScore()) {
-                interestrate = (TMM + rate.getRate())*0.1;
+                interestrate = (TMM + rate.getRate());
                 credit.setInterestrate(interestrate);
                 creditrepository.save(credit);
                 return interestrate;
@@ -233,40 +326,41 @@ public class Creditservice implements Icreditservice {
 
     @Override
     public List<Double> CalculMensualitevariable(Credit c) {
-        double montantrestant = c.getAmount();
-        double amortissement = (c.getAmount() / c.getDuration());
-        double interestrateformounth = 0;
+        double am = (c.getAmount()/c.getDuration());
+        double tm = c.getInterestrate()/12;
         double mensualite = 0;
-        List<Double> listmensualité = new ArrayList<>();
+        List<Double> listmensualite = new ArrayList<>();
         for (int i = 1; i <= c.getDuration(); i++) {
-            interestrateformounth = montantrestant * (c.getInterestrate() / 12);
-            mensualite = amortissement + interestrateformounth;
-            montantrestant = montantrestant - mensualite;
-            listmensualité.add(mensualite);
+            mensualite=am*(1+(tm*(c.getDuration()-i+1)));
+            listmensualite.add(mensualite);
         }
-        return listmensualité;
+        return listmensualite;
     }
 
     @Override
     public List<Double> listetauxinterets(Long id) {
         Credit c=creditrepository.findById(id).orElseThrow(()-> new RuntimeException(String.format("Credit not found")));
-        double montantrestant = c.getAmount();
-        double amortissement = (c.getAmount() / c.getDuration());
-        double interestrateformounth = 0;
+        double am = (c.getAmount()/c.getDuration());
+        double tm = c.getInterestrate()/12;
+        double interets;
         double mensualite = 0;
         List<Double> listtauxinterets = new ArrayList<>();
-
-        for (double i = 1; i <= c.getDuration(); i++) {
-            interestrateformounth = montantrestant * (c.getInterestrate() / 12);
-            if (interestrateformounth > 0) {
-                listtauxinterets.add(interestrateformounth);
-            } else listtauxinterets.add((double) 0);
-            mensualite = amortissement + interestrateformounth;
-            montantrestant = montantrestant - mensualite;
+        for (int i = 1; i <= c.getDuration(); i++) {
+            mensualite=am*(1+(tm*(c.getDuration()-i+1)));
+            interets=mensualite-am;
+           listtauxinterets.add(interets);
         }
-
         return listtauxinterets;
+    }
 
+
+    @Override
+    public double Calculateamountafterinsurance (Long id) {
+    Credit c = creditrepository.findById(id).orElseThrow(() -> new RuntimeException(String.format("Credit not found")));
+    double amountofinsurance= c.getAmount()*0.03;
+    c.setAmount(c.getAmount()*0.97);
+    creditrepository.save(c);
+    return amountofinsurance;
     }
 
     @Override
@@ -274,6 +368,7 @@ public class Creditservice implements Icreditservice {
         Credit c=creditrepository.findById(id).orElseThrow(()-> new RuntimeException(String.format("Credit not found")));
         float score = calculateFicoScore(c);
          if (Optional.ofNullable(c.getGuarantor()).isPresent()) {
+             //if{balance.admin>
             if (score < 580) {
                 c.setStatut(Statut.Non_Approuvé);
                 creditrepository.save(c);
@@ -349,7 +444,7 @@ public class Creditservice implements Icreditservice {
         return results;
     }
      @Override
-        public void exportpdf(HttpServletResponse response, Long idCredit) throws IOException, DocumentException {
+     public void exportpdf(HttpServletResponse response, Long idCredit) throws IOException, DocumentException {
         Document document = new Document(PageSize.A4);
         PdfWriter.getInstance(document, response.getOutputStream());
         document.open();
@@ -389,7 +484,33 @@ public class Creditservice implements Icreditservice {
             table.addCell(cellTauxValue);
         }
         document.add(table);
-        document.close();
+         // Step 2: Create a new chart object and populate it with data and percentage values
+         double totalAmount = credit.getAmount();
+         double interestAmount = credit.getInterestrate();
+         double insuranceAmount = Calculateamountafterinsurance(idCredit);
+
+         double interestPercent = interestAmount / totalAmount * 100.0;
+         double insurancePercent = insuranceAmount / totalAmount * 100.0;
+         double principalPercent = 100.0 - interestPercent - insurancePercent;
+
+         DefaultPieDataset dataset = new DefaultPieDataset();
+         dataset.setValue("Interest (" + String.format("%.1f", interestPercent) + "%)", interestAmount);
+         dataset.setValue("Insurance (" + String.format("%.1f", insurancePercent) + "%)", insuranceAmount);
+         dataset.setValue("Principal (" + String.format("%.1f", principalPercent) + "%)", credit.getAmount());
+
+         JFreeChart chart = ChartFactory.createPieChart(
+                 "Credit Details", dataset, true, true, false);
+
+         PiePlot plot = (PiePlot) chart.getPlot();
+         plot.setToolTipGenerator(new StandardPieToolTipGenerator(
+                 "{0}: {1} ({2})", new DecimalFormat("0.0"), new DecimalFormat("0.0%")));
+
+         ByteArrayOutputStream chartOut = new ByteArrayOutputStream();
+         ChartUtils.writeChartAsPNG(chartOut, chart, 500, 300);
+         byte[] chartBytes = chartOut.toByteArray();
+         Image chartImage = Image.getInstance(chartBytes);
+         document.add(chartImage);
+         document.close();
     }
     @Scheduled(cron = "0 0 1 1 * *")
     public void generateCreditReport() {
@@ -415,7 +536,10 @@ public class Creditservice implements Icreditservice {
             System.out.println();
         }
     }
+
 }
+
+
 
 
 

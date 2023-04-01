@@ -4,16 +4,10 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 
-
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
-import java.util.Set;
 
 @Entity
 @Getter
@@ -34,8 +28,8 @@ public class Transaction implements Serializable {
 
     @OneToMany(cascade = CascadeType.ALL,mappedBy = "transaction")
     private List<Account> accounts;
-
-
+    private Statut statut;
+    private Double amount;
 
 
 }

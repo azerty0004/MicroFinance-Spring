@@ -7,6 +7,8 @@ import tn.esprit.infini.Pidev.Repository.UserRepository;
 import tn.esprit.infini.Pidev.entities.TypeUser;
 import tn.esprit.infini.Pidev.entities.User;
 import java.util.List;
+import jakarta.persistence.*;
+
 
 @Service
 @AllArgsConstructor

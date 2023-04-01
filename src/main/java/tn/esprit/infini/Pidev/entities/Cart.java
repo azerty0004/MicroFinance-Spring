@@ -3,9 +3,9 @@ package tn.esprit.infini.Pidev.entities;
 
 import lombok.Getter;
 import lombok.Setter;
+import jakarta.persistence.*;
 
 import java.util.Set;
-import javax.persistence.*;
 import java.io.Serializable;
 @Entity
 @Getter

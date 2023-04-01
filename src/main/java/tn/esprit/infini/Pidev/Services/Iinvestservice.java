@@ -21,4 +21,6 @@ public interface Iinvestservice  {
     List<Invest> getInvestByiduser(Long userid);
 
     List<Invest> searchInvests(Long id, Double amount, Date dateofapplication, Date dateofobtaining, Date dateoffinish, Double interestRate, Integer mounths, Statut statut);
-}
+    List<Double> Amountgiven(Long id);
+
+    }

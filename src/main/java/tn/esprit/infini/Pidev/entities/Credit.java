@@ -2,11 +2,9 @@ package tn.esprit.infini.Pidev.entities;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.validation.constraints.FutureOrPresent;
 import lombok.*;
-import org.jetbrains.annotations.NotNull;
-
-import javax.persistence.*;
-import javax.validation.constraints.FutureOrPresent;
+import jakarta.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;

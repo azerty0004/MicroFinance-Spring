@@ -1,14 +1,14 @@
 
 package tn.esprit.infini.Pidev.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.*;
 
-import javax.persistence.*;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.validation.constraints.FutureOrPresent;
+import lombok.*;
+import jakarta.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -24,10 +24,10 @@ public class Invest implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private Double amount;
-    private LocalDate dateofapplication;
+    private LocalDate dateofapplication=LocalDate.now();
     private LocalDate dateofobtaining;
     private LocalDate dateoffinish;
-    private double interestrate;
+    private  double interestrate=0.6;
     private Integer mounths;
     @Enumerated(EnumType.STRING)
     private Statut statut = Statut.EN_ATTENTE;

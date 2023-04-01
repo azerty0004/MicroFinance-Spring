@@ -1,17 +1,12 @@
 package tn.esprit.infini.Pidev.Services;
-
-
 import com.lowagie.text.DocumentException;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import tn.esprit.infini.Pidev.dto.CreditRequestDTO;
 import tn.esprit.infini.Pidev.dto.CreditResponseDTO;
 import tn.esprit.infini.Pidev.entities.*;
-
-import javax.servlet.http.HttpServletResponse;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
@@ -48,6 +43,10 @@ public interface Icreditservice {
     Map<TypeRemboursement, Double> averageRepaymentRateByType(List<Credit> credits);
 
     void exportpdf(HttpServletResponse response, Long idCredit) throws IOException, DocumentException;
+    double calculatePaymentHistoryScore(Long id);
+    double calculateAmountsOwedScore(Credit credit);
+     int calculateLengthOfCreditHistoryScore(Credit credit);
+     double Calculateamountafterinsurance (Long id);
 
     }
 

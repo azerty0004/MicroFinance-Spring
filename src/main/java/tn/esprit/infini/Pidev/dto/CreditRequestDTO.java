@@ -1,12 +1,11 @@
 package tn.esprit.infini.Pidev.dto;
+import jakarta.validation.constraints.FutureOrPresent;
 import lombok.*;
 import tn.esprit.infini.Pidev.entities.Statut;
 import tn.esprit.infini.Pidev.entities.TypeCredit;
 import tn.esprit.infini.Pidev.entities.TypeRemboursement;
-import javax.persistence.PrePersist;
-import javax.validation.constraints.FutureOrPresent;
 import java.time.LocalDate;
-
+import jakarta.persistence.*;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor

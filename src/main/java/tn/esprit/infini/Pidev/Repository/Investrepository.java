@@ -13,6 +13,6 @@ import java.util.List;
 public interface Investrepository extends JpaRepository<Invest,Long> {
     @Query("SELECT i FROM Invest i JOIN  i.transactions t WHERE t.idUser = :userid")
     List<Invest> getInvestByiduser(@Param("userid") Long userid);
-
+    Invest getInvestById(Long id);
 
 }

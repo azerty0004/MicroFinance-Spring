@@ -8,6 +8,8 @@ import tn.esprit.infini.Pidev.dto.InvestRequestDTO;
 import tn.esprit.infini.Pidev.dto.InvestResponseDTO;
 import tn.esprit.infini.Pidev.entities.Credit;
 import tn.esprit.infini.Pidev.entities.Invest;
+import jakarta.persistence.*;
+
 @Component
 public class InvestMapper {
     public InvestResponseDTO fromInvest(Invest invest){

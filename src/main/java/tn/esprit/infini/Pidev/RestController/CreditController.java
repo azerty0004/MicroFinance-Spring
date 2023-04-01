@@ -1,14 +1,11 @@
 package tn.esprit.infini.Pidev.RestController;
 
 
-import com.lowagie.text.Document;
 import com.lowagie.text.DocumentException;
-import com.lowagie.text.Element;
-import com.lowagie.text.Paragraph;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.*;
 import tn.esprit.infini.Pidev.Services.ITransaction;
 import tn.esprit.infini.Pidev.Services.Icreditservice;
@@ -16,18 +13,14 @@ import tn.esprit.infini.Pidev.dto.CreditRequestDTO;
 import tn.esprit.infini.Pidev.dto.CreditResponseDTO;
 import tn.esprit.infini.Pidev.entities.*;
 
-import javax.servlet.http.HttpServletResponse;
-import java.io.*;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
+import java.io.IOException;
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
 @AllArgsConstructor
 @RestController
+
 public class CreditController {
     private Icreditservice icreditservice;
     private ITransaction iTransaction;
@@ -170,6 +163,10 @@ public class CreditController {
         response.setContentType("application/pdf");
         response.setHeader("Content-disposition", "attachment; filename=details_credit.pdf");
         icreditservice.exportpdf(response, creditId);
+    }
+    @GetMapping("/calculatePaymentHistoryScore/{id}")
+    public double calculatePaymentHistoryScore(@PathVariable Long id){
+        return icreditservice.calculatePaymentHistoryScore(id);
     }
 
 }

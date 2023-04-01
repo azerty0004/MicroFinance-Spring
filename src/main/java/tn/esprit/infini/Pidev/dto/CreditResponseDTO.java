@@ -7,10 +7,8 @@ import lombok.NoArgsConstructor;
 import tn.esprit.infini.Pidev.entities.Statut;
 import tn.esprit.infini.Pidev.entities.TypeCredit;
 import tn.esprit.infini.Pidev.entities.TypeRemboursement;
+import jakarta.persistence.*;
 
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 

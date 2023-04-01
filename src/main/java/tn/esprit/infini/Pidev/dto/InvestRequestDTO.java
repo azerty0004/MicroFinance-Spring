@@ -1,15 +1,17 @@
 package tn.esprit.infini.Pidev.dto;
 
+
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.validation.constraints.FutureOrPresent;
 import lombok.*;
+import jakarta.persistence.*;
 import tn.esprit.infini.Pidev.entities.Statut;
-import tn.esprit.infini.Pidev.entities.TypeCredit;
-import tn.esprit.infini.Pidev.entities.TypeRemboursement;
 
-import javax.persistence.PrePersist;
-import javax.validation.constraints.FutureOrPresent;
+import java.io.Serializable;
 import java.time.LocalDate;
-
-
+import java.util.ArrayList;
+import java.util.List;
 
 @Data
 @NoArgsConstructor
@@ -19,14 +21,11 @@ public class InvestRequestDTO {
 
     @NonNull
     private Double amount;
-    private LocalDate dateOfApplication = LocalDate.now();
     @NonNull
     @FutureOrPresent
     private LocalDate dateofobtaining;
     private LocalDate dateoffinish;
     private Integer mounths;
-    private Statut statut = Statut.EN_ATTENTE;
-
 
     @PrePersist
     public void validateDates() {

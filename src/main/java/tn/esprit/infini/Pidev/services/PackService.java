@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import tn.esprit.infini.Pidev.entities.Pack;
 import tn.esprit.infini.Pidev.Repository.PackRepository;
+import jakarta.persistence.*;
 
 import java.util.List;
 
