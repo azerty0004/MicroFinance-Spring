@@ -6,6 +6,9 @@ import tn.esprit.infini.Pidev.Repository.GuarantorRepository;
 import tn.esprit.infini.Pidev.entities.Guarantor;
 
 import java.time.LocalDate;
+import java.time.Period;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -58,7 +61,46 @@ public class GuarantorService implements IGuarantorService{
         return cinString.matches("\\d{8}");
     }
 
-   
+   /* public String classifyGuarantorAdmissibility(Guarantor guarantor) {
+        double score = 0.0;
+        int age = calculateAge(guarantor.getDateOfBirth());
+
+        // Critère 1: Âge minimum de 18 ans
+        if (age >= 18) {
+            score += 0.25;
+        }
+
+        // Critère 2: Revenu minimal de 1500 dinars
+        if (guarantor.getSalary() >= 1500) {
+            score += 0.25;
+        }
+
+        // Critère 3: Type d'emploi stable (CDI)
+        if (guarantor.getJob().equalsIgnoreCase("CDI")) {
+            score += 0.25;
+        }
+
+        // Critère 4: Historique de crédit positif
+        if (guarantor.getCredit().getCreditHistory().equalsIgnoreCase("positif")) {
+            score += 0.25;
+        }
+
+        // Classification finale
+        if (score >= 0.75) {
+            return "Admissible";
+        } else {
+            return "Non-admissible";*/
+
+
+
+    // Calculer l'âge à partir de la date de naissance
+    public int calculateAge(Date dateOfBirth) {
+        LocalDate birthdate = dateOfBirth.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+        LocalDate now = LocalDate.now();
+        Period period = Period.between(birthdate, now);
+        return period.getYears();
+    }
+
 
 
 

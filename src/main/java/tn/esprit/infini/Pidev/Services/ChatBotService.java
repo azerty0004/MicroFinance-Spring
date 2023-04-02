@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tn.esprit.infini.Pidev.Repository.ChatBotRepository;
-import tn.esprit.infini.Pidev.Repository.UserRepository;
 import tn.esprit.infini.Pidev.entities.ChatBot;
 
 @Service
