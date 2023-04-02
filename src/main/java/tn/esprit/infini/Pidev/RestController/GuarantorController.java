@@ -1,4 +1,4 @@
-/*package tn.esprit.infini.Pidev.RestController;
+package tn.esprit.infini.Pidev.RestController;
 
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -12,6 +12,7 @@ import java.util.List;
 
 @RestController
 @AllArgsConstructor
+@RequestMapping("/Guarantor")
 public class GuarantorController {
     GuarantorService guarantorService;
 
@@ -58,4 +59,3 @@ public class GuarantorController {
         }
     }
 }
-*/

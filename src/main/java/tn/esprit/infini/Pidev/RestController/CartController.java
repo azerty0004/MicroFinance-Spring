@@ -1,4 +1,4 @@
-/*
+
 package tn.esprit.infini.Pidev.RestController;
 
 import com.twilio.exception.TwilioException;
@@ -17,6 +17,7 @@ import java.util.List;
 
 @RestController
 @AllArgsConstructor
+@RequestMapping("/Cart")
 public class CartController {
 
     ICartService iCartService;
@@ -103,4 +104,4 @@ public class CartController {
 
 }
 
- */
+

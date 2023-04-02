@@ -110,23 +110,6 @@ public class TransactionService implements ITransaction {
     }
 
 
-    public List<Transaction> divideTransaction(Long amount,Integer numberOfMonths) {
-        List<Transaction> transactionList=new ArrayList<>();
-
-            BigDecimal loanAmountInBigDecimal = BigDecimal.valueOf(amount);
-            BigDecimal monthlyPayment = loanAmountInBigDecimal.divide(BigDecimal.valueOf(numberOfMonths), 2, RoundingMode.HALF_UP);
-            Calendar calendar = Calendar.getInstance();
-            calendar.setTime(new Date());
-            System.out.println();
-            for (int i = 1; i <= numberOfMonths; i++) {
-                Transaction payment = new Transaction();
-                payment.setAmount(monthlyPayment.longValue());
-                payment.setDate(calendar.getTime());
-                calendar.add(Calendar.MONTH, 1);
-                transactionList.add(payment);
-            }
-            return (transactionList);
-        }
 
 }
 

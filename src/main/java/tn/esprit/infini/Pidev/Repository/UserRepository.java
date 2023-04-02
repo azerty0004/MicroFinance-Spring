@@ -11,14 +11,6 @@ import tn.esprit.infini.Pidev.entities.User;
 
 import java.util.List;
 
-@Repository
-public interface UserRepository extends JpaRepository<User, Integer> {
-    User findByLogin(String login);
-    int findByPhoneNumber(int phoneNumber);
-    User findById ( int idUser);
-    //@Query("SELECT u FROM User u JOIN u.likedPacks p WHERE p.id = :idPack")
-  //  public List<User> getLikedByUsers(@Param("idPack") int idPack);
-
 
 import java.util.Optional;
 
@@ -30,4 +22,10 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     //List<User> findAllByTypeEndingWith(@Param("type") String type);
 
     //User findByAccount(Account account);
+   // User findByLogin(String login);
+   // int findByPhoneNumber(int phoneNumber);
+    User findById ( int idUser);
+    //@Query("SELECT u FROM User u JOIN u.likedPacks p WHERE p.id = :idPack")
+    //  public List<User> getLikedByUsers(@Param("idPack") int idPack);
+
 }

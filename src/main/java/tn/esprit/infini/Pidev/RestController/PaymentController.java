@@ -36,6 +36,7 @@ import java.util.Map;
 @RestController
 @AllArgsConstructor
 @NoArgsConstructor
+@RequestMapping("/Payment")
 public class PaymentController {
     @Value("${stripe.api.key}")
     private String stripePublicKey;

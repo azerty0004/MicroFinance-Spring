@@ -15,6 +15,7 @@ import java.util.List;
 
 @RestController
 @AllArgsConstructor
+@RequestMapping("/Transaction")
 public class TransactionController {
     @Autowired
     private ITransaction iTransaction;
@@ -58,7 +59,7 @@ public class TransactionController {
 
 
 
-    @GetMapping("/GetPaymentModel/{amount}/{numberOfMonths}")
+    @GetMapping("/GetPaymentModels/{amount}/{numberOfMonths}")
     List<Transaction> ajouter(@PathVariable Long amount, @PathVariable Integer numberOfMonths) {
         return iTransaction.divideTransaction(amount, numberOfMonths);
 

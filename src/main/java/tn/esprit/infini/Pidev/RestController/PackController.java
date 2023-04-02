@@ -1,4 +1,4 @@
-/*
+
 package tn.esprit.infini.Pidev.RestController;
 
 import lombok.AllArgsConstructor;
@@ -22,6 +22,7 @@ import java.util.Set;
 
 @RestController
 @AllArgsConstructor
+@RequestMapping("/Pack")
 public class PackController {
 
     IPackService iPackService;
@@ -74,7 +75,7 @@ public class PackController {
     }
     // rating:
 
-   /* @PostMapping("/addReactionToPack/{idPack}/reaction")
+    @PostMapping("/addReactionToPack/{idPack}/reaction")
     public void addReactionToPack(@PathVariable int idPack,
                                   @RequestBody Reaction reaction) {
         // récupérer les informations du formulaire
@@ -84,7 +85,7 @@ public class PackController {
         // appeler le service pour ajouter la réaction au pack
         packService.addReaction(idPack, idUser, type);
 
-    }*/
+    }
 
     @PostMapping("/{idPack}/{idUser}/{type}")
     public String addReaction(
@@ -139,4 +140,3 @@ public class PackController {
     }
 
 }
-*/
