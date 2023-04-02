@@ -1,13 +1,15 @@
 package tn.esprit.infini.Pidev.Services;
 
 import lombok.AllArgsConstructor;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import tn.esprit.infini.Pidev.Repository.ComplaintHistoryRepository;
 import tn.esprit.infini.Pidev.Repository.ComplaintRepository;
 import tn.esprit.infini.Pidev.Repository.UserRepository;
-import tn.esprit.infini.Pidev.entities.Complaint;
-import tn.esprit.infini.Pidev.entities.Typecomplaint;
-import tn.esprit.infini.Pidev.entities.User;
+import tn.esprit.infini.Pidev.entities.*;
+import tn.esprit.infini.Pidev.mappers.Complaintmapper;
 
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -20,7 +22,8 @@ public  class ComplaintService implements IComplaintService {
   private EmailService emailService;
     ComplaintRepository complaintRepository;
     UserRepository userRepository;
-
+    Complaintmapper complaintmapper;
+    private ComplaintHistoryRepository complaintHistoryRepository;
 
     @Override
     public List<Complaint> retrieveAllcomplaints() {
@@ -36,7 +39,11 @@ public  class ComplaintService implements IComplaintService {
       }
 
      */
-     @Override
+
+     // public Complaint addComplaint(Complaint complaint, int id)
+     //Complaintresponse addComplaint(ComplaintrequestDTO complaintDTO);
+
+    @Override
     public Complaint addComplaint(Complaint complaint, int id) {
         //        UR.findByAccount(account).setType(TypeUser.Casual_Client);
 
@@ -84,9 +91,10 @@ public  class ComplaintService implements IComplaintService {
 
 
     @Override
-    public void deleteComplaint(Long idcomplaint) {
+    public String deleteComplaint(Long idcomplaint) {
 
         complaintRepository.deleteById(idcomplaint);
+        return ("complaint supprimé");
     }
 
  /*   @Override
@@ -123,7 +131,7 @@ public  class ComplaintService implements IComplaintService {
         }
         return percentages;
     }
-    @Override
+   @Override
     public Complaint filterBadWords(Complaint complaint) {
         String[] badWords = {"shit", "crap", "basterd","damn it"," Bloody Hell"," Rubbish",};
 
@@ -137,43 +145,60 @@ public  class ComplaintService implements IComplaintService {
     public Complaint retrieveComplaint(Long idcomplaint) {
         return complaintRepository.findById(idcomplaint).get();
     }
-
- /*   public void updateComplaintState(Long complaintId, Stateofcomplaint newState) {
-        Complaint complaint = complaintRepository.findById(complaintId).orElseThrow(() -> new EntityNotFoundException("Complaint not found"));
-        Stateofcomplaint oldState = complaint.getStateofcomplaint();
-        complaint.setStateofcomplaint(newState);
-        complaintRepository.save(complaint);
-
-        if (oldState != Stateofcomplaint.complaintresolved && newState == Stateofcomplaint.complaintresolved) {
-            String recipientEmail = complaint.getUser().getEmail();
-            String subject = "Votre réclamation a été traitée";
-            String body = "Bonjour,\n\nNous sommes heureux de vous informer que votre réclamation a été traitée avec succès.\n\nCordialement,\nL'équipe de support";
-            emailService.sendEmail(recipientEmail, subject, body);
+    /*@Override
+    public void archiveResolvedComplaints(int userId) {
+        List<Complaint> complaints = complaintRepository.getComplaintsByUser(userId);
+        for (Complaint complaint : complaints) {
+            if (complaint.getStateofcomplaint() == Stateofcomplaint.complaintresolved) {
+                ComplaintHistory history = ComplaintHistory.builder()
+                        .complaint(complaint)
+                        .date(LocalDate.now())
+                        .comment("Complaint resolved and archived")
+                        .state(complaint.getStateofcomplaint())
+                        .build();
+                complaintHistoryRepository.save(history);
+                complaintRepository.delete(complaint);
+            }
         }
-    } */
- /*public void resolveComplaint(Long complaintId) {
-     Complaint complaint = complaintRepository.findById(complaintId).get();
-     if (complaint.getStateofcomplaint() == Stateofcomplaint.complaintresolved) {
-         // Envoyer un courriel au client
-         String to = complaint.getUser().getEmail();
-         String subject = "Votre plainte a été résolue";
-         String text = "Votre plainte a été résolue. Merci d'avoir contacté notre service clientèle.";
-         emailService.sendEmail(to, subject, text);
-     }
-     // Mettre à jour l'état de la plainte dans la base de données
-     complaint.setStateofcomplaint(Stateofcomplaint.complaintresolved);
-     complaintRepository.save(complaint);
- }*/
- /*  public void sendResolvedComplaintsEmails() {
-     List<Complaint> resolvedComplaints = complaintRepository.findByStateOfComplaint(Stateofcomplaint.complaintresolved);
+    }*/ //
+    @Override
+    @Scheduled( fixedRate = 5000)
+    public void archiveResolvedComplaints() {
+        List<Complaint> resolvedComplaints = complaintRepository.getResolvedComplaints();
+        for (Complaint complaint : resolvedComplaints) {
+            ComplaintHistory history = ComplaintHistory.builder()
+                    .complaint(complaint)
+                    .date(LocalDate.now())
+                    .comment("Complaint resolved and archived")
+                    .state(complaint.getStateofcomplaint())
+                    .build();
+            complaintHistoryRepository.save(history);
+            complaintRepository.delete(complaint);
+        }
+        System.out.println("Resolved complaints have been archived.");
+    }
+@Override
+    public List<ComplaintHistory> getArchivedComplaints() {
+        return (List<ComplaintHistory>) complaintHistoryRepository.findAll();
+    }
+
+
+   public void sendResolvedComplaintsEmails() {
+     List<Complaint> resolvedComplaints = complaintRepository.findComplaintsByState(Stateofcomplaint.complaintresolved);
      for (Complaint complaint : resolvedComplaints) {
          // envoyer l'e-mail à l'utilisateur correspondant ici
          User user = complaint.getUser();
          String userEmail = user.getEmail();
-         String emailBody = "Votre réclamation a été traitée avec succès.";
-         emailService.sendEmail(userEmail, "Réclamation traitée", emailBody);
+        String emailBody = "Votre réclamation a été traitée avec succès.";
+         // emailService.sendEmail(userEmail, "Réclamation traitée", emailBody);
+         Email email = new Email();
+         email.setRecipient(userEmail);
+         email.setSubject("Réclamation traitée");
+         email.setMsgBody(emailBody);
+
+         emailService.sendEmail(email);
      }
- } */
+ }
 }
 
 

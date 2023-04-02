@@ -2,7 +2,7 @@ package tn.esprit.infini.Pidev.entities;
 
 import lombok.*;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.io.Serializable;
 import java.util.Date;
 @Data
@@ -24,11 +24,13 @@ public class Insurance implements Serializable {
     private String coverage;
     private Double deductible;
     private String claimsHistory;
-    private Integer levelofrisk;
+    private Double levelofrisk;
     private Boolean archived;
+    @Enumerated(EnumType.STRING)
+    private Typeinsurance  Typeinsurance;
     @ManyToOne
     Pack pack;
-    @OneToOne
+    @ManyToOne
     Credit credit;
 
 }

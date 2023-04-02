@@ -2,14 +2,17 @@ package tn.esprit.infini.Pidev.RestController;
 
 
 import lombok.AllArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import tn.esprit.infini.Pidev.Services.IInsuranceService;
 import tn.esprit.infini.Pidev.entities.Insurance;
+import tn.esprit.infini.Pidev.entities.Typeinsurance;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
-@RequestMapping()
+@RequestMapping("/Insurance")
 @AllArgsConstructor
 public class InsuranceController {
     private IInsuranceService insuranceService;
@@ -30,8 +33,8 @@ public class InsuranceController {
 
 
     @GetMapping("/displaywithId/{idinsurance}")
-    public Insurance displaywithidinsurance(@PathVariable int idinsurance) {
-        return insuranceService.retrieveInsurance( (int) idinsurance);
+    public Insurance displaywithidinsurance(@PathVariable Integer idinsurance) {
+        return insuranceService.retrieveInsurance(  idinsurance);
     }
     @PutMapping("/updateinsurance")
     public Insurance updateinsurance(@RequestBody Insurance insurance) {
@@ -49,9 +52,48 @@ public class InsuranceController {
     public double calculateCostWithDiscount(@RequestBody Insurance insurance) {
         return insuranceService.calculateInsuranceCostWithDiscount(insurance);
     }
- /*   @PostMapping("/archive-expired")
-    public String archiveExpiredInsurances() {
-        insuranceService.archiveExpiredInsurances();
-        return "Les assurances expirées ont été archivées.";
+    @GetMapping("/getinsurancebyType")
+    public List<Object[]> getInsurancetByType() {
+        return insuranceService.getInsuranceByType();
+    }
+
+   @PostMapping("/request")
+   public String processInsuranceRequest(@RequestBody Insurance insurance) {
+       boolean isApproved = insuranceService.processInsuranceRequest(insurance);
+       if (isApproved) {
+           insuranceService.addInsurance(insurance);
+           return "La demande d'assurance a été approuvée et l'assurance a été ajoutée.";
+       } else {
+           return "La demande d'assurance a été refusée.";
+       }
+   }
+    @PostMapping("/packs/{packId}/insurances/{insuranceId}")
+    public Insurance addInsuranceToPack(@PathVariable int packId, @PathVariable int insuranceId) {
+        return insuranceService.addInsuranceToPack(insuranceId, packId);
+    }
+
+
+    @PostMapping("/calculate-fico-score")
+    public float calculateFicoScore(@RequestBody Insurance insurance) {
+        return insuranceService.calculateFicoScore(insurance);
+    }
+    @GetMapping("/LevelOfRiskCalculator")
+
+    public double LevelOfRiskCalculator(@RequestBody Insurance insurance) throws IOException {
+        return insuranceService.LevelOfRiskCalculator(insurance);
+    }
+    @PutMapping("/assignInsuranceToPack/{idinsurancek}/{idPack}") // affecte un pack au panier ( bouton ajouter au panier)
+    public Insurance assignInsiranceToPack(@PathVariable Integer idinsurance
+                                         , @PathVariable Integer idPack){
+        return insuranceService.assignInsuranceToPack( idinsurance,  idPack);
+
+    }
+   /* @GetMapping("/insurancecc")
+    public Double getInsuranceMaxNumber() {
+        List<Object[]> insuranceList = insuranceService.getInsuranceByType();
+        double maxNumber = insuranceService.findMaxNumber(insuranceList);
+        return maxNumber;
     }*/
 }
+
+

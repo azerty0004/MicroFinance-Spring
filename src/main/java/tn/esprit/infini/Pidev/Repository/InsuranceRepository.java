@@ -6,9 +6,11 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 import tn.esprit.infini.Pidev.entities.Account;
 import tn.esprit.infini.Pidev.entities.Insurance;
+import tn.esprit.infini.Pidev.entities.Typeinsurance;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 public interface InsuranceRepository extends CrudRepository<Insurance,Integer> {
     @Query(value = "SELECT COUNT(*) FROM Insurance u WHERE u.user_id = :userId", nativeQuery = true)
@@ -28,5 +30,14 @@ public interface InsuranceRepository extends CrudRepository<Insurance,Integer> {
     List<Account> findAccountsByNumberOfInsurances();
     @Query("SELECT i FROM Insurance i WHERE i.endinsurance < :date")
     List<Insurance> findByEndinsuranceBefore(@Param("date") Date date);
+
+    @Query("SELECT c.Typeinsurance, COUNT(c) FROM Insurance c GROUP BY c.Typeinsurance")
+    List<Object[]> getInsuranceByType();
+
+
+    Insurance findByIdinsurance(int idinsurance);
+    @Query("SELECT i.Typeinsurance, COUNT(i) FROM Insurance i GROUP BY i.Typeinsurance")
+    List<Object[]> countInsurancesByType();
+
 }
 

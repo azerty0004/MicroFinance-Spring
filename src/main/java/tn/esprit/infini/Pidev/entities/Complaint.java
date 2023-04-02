@@ -1,8 +1,9 @@
 package tn.esprit.infini.Pidev.entities;
 import lombok.*;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.Date;
 @Data
 @Builder
@@ -17,9 +18,9 @@ public class Complaint implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idcomplaint;
-    private Date dateofcomplaint;
+    private LocalDate dateofcomplaint= LocalDate.now();
     @Enumerated(EnumType.STRING)
-    private Stateofcomplaint stateofcomplaint;
+    private Stateofcomplaint stateofcomplaint=Stateofcomplaint.complaintpending;
     public String description;
     @Enumerated(EnumType.STRING)
     private Typecomplaint typecomplaint;

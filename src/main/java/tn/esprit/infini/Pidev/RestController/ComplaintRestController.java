@@ -4,7 +4,10 @@ import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import tn.esprit.infini.Pidev.Services.ComplaintService;
 import tn.esprit.infini.Pidev.Services.IComplaintService;
+import tn.esprit.infini.Pidev.dto.ComplaintrequestDTO;
+import tn.esprit.infini.Pidev.dto.Complaintresponse;
 import tn.esprit.infini.Pidev.entities.Complaint;
+import tn.esprit.infini.Pidev.entities.ComplaintHistory;
 import tn.esprit.infini.Pidev.entities.Typecomplaint;
 
 import java.util.HashMap;
@@ -12,6 +15,7 @@ import java.util.List;
 
 @RestController
 @AllArgsConstructor
+@RequestMapping("/Complaint")
 public class ComplaintRestController {
 
     private ComplaintService complaintService;
@@ -36,8 +40,9 @@ public class ComplaintRestController {
         return iComplaintService.addComplaint(complaint,id);
     }
 
-    @GetMapping("/displaywithId/{idcomplaint}")
-    public Complaint displaywithid(@PathVariable ("idcomplaint") Long idcomplaint) {
+
+    @GetMapping("/displaywithIdComplaint/{idcomplaint}")
+    public Complaint displaywithidComplaint(@PathVariable ("idcomplaint") Long idcomplaint) {
         return iComplaintService.retrieveComplaint( idcomplaint);
     }
 
@@ -51,9 +56,20 @@ public class ComplaintRestController {
 
     }
     @DeleteMapping("/deletecomplaint/{idcomplaint}")
-    void  deletecomplaint(@PathVariable ("idcomplaint") Long idcomplaint)
+    public String  deletecomplaint(@PathVariable ("idcomplaint") Long idcomplaint)
     {
-        iComplaintService.deleteComplaint(idcomplaint);
+         return  iComplaintService.deleteComplaint(idcomplaint);
+    }
+
+    @GetMapping("/archive")
+    public String archiveResolvedComplaints() {
+        complaintService.archiveResolvedComplaints();
+        return "Les réclamations résolues sont archivées.";
+    }
+
+    @GetMapping("/afficherarchive")
+    public List<ComplaintHistory> getArchivedComplaints() {
+        return complaintService.getArchivedComplaints();
     }
 
      /*68@PostMapping("/complaints")
@@ -63,11 +79,11 @@ public class ComplaintRestController {
      return   iComplaintService.addComplaint(complaint);
 
     } */
-   /*  @GetMapping("/complaints/sendResolvedEmails")
+     @GetMapping("/sendResolvedEmails")
      public String sendResolvedEmails() {
          complaintService.sendResolvedComplaintsEmails();
          return "Resolved complaints emails sent successfully";
-     } */
+     }
 
 }
 
