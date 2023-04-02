@@ -1,15 +1,6 @@
 package tn.esprit.infini.Pidev.Services;
 
-import com.twilio.Twilio;
-import com.twilio.exception.TwilioException;
-import com.twilio.http.TwilioRestClient;
-import com.twilio.rest.api.v2010.account.MessageCreator;
-import com.twilio.type.PhoneNumber;
-import com.twilio.rest.api.v2010.account.Message;
 import lombok.AllArgsConstructor;
-import lombok.Value;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import tn.esprit.infini.Pidev.Repository.CartRepository;
@@ -18,14 +9,12 @@ import tn.esprit.infini.Pidev.Repository.UserRepository;
 import tn.esprit.infini.Pidev.entities.Cart;
 import tn.esprit.infini.Pidev.entities.Pack;
 import tn.esprit.infini.Pidev.entities.TypePack;
-import tn.esprit.infini.Pidev.entities.User;
 
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.lang.String;
 
 
 @Service
@@ -122,7 +111,8 @@ import java.lang.String;
 
 
     @Override
-    public double getMonthlyPackPrice(Cart cart) {
+    public double getMonthlyPackPrice(int idCart) {
+        Cart cart = cartRepository.findByIdCart(idCart);
         double totalAmountWithInterest = calculateCartTotalWithInterest(cart.getIdCart());
         double monthlyPrice = totalAmountWithInterest/ cart.getNbreMounths();
         return monthlyPrice;

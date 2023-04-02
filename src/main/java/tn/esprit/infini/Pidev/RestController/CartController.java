@@ -73,11 +73,11 @@ public class CartController {
     @GetMapping("/{idCart}/monthly-price")
     public double getMonthlyPrice(@PathVariable("idCart") int idCart) {
         Cart cart = cartRepository.findByIdCart(idCart);
-        return cartService.getMonthlyPackPrice(cart);
+        return cartService.getMonthlyPackPrice(idCart);
     }
 
-    @GetMapping("/most-expensive")
-    public Cart findMostExpensiveCart() {
+    @GetMapping("/most-expensive/{idCart}")
+    public Cart findMostExpensiveCart(@PathVariable Integer idCart) {
         Cart mostExpensiveCart = cartService.findMostExpensiveCart();
         return mostExpensiveCart ;
     }

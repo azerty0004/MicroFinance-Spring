@@ -21,12 +21,13 @@ public interface ICartService {
 
     double calculateCartTotalWithInterest(int cartId);
 
-    double getMonthlyPackPrice(Cart cart);
 
     Cart removePackFromCart(int idCart, int idPack);
 
     Cart findMostExpensiveCart();
 
+
+    double getMonthlyPackPrice(int idCart);
 
     List<Pack> getRecommendedPacks(Integer idCart);
 
