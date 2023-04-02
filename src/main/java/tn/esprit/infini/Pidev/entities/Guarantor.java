@@ -7,6 +7,8 @@ import lombok.Setter;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
+import java.time.LocalDate;
+import java.util.Date;
 
 @Entity
 @Getter
@@ -20,6 +22,9 @@ public class Guarantor implements Serializable {
     private String firstNameGuarantor ;
     private String lastNameGuarantor ;
     private int cinGuarantor ;
+    private Date dateOfBirth;
     private double salary ;
     private String job ;
+    @OneToOne
+    Credit credit;
    }

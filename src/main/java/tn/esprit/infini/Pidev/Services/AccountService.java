@@ -18,7 +18,7 @@ public class AccountService implements IAccount {
     @Override
     public Account addAccount(Account account, int idUser) {
 //        UR.findByAccount(account).setType(TypeUser.Casual_Client);
-        User user= UR.findById(idUser).orElse(null);
+        User user= UR.findById(idUser);
         account.setUser(user);
         return AR.save(account);}
     @Override

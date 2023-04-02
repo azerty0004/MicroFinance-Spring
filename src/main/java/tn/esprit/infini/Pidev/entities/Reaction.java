@@ -1,27 +1,32 @@
 package tn.esprit.infini.Pidev.entities;
 
-import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import jakarta.persistence.*;
-
 import java.io.Serializable;
-import java.util.Date;
 
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Account implements Serializable {
+@Table(name = "Reaction")
+
+public class Reaction implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private int id;
-    private Date creationDate;
-    private float balance;
-    @OneToOne
-    private User user;
+
+    @Enumerated(EnumType.STRING)
+    public TypeReaction TP;
+
+    private int idUser;
+
+    @ManyToOne
+    public Pack pack;
+
 }

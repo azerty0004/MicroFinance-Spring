@@ -2,6 +2,7 @@ package tn.esprit.infini.Pidev.Services;
 
 
 
+import tn.esprit.infini.Pidev.entities.Pack;
 import tn.esprit.infini.Pidev.entities.User;
 
 import java.util.List;
@@ -22,4 +23,6 @@ public interface IUser {
     int countAge(int idUser);
     List<User>findAllByTypeEndingWith(String s);
     void banUser(User user);
+
+    //List<Pack> getLikedPacks(int idUser);
 }

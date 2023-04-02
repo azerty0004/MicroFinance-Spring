@@ -28,8 +28,4 @@ public class Bill  implements Serializable {
     private String picture;
 
 
-
-
-
-
 }

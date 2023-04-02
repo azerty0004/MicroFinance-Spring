@@ -3,11 +3,18 @@ package tn.esprit.infini.Pidev.Services;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import tn.esprit.infini.Pidev.Repository.UserRepository;
+
+import tn.esprit.infini.Pidev.entities.Pack;
+import tn.esprit.infini.Pidev.entities.User;
+
+import java.util.ArrayList;
+
 import tn.esprit.infini.Pidev.entities.User;
 
 import java.sql.Date;
 import java.time.LocalDate;
 import java.time.Period;
+
 import java.util.List;
 
 @Service
@@ -30,7 +37,7 @@ public class UserService implements IUser{
     public void deleteUser(Integer idUser) {UR.deleteById(idUser);}
     //Advanced functions
     @Override
-    public User retrieveUser(int idUser) {return UR.findById(idUser).get();}
+    public User retrieveUser(int idUser) {return UR.findById(idUser);}
 
    // @Override
     //public User retrieveUserByLogin(String login) {return UR.findByLogin(login);}
@@ -81,4 +88,5 @@ public class UserService implements IUser{
     public void banUser(User user) {
 
     }
+
 }

@@ -10,6 +10,10 @@ import lombok.Setter;
 
 import jakarta.persistence.*;
 
+
+import jakarta.persistence.*;
+
+
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
@@ -44,8 +48,13 @@ public class Transaction implements Serializable {
     @Column(name = "credits")
     @OneToMany(mappedBy = "transaction")
     private Set<Credit> credits;
+
+    @OneToMany(mappedBy = "transaction")
+    private Set<Pack> packs;
+
     @Column
     private String status;
+
 
 
 

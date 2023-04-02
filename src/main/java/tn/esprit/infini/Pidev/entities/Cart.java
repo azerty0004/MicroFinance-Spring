@@ -12,9 +12,13 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 
+import jakarta.persistence.*;
+
+
 import java.util.Set;
 
 import jakarta.persistence.*;
+
 
 import java.io.Serializable;
 import java.util.Set;
@@ -33,13 +37,11 @@ public class Cart implements Serializable {
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         @Column(name = "idCart")
         private int idCart;
-        private int quantity;
         private int nbreMounths;
-        private double mounthlyAmount;
 
          @OneToMany(mappedBy = "cart")
          @JsonIgnore
-         private Set<Pack> pack;
+         public Set<Pack> pack;
 
 
 }
