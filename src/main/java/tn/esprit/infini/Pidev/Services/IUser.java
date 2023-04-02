@@ -15,10 +15,13 @@ public interface IUser {
     void deleteUser(Integer idUser);
     //Advanced functions
     User retrieveUser (int idUser);
-    User retrieveUserByLogin(String login);
+    //User retrieveUserByLogin(String login);
     Boolean login(String login, String mdp);
     void changePassword(User user, String mdp);
     boolean veriyUserPassword(User user, String password);
+    int countUsers();
+    int countAge(int idUser);
+    List<User>findAllByTypeEndingWith(String s);
     void banUser(User user);
 
     //List<Pack> getLikedPacks(int idUser);
