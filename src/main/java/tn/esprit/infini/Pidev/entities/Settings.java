@@ -24,6 +24,7 @@ public class Settings  {
     private int maxScore;
 
     private double rate;
+    private double levelofrisk;
 
 
 }

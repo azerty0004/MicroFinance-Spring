@@ -45,5 +45,6 @@ public interface Creditrepository extends JpaRepository<Credit,Long>, JpaSpecifi
     @Query("SELECT c FROM Credit c JOIN c.transactions t WHERE t.idUser = :userId")
            List <Credit> getCreditByiduser(@Param("userId") Long userid);
 
+    Credit findByAmount(double amount);
 
 }

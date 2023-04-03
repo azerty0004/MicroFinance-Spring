@@ -1,6 +1,8 @@
 package tn.esprit.infini.Pidev.RestController;
 
 
+import com.google.gson.Gson;
+import com.stripe.exception.StripeException;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -10,11 +12,14 @@ import tn.esprit.infini.Pidev.Services.ITransaction;
 import tn.esprit.infini.Pidev.Services.Icreditservice;
 import tn.esprit.infini.Pidev.entities.Credit;
 import tn.esprit.infini.Pidev.entities.Transaction;
+
+import java.util.Date;
 import java.util.List;
 
 @RestController
 @Service
 @AllArgsConstructor
+@RequestMapping("/Transaction")
 public class TransactionController {
     private ITransaction iTransaction;
     private TransactionRepository transactionRepository;
@@ -46,6 +51,22 @@ public class TransactionController {
     {
         iTransaction.deleteTransaction(idTransaction);
     }
+    @PostMapping("/confirmTransaction")
+    void confirmTransaction(@RequestBody String intentId)
+    {
+        iTransaction.confirmTransaction(intentId);
+
+
+    }
+
+
+    @GetMapping("/GetPaymentModels/{amount}/{numberOfMonths}")
+    List<Transaction> ajouter(@PathVariable Long amount, @PathVariable Integer numberOfMonths) {
+        return iTransaction.divideTransaction(amount, numberOfMonths);
+
+    }
+
+
 
 
 }

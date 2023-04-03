@@ -1,8 +1,11 @@
 package tn.esprit.infini.Pidev.entities;
 
 
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import jakarta.persistence.*;
+
 import jakarta.persistence.*;
 
 import java.io.Serializable;
@@ -24,10 +27,6 @@ public class Bill  implements Serializable {
     @Enumerated(EnumType.STRING)
     private BillType billType;
     private String picture;
-
-
-
-
 
 
 }

@@ -1,6 +1,4 @@
 package tn.esprit.infini.Pidev.entities;
-
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.constraints.FutureOrPresent;
 import lombok.*;
@@ -9,6 +7,16 @@ import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+import jakarta.persistence.*;
+
+import jakarta.persistence.*;
+
+import java.io.Serializable;
+import java.util.Date;
+import java.util.Set;
 
 @Entity
 @Getter
@@ -17,6 +25,7 @@ import java.util.List;
 @NoArgsConstructor
 @Data
 @Builder
+
 
 @Table(name = "Credit")
 public class Credit implements Serializable {
@@ -45,7 +54,7 @@ public class Credit implements Serializable {
     @OneToOne
     @JsonIgnore
     private Guarantor guarantor;
-    @NonNull
+
     @Enumerated(EnumType.STRING)
     private TypeCredit typeCredit;
 
@@ -59,6 +68,10 @@ public class Credit implements Serializable {
     @NonNull
     @Enumerated(EnumType.STRING)
     private TypeRemboursement typeRemboursement;
+
+
+
+
 
     @PrePersist
     public void validateDates() {
