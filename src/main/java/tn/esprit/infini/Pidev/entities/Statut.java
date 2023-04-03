@@ -1,4 +1,5 @@
 package tn.esprit.infini.Pidev.entities;
+import jakarta.persistence.*;
 
 
 import java.io.Serializable;

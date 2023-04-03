@@ -11,6 +11,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import jakarta.persistence.*;
 
 import jakarta.persistence.*;
 
@@ -42,6 +43,7 @@ public class Cart implements Serializable {
          @OneToMany(mappedBy = "cart")
          @JsonIgnore
          public Set<Pack> pack;
+
 
 
 }

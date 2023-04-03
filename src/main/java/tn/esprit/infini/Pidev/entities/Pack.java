@@ -7,6 +7,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import jakarta.persistence.*;
+import java.io.Serializable;
+import java.util.Set;
 
 import java.io.Serializable;
 import java.time.LocalDate;
@@ -38,15 +40,14 @@ import jakarta.persistence.*;
     private LocalDate createdAt;
     @Enumerated(EnumType.STRING)
     private TypePack typePack;
-
     @ManyToOne
     @JsonIgnore
     public Cart cart;
-
     @ManyToOne
     @JsonIgnore
     Transaction transaction;
-
+    @OneToMany( mappedBy="pack")
+    private Set<Insurance> Insurances;
     @OneToMany (mappedBy = "pack")
     @JsonIgnore
     Set<Reaction> reaction;

@@ -1,13 +1,15 @@
 package tn.esprit.infini.Pidev.entities;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import jakarta.persistence.*;
 
 import java.io.Serializable;
 import java.util.Date;
-
+@Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
 @Entity
@@ -15,23 +17,27 @@ import java.util.Date;
 public class Insurance implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idinsurance;
-
+    private int idinsurance;
     private String insured;
+    private Double insuredAmount;
     private Date startinsurance;
     private Date endinsurance;
-    private Double premium;
     private String coverage;
     private Double deductible;
     private String claimsHistory;
+    private Double levelofrisk;
+    private Boolean archived;
+    @Enumerated(EnumType.STRING)
+    private Typeinsurance  Typeinsurance;
+    @ManyToOne
+    Pack pack;
+    @ManyToOne
 
     @ManyToOne
     Pack pack;
 
     @OneToOne
     Credit credit;
-
-
 
 }
 

@@ -5,6 +5,8 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import jakarta.persistence.*;
+
 
 
 
@@ -48,6 +50,8 @@ public class Transaction implements Serializable {
     @Column(name = "credits")
     @OneToMany(mappedBy = "transaction")
     private Set<Credit> credits;
+    @OneToMany(mappedBy = "transaction")
+    private  Set<Account> accounts;
 
     @OneToMany(mappedBy = "transaction")
     private Set<Pack> packs;
@@ -69,4 +73,6 @@ public class Transaction implements Serializable {
         this.status=status;
 
     }
+
+
 }

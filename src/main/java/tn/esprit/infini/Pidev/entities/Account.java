@@ -1,6 +1,8 @@
 package tn.esprit.infini.Pidev.entities;
 
 import jakarta.persistence.*;
+import lombok.*;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,6 +18,8 @@ import java.util.Date;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Data
+@Builder
 public class Account implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,4 +28,7 @@ public class Account implements Serializable {
     private float balance;
     @OneToOne
     private User user;
+    @ManyToOne
+    Transaction transaction;
+
 }
