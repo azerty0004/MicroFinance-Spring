@@ -11,9 +11,8 @@ import tn.esprit.infini.Pidev.entities.Fine;
 import tn.esprit.infini.Pidev.entities.FineType;
 
 import jakarta.persistence.*;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+
+import java.util.*;
 
 @Service
 @AllArgsConstructor
@@ -104,5 +103,34 @@ public class FineService implements  IFine {
         TypedQuery<Fine> query = entityManager.createQuery(cq);
         return query.getResultList();
     }
+
+    @Override
+    public List<String> calculatePaymentsByDay(Date declaredDate, Date startDate, Date dueDate, Double totalAmount) {
+        List<String> paymentsByDay = new ArrayList<>();
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(startDate);
+
+        Double interestRate = Math.exp(Math.log(1 + (0.3 / totalAmount)) / ((dueDate.getTime() - startDate.getTime()) / (1000.0 * 60 * 60 * 24))) - 1;
+
+        Double interest = 0.0;
+        Double amount = totalAmount;
+
+        while ((calendar.getTime().before(dueDate) || calendar.getTime().equals(dueDate)) && amount < totalAmount * 1.3) {
+            Double dailyInterest = amount * interestRate;
+            interest += dailyInterest;
+
+            Double dailyPayment = Math.min(amount + dailyInterest, totalAmount * 1.3) - amount;
+            amount += dailyPayment;
+            String dayAndPayment = String.format("%s,%.2f", calendar.getTime(), dailyPayment);
+            paymentsByDay.add(dayAndPayment);
+
+            calendar.add(Calendar.DATE, 1);
+        }
+
+        return paymentsByDay;
+    }
+
+
 
 }

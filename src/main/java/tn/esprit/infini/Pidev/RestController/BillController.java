@@ -14,6 +14,7 @@ import java.util.Map;
 
 @RestController
 @AllArgsConstructor
+@RequestMapping("/Bill")
 public class BillController {
     private  IBill iBill;
     @GetMapping("/getBills")

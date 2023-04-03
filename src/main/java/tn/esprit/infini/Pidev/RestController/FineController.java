@@ -18,6 +18,7 @@ import java.util.Map;
 
 @RestController
 @AllArgsConstructor
+@RequestMapping("/Fine")
 public class FineController {
     private IFine iFine;
     @GetMapping("/getFines")
@@ -73,6 +74,9 @@ public class FineController {
         // call service method to search for fines
 
         return iFine.searchFines(criteria,criteria.size());
-    }
 
+    }
+    @GetMapping("/GetCreditModel")
+    public List<String> calculatePaymentsByDay(@RequestBody Date declaredDate,@RequestBody Date startDate,@RequestBody Date dueDate,@RequestBody Double totalAmount)
+    {return iFine.calculatePaymentsByDay(declaredDate,startDate,dueDate,totalAmount);}
 }

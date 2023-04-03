@@ -1,7 +1,10 @@
 package tn.esprit.infini.Pidev.Services;
 
-import com.google.gson.Gson;
 
+
+
+
+import com.google.gson.Gson;
 import lombok.AllArgsConstructor;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -10,6 +13,7 @@ import tn.esprit.infini.Pidev.Repository.TransactionRepository;
 import tn.esprit.infini.Pidev.entities.Transaction;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -21,8 +25,10 @@ import java.lang.String;
 public class TransactionService implements ITransaction {
 
 
+
     private TransactionRepository transactionRepository;
     private static Gson gson = new Gson();
+
     @Override
     public Transaction addTransaction(Transaction transaction) {
         return transactionRepository.save(transaction);
@@ -70,7 +76,7 @@ public class TransactionService implements ITransaction {
             Transaction payment = new Transaction();
             payment.setAmount(monthlyPayment.longValue());
 
-            // Set date for each transaction with a 1-minute increment
+
             calendar.add(Calendar.SECOND, 40);
             System.out.println(calendar.getTime());
             payment.setDate(calendar.getTime());
