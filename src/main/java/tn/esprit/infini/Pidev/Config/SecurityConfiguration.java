@@ -23,6 +23,8 @@ public class SecurityConfiguration {
                 .csrf()
                 .disable()
                 .authorizeHttpRequests()
+                .requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**")
+                .permitAll()
                 .requestMatchers("/api/v1/auth/**","/User/**","/Account/**","/ Guarantor/**","/Pack/**","/ChatBot/**","/Cart/**","/Transaction/**","/Payment/**","/Complaint/**","/Insurance/**","/Credit/**","/Invest/**","/Bill/**","/Fine/**")
                 .permitAll()
                 .anyRequest()
@@ -34,7 +36,5 @@ public class SecurityConfiguration {
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthFiler, UsernamePasswordAuthenticationFilter.class);
         return http.build();
-
-
     }
 }

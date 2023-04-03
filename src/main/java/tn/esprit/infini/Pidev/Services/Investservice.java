@@ -8,7 +8,6 @@ import jakarta.persistence.criteria.Root;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import tn.esprit.infini.Pidev.Repository.Investrepository;
 import tn.esprit.infini.Pidev.Repository.TransactionRepository;
