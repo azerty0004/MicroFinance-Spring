@@ -3,6 +3,7 @@ package tn.esprit.infini.Pidev.Repository;
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import tn.esprit.infini.Pidev.entities.Complaint;
 import org.springframework.data.repository.query.Param;
 import tn.esprit.infini.Pidev.entities.Complaint;
 import tn.esprit.infini.Pidev.entities.Stateofcomplaint;

@@ -9,11 +9,12 @@ import com.stripe.param.PaymentIntentCreateParams;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import tn.esprit.infini.Pidev.entities.Transaction;
 import tn.esprit.infini.Pidev.entities.TypeTransaction;
-
+import java.lang.String;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -26,7 +27,7 @@ public class PaymentService implements IPayment {
     private String stripePublicKey;
     private static Gson gson = new Gson();
     @Autowired
-    ITransaction iTransaction;
+    private ITransaction iTransaction;
     @Override
     public void persistTransaction(String intentId) throws StripeException {
         Stripe.apiKey=this.stripePublicKey;

@@ -1,5 +1,9 @@
 package tn.esprit.infini.Pidev.entities;
 
+import lombok.Getter;
+import lombok.Setter;
+import jakarta.persistence.*;
+import java.io.Serializable;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

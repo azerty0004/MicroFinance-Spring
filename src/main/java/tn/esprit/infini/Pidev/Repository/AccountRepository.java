@@ -1,9 +1,16 @@
 package tn.esprit.infini.Pidev.Repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.repository.query.Param;
 import tn.esprit.infini.Pidev.entities.Account;
-@Repository
-public interface AccountRepository extends JpaRepository<Account, Integer> {
+import jakarta.persistence.*;
+import tn.esprit.infini.Pidev.entities.Invest;
+import tn.esprit.infini.Pidev.entities.Transaction;
+import tn.esprit.infini.Pidev.entities.User;
 
+import java.util.List;
+
+
+public interface AccountRepository extends JpaRepository<Account, Integer> {
+    Account getAccountByUser(User u);
 }

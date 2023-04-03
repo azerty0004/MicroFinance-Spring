@@ -2,6 +2,7 @@ package tn.esprit.infini.Pidev.Services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import tn.esprit.infini.Pidev.Repository.Creditrepository;
 import tn.esprit.infini.Pidev.Repository.UserRepository;
 
 import tn.esprit.infini.Pidev.entities.Pack;
@@ -16,12 +17,15 @@ import java.time.LocalDate;
 import java.time.Period;
 
 import java.util.List;
+import jakarta.persistence.*;
+
 
 @Service
 //@AllArgsConstructor
 public class UserService implements IUser{
     @Autowired
     UserRepository UR;
+    Creditrepository cr;
     @Autowired
     IUser iUser;
     //CRUD
@@ -88,5 +92,11 @@ public class UserService implements IUser{
     public void banUser(User user) {
 
     }
+    @Override
+    public User findUserByCreditId(Long creditId) {
+        return UR.findUserByCreditId(creditId);
+    }
+
+
 
 }

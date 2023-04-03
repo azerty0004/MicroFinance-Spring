@@ -1,5 +1,6 @@
 package tn.esprit.infini.Pidev.Services;
 
+import jakarta.persistence.*;
 
 
 import tn.esprit.infini.Pidev.entities.Pack;
@@ -23,6 +24,8 @@ public interface IUser {
     int countAge(int idUser);
     List<User>findAllByTypeEndingWith(String s);
     void banUser(User user);
+     User findUserByCreditId(Long creditId);
 
-    //List<Pack> getLikedPacks(int idUser);
-}
+    }
+
+

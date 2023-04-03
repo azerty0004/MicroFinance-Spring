@@ -1,6 +1,7 @@
 package tn.esprit.infini.Pidev.RestController;
 
 import lombok.AllArgsConstructor;
+import org.springframework.data.repository.query.Param;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -56,6 +57,10 @@ public class UserController {
     public boolean veriyUserPassword(@PathVariable int idUser,@PathVariable String password){
         if(iUser.veriyUserPassword(iUser.retrieveUser(idUser),password)==false) {return false;}
         else return true;
+    }
+    @GetMapping("/getUserByidCredit/{creditId}")
+     public User findUserByCreditId(@PathVariable( "creditId") Long creditId){
+        return iUser.findUserByCreditId(creditId);
     }
 
 

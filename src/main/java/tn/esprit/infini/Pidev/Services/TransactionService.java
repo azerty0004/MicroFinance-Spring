@@ -2,34 +2,26 @@ package tn.esprit.infini.Pidev.Services;
 
 import com.google.gson.Gson;
 
-import com.google.gson.JsonObject;
-import com.stripe.Stripe;
-import com.stripe.exception.StripeException;
 import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import tn.esprit.infini.Pidev.Repository.TransactionRepository;
 import tn.esprit.infini.Pidev.entities.Transaction;
-
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.lang.String;
 
 @Service
 @AllArgsConstructor
-@NoArgsConstructor
 public class TransactionService implements ITransaction {
-    @Value("${stripe.api.key}")
-    private String stripePublicKey;
-    @Autowired
-    private TransactionRepository transactionRepository;
 
+
+    private TransactionRepository transactionRepository;
     private static Gson gson = new Gson();
     @Override
     public Transaction addTransaction(Transaction transaction) {

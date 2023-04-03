@@ -7,7 +7,11 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import jakarta.persistence.*;
 
+import java.io.Serializable;
+import java.util.Date;
+import java.util.Set;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
@@ -27,8 +31,12 @@ public class Account implements Serializable {
     private Date creationDate;
     private float balance;
     @OneToOne
+    @JoinColumn(name = "user_id")
+
     private User user;
     @ManyToOne
-    Transaction transaction;
+    @JoinColumn(name = "transaction_id")
+
+    private Transaction transaction;
 
 }

@@ -12,7 +12,7 @@ import jakarta.persistence.*;
 @NoArgsConstructor
 @Entity
 @Table(name = "settings")
-public class Settings {
+public class Settings  {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -23,6 +23,7 @@ public class Settings {
     @Column(name = "max_score")
     private int maxScore;
 
+    private double rate;
     private double levelofrisk;
 
 

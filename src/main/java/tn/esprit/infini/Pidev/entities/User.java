@@ -6,10 +6,11 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
 import jakarta.persistence.*;
 
-
+import java.io.Serializable;
+import java.util.Date;
+import jakarta.persistence.*;
 
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
@@ -46,7 +47,8 @@ public class User implements Serializable, UserDetails {
     private int nombreTentatives;
     private String password;
     private Date lastBanDate;
-
+    @OneToOne
+    private Account account;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

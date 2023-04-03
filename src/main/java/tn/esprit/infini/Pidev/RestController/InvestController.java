@@ -1,13 +1,23 @@
 package tn.esprit.infini.Pidev.RestController;
 
 import lombok.AllArgsConstructor;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
 import tn.esprit.infini.Pidev.Services.Iinvestservice;
+import tn.esprit.infini.Pidev.dto.InvestRequestDTO;
+import tn.esprit.infini.Pidev.dto.InvestResponseDTO;
+import tn.esprit.infini.Pidev.entities.Credit;
 import tn.esprit.infini.Pidev.entities.Invest;
+import tn.esprit.infini.Pidev.entities.Statut;
+import tn.esprit.infini.Pidev.entities.User;
 
+import java.util.Date;
 import java.util.List;
 @RestController
 @AllArgsConstructor
+@RequestMapping("/Invest")
+
 public class InvestController {
     private Iinvestservice iinvestservice;
 
@@ -17,11 +27,11 @@ public class InvestController {
     }
 
     @PostMapping("/addInvest")
-    Invest ajouter(@RequestBody Invest invest) {
-        return iinvestservice.addInvest(invest);
+    InvestResponseDTO ajouter(@RequestBody InvestRequestDTO investRequestDTO) {
+        return iinvestservice.addInvest(investRequestDTO);
     }
 
-    @GetMapping("/getInvestById/{id}")
+    @GetMapping("/getInvestById/{idInvest}")
     Invest afficherAvecId(@PathVariable Long idInvest){
         return iinvestservice.retrieveInvest(idInvest);
     }
@@ -36,5 +46,28 @@ public class InvestController {
     {
         iinvestservice.deleteInvest(idInvest);
     }
+
+    @GetMapping("/getinvestsbyiduser/userid")
+    public List<Invest> getInvestByiduser(@PathVariable( "userid") Long userid) {
+        return iinvestservice.getInvestByiduser(userid);
+    }
+
+    @GetMapping("/searchs")
+    public List<Invest> searchInvests(
+            @RequestParam(required = false) Long id,
+            @RequestParam(required = false) Double amount,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date dateofapplication ,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date dateofobtaining,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) Date dateoffinish,
+            @RequestParam(required = false) Double interestrate,
+            @RequestParam(required = false) Integer mounths,
+            @RequestParam(required = false) Statut statut) {
+            return iinvestservice.searchInvests(id,amount,dateofapplication,dateofobtaining,dateoffinish,interestrate,mounths,statut);
+    }
+    @GetMapping("/amount/{id}")
+    List<Double> Amountgiven(@PathVariable  Long id){
+        return iinvestservice.Amountgiven(id);
+    }
+
 }
 

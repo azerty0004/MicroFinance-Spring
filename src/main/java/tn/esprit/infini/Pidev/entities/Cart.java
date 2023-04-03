@@ -1,6 +1,12 @@
 package tn.esprit.infini.Pidev.entities;
 
 
+import lombok.Getter;
+import lombok.Setter;
+import jakarta.persistence.*;
+
+import java.util.Set;
+import java.io.Serializable;
 
 import jakarta.persistence.*;
 
@@ -38,11 +44,17 @@ public class Cart implements Serializable {
         @GeneratedValue(strategy = GenerationType.IDENTITY)
         @Column(name = "idCart")
         private int idCart;
+        private String productName;
+        private String productDescription;
+        private int quantity;
+        private double price;
+        private double mouthlyamount;
         private int nbreMounths;
-
-         @OneToMany(mappedBy = "cart")
-         @JsonIgnore
-         public Set<Pack> pack;
+        @Enumerated(EnumType.STRING)
+        private TypePack typePAck;
+            @OneToMany(mappedBy = "cart")
+             @JsonIgnore
+             public Set<Pack> pack;
 
 
 

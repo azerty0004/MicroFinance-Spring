@@ -1,5 +1,8 @@
 package tn.esprit.infini.Pidev.entities;
 
+import lombok.Getter;
+import lombok.Setter;
+import jakarta.persistence.*;
 import lombok.*;
 
 import jakarta.persistence.*;
@@ -25,16 +28,17 @@ public class Insurance implements Serializable {
     private String coverage;
     private Double deductible;
     private String claimsHistory;
+    @ManyToOne
+    Pack pack;
+    @OneToOne
+    Credit credit;
     private Double levelofrisk;
     private Boolean archived;
     @Enumerated(EnumType.STRING)
     private Typeinsurance  Typeinsurance;
-    @ManyToOne
-    Pack pack;
 
 
-    @OneToOne
-    Credit credit;
+
 
 }
 

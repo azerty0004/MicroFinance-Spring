@@ -4,22 +4,27 @@ package tn.esprit.infini.Pidev.RestController;
 import com.google.gson.Gson;
 import com.stripe.exception.StripeException;
 import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
+import tn.esprit.infini.Pidev.Repository.TransactionRepository;
 import tn.esprit.infini.Pidev.Services.ITransaction;
+import tn.esprit.infini.Pidev.Services.Icreditservice;
+import tn.esprit.infini.Pidev.entities.Credit;
 import tn.esprit.infini.Pidev.entities.Transaction;
 
 import java.util.Date;
 import java.util.List;
 
 @RestController
+@Service
 @AllArgsConstructor
 @RequestMapping("/Transaction")
 public class TransactionController {
-    @Autowired
     private ITransaction iTransaction;
-    private static Gson gson = new Gson();
+    private TransactionRepository transactionRepository;
+    private Icreditservice icreditService;
+
 
     @GetMapping("/getTransactions")
     List<Transaction> afficher() {
@@ -28,7 +33,6 @@ public class TransactionController {
 
     @PostMapping("/addTransaction")
     Transaction ajouter(@RequestBody Transaction transaction) {
-        System.out.println(gson.toJson(transaction));
         return iTransaction.addTransaction(transaction);
     }
 
@@ -56,14 +60,12 @@ public class TransactionController {
     }
 
 
-
-
-
     @GetMapping("/GetPaymentModels/{amount}/{numberOfMonths}")
     List<Transaction> ajouter(@PathVariable Long amount, @PathVariable Integer numberOfMonths) {
         return iTransaction.divideTransaction(amount, numberOfMonths);
 
     }
+
 
 
 

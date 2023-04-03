@@ -1,6 +1,7 @@
 
 package tn.esprit.infini.Pidev.RestController;
 
+
 import com.twilio.exception.TwilioException;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -42,6 +43,15 @@ public class CartController {
         return iCartService.retrieveCart(idCart);
     }
 
+    @PutMapping("/updatePack")
+    public Cart updatePack(@RequestBody Cart cart) {
+        return iCartService.updateCart(cart);
+    }
+
+    @DeleteMapping("/deletePack/{idPack}")
+    void deletePack(@PathVariable ("idGuarantor") Integer idPack){
+        iCartService.deleteCart(idPack);
+    }
     @PutMapping("/updateCart")
     public Cart updateCart(@RequestBody Cart cart) {
         return iCartService.updateCart(cart);
@@ -95,6 +105,7 @@ public class CartController {
         List<Pack> recommendedPacks = cartService.getRecommendedPacksByType(idCart);
         return recommendedPacks;
     }
+
 
     @PostMapping("/clearExpiredPacks")
     public String clearExpiredPacks() {
