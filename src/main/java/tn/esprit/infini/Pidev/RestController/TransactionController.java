@@ -60,9 +60,9 @@ public class TransactionController {
     }
 
 
-    @GetMapping("/GetPaymentModels/{amount}/{numberOfMonths}")
-    List<Transaction> ajouter(@PathVariable Long amount, @PathVariable Integer numberOfMonths) {
-        return iTransaction.divideTransaction(amount, numberOfMonths);
+    @GetMapping("/GetPaymentModels/{idCredit}")
+    List<Transaction> ajouter(@PathVariable Long idCredit) {
+        return iTransaction.divideTransaction(idCredit);
 
     }
 

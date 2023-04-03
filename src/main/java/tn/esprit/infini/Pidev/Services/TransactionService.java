@@ -10,7 +10,10 @@ import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import tn.esprit.infini.Pidev.Repository.TransactionRepository;
+import tn.esprit.infini.Pidev.entities.Credit;
 import tn.esprit.infini.Pidev.entities.Transaction;
+import tn.esprit.infini.Pidev.entities.TypeRemboursement;
+
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 
@@ -25,7 +28,7 @@ import java.lang.String;
 public class TransactionService implements ITransaction {
 
 
-
+    private  Creditservice creditservice;
     private TransactionRepository transactionRepository;
     private static Gson gson = new Gson();
 
@@ -63,29 +66,49 @@ public class TransactionService implements ITransaction {
 
     @Override
 
-    public List<Transaction> divideTransaction(Long amount, Integer numberOfMonths) {
+    public List<Transaction> divideTransaction(Long idCredit) {
         List<Transaction> transactionList = new ArrayList<>();
+        Credit credit =creditservice.retrieveCredit(idCredit);
+        Integer numberOfMonths = credit.getDuration();
+        if (credit.getTypeRemboursement()==TypeRemboursement.Mensualitéfixe){
+            Double monthlyPayment =creditservice.CalculMensualitefixe(credit);
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(new Date());
 
-        BigDecimal loanAmountInBigDecimal = BigDecimal.valueOf(amount);
-        BigDecimal monthlyPayment = loanAmountInBigDecimal.divide(BigDecimal.valueOf(numberOfMonths), 2, RoundingMode.HALF_UP);
+            for (int i = 1; i <= numberOfMonths; i++) {
+                Transaction payment = new Transaction();
+                payment.setAmount(monthlyPayment.longValue());
+                calendar.add(Calendar.SECOND, 40);
+                System.out.println(calendar.getTime());
+                payment.setDate(calendar.getTime());
 
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(new Date());
+                transactionList.add(payment);
+            }
+            return transactionList;
 
-        for (int i = 1; i <= numberOfMonths; i++) {
-            Transaction payment = new Transaction();
-            payment.setAmount(monthlyPayment.longValue());
+        }
+        else  {
+            List<Double> monthlyPayment = creditservice.CalculMensualitevariable(credit);
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(new Date());
+            for (int i = 0; i < numberOfMonths; i++) {
+                Transaction payment = new Transaction();
+                double tempAmount = monthlyPayment.get(i);
+                long amount = (long) tempAmount;
+                payment.setAmount(amount);
+                calendar.add(Calendar.SECOND, 40);
+                System.out.println(calendar.getTime());
+                payment.setDate(calendar.getTime());
+                transactionList.add(payment);
+            }
+            return transactionList;
 
-
-            calendar.add(Calendar.SECOND, 40);
-            System.out.println(calendar.getTime());
-            payment.setDate(calendar.getTime());
-
-            transactionList.add(payment);
+        }
         }
 
-        return transactionList;
-    }
+
+
+
 
 
 

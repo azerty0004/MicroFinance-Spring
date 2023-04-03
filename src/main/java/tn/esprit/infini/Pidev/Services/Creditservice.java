@@ -340,6 +340,8 @@ public class Creditservice implements Icreditservice {
         return listmensualite;
     }
 
+
+
     @Override
     public List<Double> listetauxinterets(Long id) {
         Credit c=creditrepository.findById(id).orElseThrow(()-> new RuntimeException(String.format("Credit not found")));

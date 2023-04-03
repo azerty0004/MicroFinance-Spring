@@ -73,9 +73,9 @@ public class PaymentController {
 
 
         }
-    @GetMapping("/GetPaymentModel/{amount}/{numberOfMonths}")
-    public void divideTransaction(@PathVariable Long amount, @PathVariable Integer numberOfMonths) throws StripeException {
-        List<Transaction> maListe =transactionService.divideTransaction(amount, numberOfMonths);
+    @GetMapping("/GetPaymentModel/{idCredit}")
+    public void divideTransaction(@PathVariable Long idCredit) throws StripeException {
+        List<Transaction> maListe =transactionService.divideTransaction( idCredit);
         for (Transaction transaction:maListe)
         {
            String intent= paymentService.createPaymentIntent(transaction);
