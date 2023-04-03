@@ -18,14 +18,13 @@ import tn.esprit.infini.Pidev.dto.InvestResponseDTO;
 import tn.esprit.infini.Pidev.entities.Credit;
 import tn.esprit.infini.Pidev.entities.Invest;
 import tn.esprit.infini.Pidev.entities.Statut;
+import tn.esprit.infini.Pidev.entities.TypeCredit;
 import tn.esprit.infini.Pidev.mappers.InvestMapper;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @Service
 @Getter
@@ -150,19 +149,20 @@ public class Investservice implements Iinvestservice {
         Double tax;
         Double x;
         LocalDate currentdate = LocalDate.now();
-        List amountgiven=new ArrayList<>();
-        long mounths = ChronoUnit.MONTHS.between( currentdate.withDayOfMonth(1),i.getDateoffinish().withDayOfMonth(1));
+        List amountgiven = new ArrayList<>();
+        long mounths = ChronoUnit.MONTHS.between(currentdate.withDayOfMonth(1), i.getDateoffinish().withDayOfMonth(1));
 
-      if (mounths == 12) {
-            montantinteret=(i.getAmount()*i.getInterestrate());
-            tax=montantinteret*0.15;
-            x=(i.getAmount()+montantinteret-tax);
+        if (mounths == 12) {
+            montantinteret = (i.getAmount() * i.getInterestrate());
+            tax = montantinteret * 0.15;
+            x = (i.getAmount() + montantinteret - tax);
             amountgiven.add(x);
             i.setAmount(x);
             investrepository.save(i);
-       }
+        }
 
-    return amountgiven;
+        return amountgiven;
 
     }
+
 }

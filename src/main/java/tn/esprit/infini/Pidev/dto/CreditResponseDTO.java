@@ -23,17 +23,10 @@ public class CreditResponseDTO {
     private Long id;
 
     private Double amount;
-
-
     private LocalDate dateOfApplication = LocalDate.now();
-
     private LocalDate dateofobtaining;
-
-
     private LocalDate dateoffinish;
-
     private Double interestrate;
-
     private Integer duration;
     private Statut statut = Statut.EN_ATTENTE;
     @NotNull

@@ -58,10 +58,10 @@ public class Creditservice implements Icreditservice {
             Credit credit = Credit.builder()
                     .amount(creditDTO.getAmount())
                     .duration((int) ChronoUnit.MONTHS.between(creditDTO.getDateofobtaining().withDayOfMonth(1), creditDTO.getDateoffinish().withDayOfMonth(1)))
-                    .dateOfApplication(creditDTO.getDateOfApplication())
+                    .dateOfApplication(LocalDate.now())
                     .dateofobtaining(creditDTO.getDateofobtaining())
                     .dateoffinish(creditDTO.getDateoffinish())
-                    .statut(creditDTO.getStatut())
+                    .statut(Statut.EN_ATTENTE)
                     .typeRemboursement(creditDTO.getTypeRemboursement())
                     .typeCredit(creditDTO.getTypeCredit())
                     .build();
@@ -73,10 +73,10 @@ public class Creditservice implements Icreditservice {
             Credit credit = Credit.builder()
                     .amount(creditDTO.getAmount())
                     .duration(creditDTO.getDuration())
-                    .dateOfApplication(creditDTO.getDateOfApplication())
+                    .dateOfApplication(LocalDate.now())
                     .dateofobtaining(creditDTO.getDateofobtaining())
                     .dateoffinish(creditDTO.getDateofobtaining().plusMonths(creditDTO.getDuration()))
-                    .statut(creditDTO.getStatut())
+                    .statut(Statut.EN_ATTENTE)
                     .typeRemboursement(creditDTO.getTypeRemboursement())
                     .typeCredit(creditDTO.getTypeCredit())
                     .build();
@@ -216,18 +216,20 @@ public class Creditservice implements Icreditservice {
     }
 
     @Override
-    public Integer TauxtypeCredit(Credit c) {
-
+    public Double TauxtypeCredit(Credit c) {
+        double s;
         if ((c.getTypeCredit()) == TypeCredit.CREDITConsommation) {
-
-            return 500;
+            s=500;
+            return s;
         } else if ((c.getTypeCredit()) == TypeCredit.CreditImmobilier) {
-
-            return 650;
+            s=650;
+            return s;
         } else if ((c.getTypeCredit()) == TypeCredit.CREDITEtudiant) {
-            return 750;
+            s=750;
+            return s;
         } else {
-            return 850;
+            s=850;
+            return s;
         }
 
     }
@@ -276,7 +278,7 @@ public class Creditservice implements Icreditservice {
 
     @Override
     public double InterestRateCalculator(Credit credit) throws IOException {
-        double TMM = Double.parseDouble(getmm())*0.1;
+        double TMM = Double.parseDouble(getmm())*0.01;
         double interestrate = 0;
         float score = calculateFicoScore(credit);
         List<Settings> settings = settingsRepository.findAll();
@@ -312,17 +314,18 @@ public class Creditservice implements Icreditservice {
     }
 
     @Override
-    public double CalculMensualitefixe(Credit c) {
-        double mensualite;
-        double a=0 ;
-        double b=0 ;
-        a = c.getAmount() *((c.getInterestrate() / 12));
+        public double CalculMensualitefixe(Credit c) {
+            double mensualite;
+            double a=0 ;
+            double b=0 ;
+            double d= c.getInterestrate()/12;
+            a = c.getAmount() *d;
 
-        b = 1 - (Math.pow(1 + (c.getInterestrate() / 12), -c.getDuration()));
-        mensualite = a / b;
+            b = 1 - (Math.pow(1 + d, -c.getDuration()));
+            mensualite = a / b;
 
-        return mensualite;
-    }
+            return mensualite;
+        }
 
     @Override
     public List<Double> CalculMensualitevariable(Credit c) {
@@ -340,21 +343,102 @@ public class Creditservice implements Icreditservice {
     @Override
     public List<Double> listetauxinterets(Long id) {
         Credit c=creditrepository.findById(id).orElseThrow(()-> new RuntimeException(String.format("Credit not found")));
-        double am = (c.getAmount()/c.getDuration());
-        double tm = c.getInterestrate()/12;
         double interets;
-        double mensualite = 0;
-        List<Double> listtauxinterets = new ArrayList<>();
-        for (int i = 1; i <= c.getDuration(); i++) {
-            mensualite=am*(1+(tm*(c.getDuration()-i+1)));
-            interets=mensualite-am;
-           listtauxinterets.add(interets);
+        double im = c.getInterestrate()/12;
+        double montantrestant=c.getAmount();
+        if (c.getTypeRemboursement()==TypeRemboursement.Amortissementfixe) {
+            List <Double> mensualite=CalculMensualitevariable(c);
+            List<Double> listtauxinterets = new ArrayList<>();
+             for (int i = 0; i < mensualite.size(); i++) {
+                interets = montantrestant*im;
+                montantrestant=montantrestant-mensualite.get(i)+interets;
+                 listtauxinterets.add(interets);
+
+                  }
+             listtauxinterets.add(0.0);
+
+            return listtauxinterets;
         }
-        return listtauxinterets;
+        else {
+            double mensualite=CalculMensualitefixe(c);
+            List<Double> listtauxinterets = new ArrayList<>();
+           for (int i = 1; i <= c.getDuration(); i++) {
+                interets=montantrestant*im;
+                montantrestant=montantrestant-mensualite+interets;
+                listtauxinterets.add(interets);
+
+                }
+            listtauxinterets.add(0.0);
+
+            return listtauxinterets;
+            }
+    }
+    @Override
+    public List<Double> listeAmortissement(Long id) {
+     Credit c=creditrepository.findById(id).orElseThrow(()-> new RuntimeException(String.format("Credit not found")));
+        List<Double> listeamortissement = new ArrayList<>();
+        if (c.getTypeRemboursement()==TypeRemboursement.Amortissementfixe) {
+            double am = (c.getAmount() / c.getDuration());
+            for (int i = 0; i < c.getDuration(); i++) {
+                listeamortissement.add(am);
+
+            }
+            listeamortissement.add(0.0);
+            return listeamortissement;
+
+        }
+        else{
+            double am;
+            for (int i = 0; i < c.getDuration(); i++) {
+                am=CalculMensualitefixe(c)-listetauxinterets(id).get(i);
+                listeamortissement.add(am);
+
+
+        }
+            listeamortissement.add(0.0);
+            return listeamortissement;
+
+
+        }
+
+        }
+    @Override
+    public List<Double> listemontantrestant(Long id) {
+        Credit c=creditrepository.findById(id).orElseThrow(()-> new RuntimeException(String.format("Credit not found")));
+        double interets;
+        double im = c.getInterestrate()/12;
+        double montantrestant=c.getAmount();
+        if (c.getTypeRemboursement()==TypeRemboursement.Amortissementfixe) {
+            List <Double> mensualite=CalculMensualitevariable(c);
+            List<Double> listmontantrestant = new ArrayList<>();
+            for (int i = 0; i < mensualite.size(); i++) {
+                interets = montantrestant*im;
+                montantrestant=montantrestant-mensualite.get(i)+interets;
+                listmontantrestant.add(montantrestant);
+
+            }
+            listmontantrestant.add(0.0);
+            return listmontantrestant;
+        }
+        else {
+            double mensualite=CalculMensualitefixe(c);
+            List<Double> listmontantrestant = new ArrayList<>();
+            for (int i = 1; i <= c.getDuration(); i++) {
+                interets=montantrestant*im;
+                montantrestant=montantrestant-mensualite+interets;
+                listmontantrestant.add(montantrestant);
+
+            }
+            listmontantrestant.add(0.0);
+            return listmontantrestant;
+        }
     }
 
 
-    @Override
+
+
+
+        @Override
     public double Calculateamountafterinsurance (Long id) {
     Credit c = creditrepository.findById(id).orElseThrow(() -> new RuntimeException(String.format("Credit not found")));
     double amountofinsurance= c.getAmount()*0.03;
@@ -445,6 +529,7 @@ public class Creditservice implements Icreditservice {
     }
      @Override
      public void exportpdf(HttpServletResponse response, Long idCredit) throws IOException, DocumentException {
+        Credit credit = retrieveCredit(idCredit);
         Document document = new Document(PageSize.A4);
         PdfWriter.getInstance(document, response.getOutputStream());
         document.open();
@@ -453,12 +538,13 @@ public class Creditservice implements Icreditservice {
         Paragraph paragraph = new Paragraph("Voici les détails de votre crédit.", fontTitle);
         paragraph.setAlignment(Paragraph.ALIGN_CENTER);
         document.add(paragraph);
-        Credit credit = retrieveCredit(idCredit);
         List<Double> mensualites = CalculMensualitevariable(credit);
         List<Double> tauxInterets = listetauxinterets(idCredit);
+        List<Double> Montantrestant = listemontantrestant(idCredit);
+        List<Double> Amortissement = listeAmortissement(idCredit);
         Font fontParagraph = FontFactory.getFont(FontFactory.HELVETICA);
         fontParagraph.setSize(12);
-        PdfPTable table = new PdfPTable(3);
+        PdfPTable table = new PdfPTable(5);
         table.setWidthPercentage(100);
         table.setHorizontalAlignment(Element.ALIGN_LEFT);
         PdfPCell cellNumero = new PdfPCell(new Phrase("Mensualité numéro", fontTitle));
@@ -470,32 +556,43 @@ public class Creditservice implements Icreditservice {
         PdfPCell cellTaux = new PdfPCell(new Phrase("montant  d'interets", fontTitle));
         cellTaux.setHorizontalAlignment(Element.ALIGN_CENTER);
         table.addCell(cellTaux);
+         PdfPCell cellMontantrestant = new PdfPCell(new Phrase("montant  restant", fontTitle));
+         cellTaux.setHorizontalAlignment(Element.ALIGN_CENTER);
+         table.addCell(cellMontantrestant);
+         PdfPCell cellamortissement= new PdfPCell(new Phrase("amortissement", fontTitle));
+         cellTaux.setHorizontalAlignment(Element.ALIGN_CENTER);
+         table.addCell(cellamortissement);
         for (int i = 0; i < mensualites.size(); i++) {
             PdfPCell cellNumeroValue = new PdfPCell(new Phrase(Integer.toString(i+1), fontParagraph));
             cellNumeroValue.setHorizontalAlignment(Element.ALIGN_LEFT);
             table.addCell(cellNumeroValue);
-
             PdfPCell cellMensualitesValue = new PdfPCell(new Phrase(Double.toString(mensualites.get(i)), fontParagraph));
             cellMensualitesValue.setHorizontalAlignment(Element.ALIGN_LEFT);
             table.addCell(cellMensualitesValue);
-
             PdfPCell cellTauxValue = new PdfPCell(new Phrase(Double.toString(tauxInterets.get(i)), fontParagraph));
             cellTauxValue.setHorizontalAlignment(Element.ALIGN_LEFT);
             table.addCell(cellTauxValue);
+            PdfPCell cellMontantrestantValue = new PdfPCell(new Phrase(Double.toString(Amortissement.get(i)), fontParagraph));
+            cellTauxValue.setHorizontalAlignment(Element.ALIGN_LEFT);
+            table.addCell(cellMontantrestantValue);
+            PdfPCell cellamortissementValue = new PdfPCell(new Phrase(Double.toString(Montantrestant.get(i)), fontParagraph));
+            cellTauxValue.setHorizontalAlignment(Element.ALIGN_LEFT);
+            table.addCell(cellamortissementValue);
         }
         document.add(table);
-         // Step 2: Create a new chart object and populate it with data and percentage values
          double totalAmount = credit.getAmount();
-         double interestAmount = credit.getInterestrate();
          double insuranceAmount = Calculateamountafterinsurance(idCredit);
-
-         double interestPercent = interestAmount / totalAmount * 100.0;
-         double insurancePercent = insuranceAmount / totalAmount * 100.0;
-         double principalPercent = 100.0 - interestPercent - insurancePercent;
+         double suminterest = listetauxinterets(idCredit).stream().mapToDouble(Double::doubleValue).sum();
+         double fraisdossier =250;
+         double interestPercent = suminterest/totalAmount*100.0;
+         double insurancePercent = (insuranceAmount / totalAmount * 100.0);
+         double fraisdossierPercent = fraisdossier/totalAmount*100;
+         double principalPercent = 100.0 - interestPercent - insurancePercent-fraisdossierPercent;
 
          DefaultPieDataset dataset = new DefaultPieDataset();
-         dataset.setValue("Interest (" + String.format("%.1f", interestPercent) + "%)", interestAmount);
+         dataset.setValue("Interest (" + String.format("%.1f", interestPercent) + "%)", suminterest);
          dataset.setValue("Insurance (" + String.format("%.1f", insurancePercent) + "%)", insuranceAmount);
+         dataset.setValue("Frais (" + String.format("%.1f", fraisdossierPercent) + "%)", fraisdossier);
          dataset.setValue("Principal (" + String.format("%.1f", principalPercent) + "%)", credit.getAmount());
 
          JFreeChart chart = ChartFactory.createPieChart(

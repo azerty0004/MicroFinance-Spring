@@ -25,13 +25,14 @@ public interface Icreditservice {
     List<Credit> findCreditsByAttributes(Long id, Double amount, LocalDate dateOfApplication, LocalDate dateofobtaining, LocalDate dateoffinish, Double interestrate, Integer duration, Statut statut, Guarantor guarantor, TypeCredit typeCredit, Insurance insurance);
     List<Credit> getCreditByiduser(Long userid);
     Float newCredit(Long idcredit);
-    Integer TauxtypeCredit(Credit credit);
+    Double TauxtypeCredit(Credit credit);
     double CalculMensualitefixe(Credit credit);
     List<Double> CalculMensualitevariable(Credit credit);
     List<Double> listetauxinterets(Long id);
     void ValidateCredit(Long id) throws IOException;
      float calculateFicoScore(Credit credit);
-
+    List<Double> listeAmortissement(Long id);
+    List<Double> listemontantrestant(Long id);
     double InterestRateCalculator(Credit credit) throws IOException;
 
     String getmm() throws Exception;

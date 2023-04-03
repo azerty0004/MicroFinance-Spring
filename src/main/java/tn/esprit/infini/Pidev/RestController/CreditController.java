@@ -81,7 +81,7 @@ public class CreditController {
     }
 
     @GetMapping("/TauxtypeCredit")
-    public Integer TauxtypeCredit(@RequestBody Credit c) {
+    public Double TauxtypeCredit(@RequestBody Credit c) {
         return icreditservice.TauxtypeCredit(c);
     }
 
@@ -110,6 +110,14 @@ public class CreditController {
     public List<Double> listetauxinterets(@PathVariable Long id) {
         return icreditservice.listetauxinterets(id);
     }
+    @GetMapping("/listeamortissement/{id}")
+    public List<Double> listeAmortissement(@PathVariable("id")Long id){
+        return icreditservice.listeAmortissement(id);
+    }
+    @GetMapping("/listemontantrestant/{id}")
+    public List<Double> listemontantrestant(@PathVariable("id") Long id){
+        return icreditservice.listemontantrestant(id);
+    }
 
 @PutMapping("/validatecredit/{id}")
     public void ValidateCredit(@PathVariable Long id) throws IOException {
@@ -121,6 +129,7 @@ public class CreditController {
     public String runPythonScript() throws Exception {
         return icreditservice.getmm();
     }
+
 
     @GetMapping("/percentageByStatus")
     public ResponseEntity<Map<String, Double>> PercentageOfCreditsByStatus() {
@@ -168,6 +177,8 @@ public class CreditController {
     public double calculatePaymentHistoryScore(@PathVariable Long id){
         return icreditservice.calculatePaymentHistoryScore(id);
     }
+
+
 
 }
 

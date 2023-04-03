@@ -14,19 +14,15 @@ public class CreditRequestDTO {
 
     @NonNull
     private Double amount;
-    private LocalDate dateOfApplication = LocalDate.now();
-
     @NonNull
     @FutureOrPresent
     private LocalDate dateofobtaining;
     private LocalDate dateoffinish;
     private  Integer duration;
-
     @NonNull
     private TypeRemboursement typeRemboursement;
     @NonNull
     private TypeCredit typeCredit;
-    private Statut statut = Statut.EN_ATTENTE;
     @PrePersist
     public void validateDates() {
             if (dateoffinish.isBefore(dateofobtaining) || dateofobtaining.isEqual(dateoffinish)) {
