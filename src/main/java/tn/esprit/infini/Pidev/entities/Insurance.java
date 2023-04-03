@@ -31,10 +31,7 @@ public class Insurance implements Serializable {
     private Typeinsurance  Typeinsurance;
     @ManyToOne
     Pack pack;
-    @ManyToOne
 
-    @ManyToOne
-    Pack pack;
 
     @OneToOne
     Credit credit;

@@ -47,7 +47,7 @@ public  class ComplaintService implements IComplaintService {
     public Complaint addComplaint(Complaint complaint, int id) {
         //        UR.findByAccount(account).setType(TypeUser.Casual_Client);
 
-        User user= userRepository.findById(id).orElse(null);
+        User user= userRepository.findById(id);
         complaint.setUser(user);
         return complaintRepository.save(filterBadWords(complaint));
     }
