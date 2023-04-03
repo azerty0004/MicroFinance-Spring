@@ -54,22 +54,19 @@ public class Transaction implements Serializable {
     private String stripeId;
     @Column(name = "paymentMethod")
     private String paymentMethod;
-    @Column(name = "invests")
+    @ManyToOne
+    @JsonIgnore
+    private Invest invests;
+    @ManyToOne
+    @JsonIgnore
+    private Credit credits;
     @OneToMany(mappedBy = "transaction")
-    private Set<Invest> invests;
-    @Column(name = "credits")
-    @OneToMany(mappedBy = "transaction")
-    private Set<Credit> credits;
-      @OneToMany(mappedBy = "transaction")
     private Set<Pack> packs;
-
     @Column
     private String status;
 
 
-
-
-    public Transaction(TypeTransaction typeTransaction, long idUser, long idObject, Date date, Long amount, String stripeId, String paymentMethod,String status) {
+    public Transaction(TypeTransaction typeTransaction, long idUser, long idobject, Date date, Long amount, String stripeId, String paymentMethod,String status) {
         this.typeTransaction = typeTransaction;
         this.idUser = idUser;
         this.idobject = idobject;

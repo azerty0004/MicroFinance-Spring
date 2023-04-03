@@ -38,9 +38,6 @@ import jakarta.persistence.*;
     private int idPack;
     private String name;
     private String description;
-    @Enumerated(EnumType.STRING)
-    private TypePack typePAck;
-
     private double price ;
     private int likes;
     private int dislikes;

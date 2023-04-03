@@ -16,6 +16,8 @@ import java.util.Date;
 import java.util.List;
 @RestController
 @AllArgsConstructor
+@RequestMapping("/Invest")
+
 public class InvestController {
     private Iinvestservice iinvestservice;
 

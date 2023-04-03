@@ -24,7 +24,7 @@ import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer> {
-    User findByLogin(String login);
+    //User findByLogin(String login);
 
     @Query("SELECT u FROM User u INNER JOIN u.account a INNER JOIN a.transaction t INNER JOIN t.credit c WHERE c.id = :creditId")
     User findUserByCreditId(@Param("creditId") Long creditId);

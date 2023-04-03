@@ -31,9 +31,7 @@ public interface ICartService {
 
     List<Pack> getRecommendedPacks(Integer idCart);
 
-    List<Pack> getRecommendedPacksByType(Integer idCart);
-
-
+     List<Pack> getRecommendedPacksByType(Integer idCart);
     @Scheduled(cron = "0 0 12 * * ?") // exécution à midi chaque jour
     void clearCart();
 }

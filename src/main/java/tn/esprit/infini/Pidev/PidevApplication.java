@@ -24,8 +24,6 @@ import tn.esprit.infini.Pidev.RestController.PaymentController;
 import tn.esprit.infini.Pidev.Services.Creditservice;
 import tn.esprit.infini.Pidev.Services.ITransaction;
 import tn.esprit.infini.Pidev.Services.TransactionService;
-import tn.esprit.infini.Pidev.dto.CreatePayment;
-import tn.esprit.infini.Pidev.dto.CreatePaymentResponse;
 import tn.esprit.infini.Pidev.dto.ScheduledTask;
 import tn.esprit.infini.Pidev.entities.Credit;
 import tn.esprit.infini.Pidev.entities.Transaction;

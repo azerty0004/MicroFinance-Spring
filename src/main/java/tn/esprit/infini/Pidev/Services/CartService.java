@@ -9,19 +9,16 @@ import tn.esprit.infini.Pidev.Repository.UserRepository;
 import tn.esprit.infini.Pidev.entities.Cart;
 import tn.esprit.infini.Pidev.entities.Pack;
 import tn.esprit.infini.Pidev.entities.TypePack;
-
 import java.time.LocalDate;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
-
-
 @Service
 @AllArgsConstructor
 
 
-    public class CartService implements ICartService {
+public class CartService implements ICartService {
 
         CartRepository cartRepository;
         UserRepository userRepository;
@@ -130,7 +127,6 @@ import java.util.stream.Collectors;
                 .collect(Collectors.toList());
     }
 
-
     @Override
     public List<Pack> getRecommendedPacksByType(Integer idCart) {
         Cart cart = cartRepository.findByIdCart(idCart);
@@ -146,6 +142,7 @@ import java.util.stream.Collectors;
                 .filter(pack -> !cart.getPack().contains(pack))
                 .collect(Collectors.toList());
     }
+
 
     @Override
     @Scheduled(cron = "0 0 12 * * ?") // exécution à midi chaque jour

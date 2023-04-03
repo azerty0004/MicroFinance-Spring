@@ -21,8 +21,6 @@ import tn.esprit.infini.Pidev.Services.IPayment;
 import tn.esprit.infini.Pidev.Services.ITransaction;
 import tn.esprit.infini.Pidev.Services.PaymentService;
 import tn.esprit.infini.Pidev.Services.TransactionService;
-import tn.esprit.infini.Pidev.dto.CreatePayment;
-import tn.esprit.infini.Pidev.entities.CheckoutForm;
 import tn.esprit.infini.Pidev.entities.Transaction;
 import tn.esprit.infini.Pidev.entities.TypeTransaction;
 
@@ -55,11 +53,6 @@ public class PaymentController {
        String IntentId =paymentService.createPaymentIntent(transaction);
        paymentService.persistTransaction(IntentId);
        return IntentId;
-
-
-
-
-
     }
     @PostMapping("confirm-payment-intent")
     public void confimPayment(@RequestBody String intentId) throws StripeException {

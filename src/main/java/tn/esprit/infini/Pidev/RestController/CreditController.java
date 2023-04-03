@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Map;
 @AllArgsConstructor
 @RestController
+@RequestMapping("/Credit")
 
 public class CreditController {
     private Icreditservice icreditservice;

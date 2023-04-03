@@ -8,7 +8,7 @@ import com.lowagie.text.pdf.PdfWriter;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.AllArgsConstructor;
 import org.jfree.chart.ChartFactory;
-import org.jfree.chart.ChartUtils;
+import org.jfree.chart.*;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.labels.StandardPieToolTipGenerator;
 import org.jfree.chart.plot.PiePlot;
@@ -601,9 +601,8 @@ public class Creditservice implements Icreditservice {
          PiePlot plot = (PiePlot) chart.getPlot();
          plot.setToolTipGenerator(new StandardPieToolTipGenerator(
                  "{0}: {1} ({2})", new DecimalFormat("0.0"), new DecimalFormat("0.0%")));
-
          ByteArrayOutputStream chartOut = new ByteArrayOutputStream();
-         ChartUtils.writeChartAsPNG(chartOut, chart, 500, 300);
+         ChartUtilities.writeChartAsPNG(chartOut, chart, 500, 300);
          byte[] chartBytes = chartOut.toByteArray();
          Image chartImage = Image.getInstance(chartBytes);
          document.add(chartImage);
