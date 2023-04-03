@@ -79,7 +79,7 @@ public class TransactionService implements ITransaction {
                 Transaction payment = new Transaction();
                 payment.setAmount(monthlyPayment.longValue());
                 calendar.add(Calendar.SECOND, 40);
-                System.out.println(calendar.getTime());
+                payment.setIdobject(credit.getId());
                 payment.setDate(calendar.getTime());
 
                 transactionList.add(payment);
@@ -97,8 +97,9 @@ public class TransactionService implements ITransaction {
                 long amount = (long) tempAmount;
                 payment.setAmount(amount);
                 calendar.add(Calendar.SECOND, 40);
-                System.out.println(calendar.getTime());
+               
                 payment.setDate(calendar.getTime());
+                payment.setIdobject(credit.getId());
                 transactionList.add(payment);
             }
             return transactionList;
