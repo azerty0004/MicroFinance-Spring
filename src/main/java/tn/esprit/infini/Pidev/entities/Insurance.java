@@ -3,6 +3,7 @@ package tn.esprit.infini.Pidev.entities;
 import lombok.*;
 
 import jakarta.persistence.*;
+
 import java.io.Serializable;
 import java.util.Date;
 @Data
@@ -31,6 +32,11 @@ public class Insurance implements Serializable {
     @ManyToOne
     Pack pack;
     @ManyToOne
+
+    @ManyToOne
+    Pack pack;
+
+    @OneToOne
     Credit credit;
 
 }

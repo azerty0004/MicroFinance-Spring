@@ -1,10 +1,19 @@
 package tn.esprit.infini.Pidev;
 
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+
+
+import java.io.IOException;
+
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import com.stripe.Stripe;
 import com.stripe.model.PaymentIntent;
 import com.stripe.model.PaymentIntentCollection;
 import lombok.AllArgsConstructor;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
@@ -27,19 +36,29 @@ import java.util.Map;
 
 
 
+
+
 @SpringBootApplication
+@EnableScheduling
 public class PidevApplication  {
-	@Value("${stripe.api.key}")
-	private String stripePublicKey;
 
 
 
 
 
-	public static void main(String[] args) {
+
+
+
+
+
+
+	public static void main(String[] args) throws IOException {
 		SpringApplication.run(PidevApplication.class, args);
+
+
 		ScheduledTask task = new ScheduledTask();
 		task.executeMonthlyTask();
+
 
 
 

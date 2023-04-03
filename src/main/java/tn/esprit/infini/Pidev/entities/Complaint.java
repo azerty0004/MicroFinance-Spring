@@ -2,6 +2,12 @@ package tn.esprit.infini.Pidev.entities;
 import lombok.*;
 
 import jakarta.persistence.*;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+
+import jakarta.persistence.*;
+
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.Date;

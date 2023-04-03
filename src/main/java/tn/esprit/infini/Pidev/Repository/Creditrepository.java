@@ -32,5 +32,6 @@ public interface Creditrepository extends JpaRepository<Credit,Long>, JpaSpecifi
                                     @Param("inputStatut") Statut statut,
                                     @Param("inputGuarantor") Guarantor guarantor,
                                     @Param("inputInsurance") Insurance insurance);
+    Credit findByAmount(double amount);
 
 }

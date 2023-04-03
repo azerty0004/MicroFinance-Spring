@@ -1,9 +1,18 @@
 package tn.esprit.infini.Pidev.entities;
 
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import jakarta.persistence.*;
+
+
+
+
+import jakarta.persistence.*;
+
+
 import jakarta.persistence.*;
 
 
@@ -44,8 +53,16 @@ public class Transaction implements Serializable {
     @OneToMany(mappedBy = "transaction")
     private  Set<Account> accounts;
 
+    @OneToMany(mappedBy = "transaction")
+    private Set<Pack> packs;
 
-    public Transaction(TypeTransaction typeTransaction, long idUser, long idObject, Date date, Long amount, String stripeId, String paymentMethod) {
+    @Column
+    private String status;
+
+
+
+
+    public Transaction(TypeTransaction typeTransaction, long idUser, long idObject, Date date, Long amount, String stripeId, String paymentMethod,String status) {
         this.typeTransaction = typeTransaction;
         this.idUser = idUser;
         this.idObject = idObject;
@@ -53,6 +70,7 @@ public class Transaction implements Serializable {
         this.amount = amount;
         this.stripeId=stripeId;
         this.paymentMethod=paymentMethod;
+        this.status=status;
 
     }
 

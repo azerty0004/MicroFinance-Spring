@@ -4,12 +4,12 @@ import lombok.AllArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 import tn.esprit.infini.Pidev.Services.IAccount;
 import tn.esprit.infini.Pidev.entities.Account;
-import tn.esprit.infini.Pidev.entities.User;
 
 import java.util.List;
 
 @RestController
 @AllArgsConstructor
+@RequestMapping("/Account")
 public class AccountController {
     private IAccount iAccount;
     @GetMapping("/getAccounts")
@@ -35,4 +35,8 @@ public class AccountController {
     @PutMapping("/substractBalance/{idAccount}/{amount}")
     public  void substractBalance(@PathVariable int idAccount, @PathVariable float amount)
     {iAccount.substractBalance(iAccount.retrieveAccount(idAccount), amount);}
+    @GetMapping("/countAccounts")
+    public int countAccounts() {
+        return iAccount.countAccounts();
+    }
 }

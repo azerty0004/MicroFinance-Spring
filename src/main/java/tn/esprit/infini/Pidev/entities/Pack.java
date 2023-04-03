@@ -10,6 +10,15 @@ import jakarta.persistence.*;
 import java.io.Serializable;
 import java.util.Set;
 
+import java.io.Serializable;
+import java.time.LocalDate;
+import java.util.Set;
+
+
+import java.io.Serializable;
+import jakarta.persistence.*;
+
+
 
 @Entity
 @Getter
@@ -28,19 +37,25 @@ import java.util.Set;
     private double price ;
     private int likes;
     private int dislikes;
+    private LocalDate createdAt;
     @Enumerated(EnumType.STRING)
     private TypePack typePack;
-
     @ManyToOne
     @JsonIgnore
-    Cart cart;
-
+    public Cart cart;
     @ManyToOne
     @JsonIgnore
     Transaction transaction;
-
     @OneToMany( mappedBy="pack")
     private Set<Insurance> Insurances;
+    @OneToMany (mappedBy = "pack")
+    @JsonIgnore
+    Set<Reaction> reaction;
+
+    @OneToMany(mappedBy = "pack")
+    @JsonIgnore
+    Set<Insurance> insurance;
+
 
 }
 

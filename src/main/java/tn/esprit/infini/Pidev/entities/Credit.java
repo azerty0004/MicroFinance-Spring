@@ -1,7 +1,11 @@
 package tn.esprit.infini.Pidev.entities;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import jakarta.persistence.*;
+
+import jakarta.persistence.*;
+
 import java.io.Serializable;
 import java.util.Date;
 import java.util.Set;
@@ -24,8 +28,7 @@ public class Credit implements Serializable {
     private Integer duration;
     @Enumerated(EnumType.STRING)
     private Statut statut;
-    @OneToOne
-    Guarantor guarantor;
+
     @Enumerated(EnumType.STRING)
     private TypeCredit typeCredit;
     @ManyToOne
@@ -34,6 +37,10 @@ public class Credit implements Serializable {
     Insurance insurance;
    // @OneToMany( mappedBy="credit")
     // private Set<Insurance> Insurance;
+
+    @OneToOne
+    Guarantor guarantor;
+
 
 
 
