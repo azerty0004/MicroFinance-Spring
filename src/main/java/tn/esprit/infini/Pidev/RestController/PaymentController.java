@@ -57,19 +57,17 @@ public class PaymentController {
     @PostMapping("confirm-payment-intent")
     public void confimPayment(@RequestBody String intentId) throws StripeException {
         Stripe.apiKey=this.stripePublicKey;
-        paymentService.confimPayment(intentId);
-        transactionService.confirmTransaction(intentId);
-
-
+        Gson gson = new Gson();
+        JsonObject jsonObject = gson.fromJson(intentId, JsonObject.class);
+        String id = jsonObject.get("intentId").getAsString();
+        paymentService.confimPayment(id);
+        transactionService.confirmTransaction(id);
         }
 
         @PostMapping("/persist-payment-base")
         public  void persistTransaction(@RequestBody String intentId) throws StripeException {
             Stripe.apiKey=this.stripePublicKey;
             paymentService.persistTransaction(intentId);
-
-
-
 
 
         }
@@ -81,7 +79,8 @@ public class PaymentController {
            String intent= paymentService.createPaymentIntent(transaction);
            transaction.setStripeId(intent);
            transaction.setStatus("requires_payment_method");
-           transaction.setTypeTransaction(TypeTransaction.Invest);
+           transaction.setIdobject(idCredit);
+           transaction.setTypeTransaction(TypeTransaction.Credit);
             transactionService.addTransaction(transaction);
 
         }

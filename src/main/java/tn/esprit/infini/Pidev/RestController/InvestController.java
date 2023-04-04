@@ -14,6 +14,8 @@ import tn.esprit.infini.Pidev.entities.User;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+
 @RestController
 @AllArgsConstructor
 @RequestMapping("/Invest")
@@ -64,10 +66,15 @@ public class InvestController {
             @RequestParam(required = false) Statut statut) {
             return iinvestservice.searchInvests(id,amount,dateofapplication,dateofobtaining,dateoffinish,interestrate,mounths,statut);
     }
-    //@GetMapping("/amount/{id}")
-    //List<Double> Amountgiven(@PathVariable  Long id){
-        //return iinvestservice.Amountgiven(id);
-    //}
+    @GetMapping("/amount")
+   Double totalAmountOfInvests(){
+       return iinvestservice.totalAmountOfInvests();
+    }
+    @GetMapping("/investbystatut")
+
+    Map<Statut, Double> percentageOfinvestsByStatus(){
+        return iinvestservice.percentageOfinvestsByStatus();
+    }
 
 }
 

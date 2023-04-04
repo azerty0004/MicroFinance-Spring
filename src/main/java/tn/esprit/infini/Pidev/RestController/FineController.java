@@ -70,13 +70,16 @@ public class FineController {
                 }
             }
         }
-
         // call service method to search for fines
 
         return iFine.searchFines(criteria,criteria.size());
 
     }
-    @GetMapping("/GetFineModel")
-    public List<String> calculatePaymentsByDay(@RequestBody Date startDate,@RequestBody Date dueDate,@RequestBody Double totalAmount)
-    {return iFine.calculatePaymentsByDay(startDate,dueDate,totalAmount);}
+    @GetMapping("/GetFineModel/{idFine}")
+    public List<String> calculatePaymentsByDay(@PathVariable Long idFine)
+
+    { Fine fine = iFine.retrieveFine(idFine);
+        return iFine.calculatePaymentsByDay(fine.getStartDate(),fine.getDueDate(), fine.getTotalAmount());
+
+    }
 }

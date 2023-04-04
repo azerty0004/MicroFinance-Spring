@@ -31,7 +31,7 @@ public class ScheduledTasks {
 
     private static final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy:MM:dd:HH:mm:ss");
 
-    @Scheduled(cron = "*/10 * * * * *")
+    @Scheduled(cron = "0 0 1 * * *")
     public void reportCurrentTime() throws StripeException, ParseException {
         Date today = new Date();
 

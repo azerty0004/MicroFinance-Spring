@@ -276,14 +276,14 @@ public class Creditservice implements Icreditservice {
 
     @Override
     public double InterestRateCalculator(Credit credit) throws IOException {
-        double TMM = Double.parseDouble(getmm())*0.01;
+        double TMM = Double.parseDouble(getmm());
         double interestrate = 0;
         float score = calculateFicoScore(credit);
         List<Settings> settings = settingsRepository.findAll();
 
         for (Settings rate : settings) {
             if (score >= rate.getMinScore() && score <= rate.getMaxScore()) {
-                interestrate = (TMM + rate.getRate());
+                interestrate = (TMM + (rate.getRate()))*0.01;
                 credit.setInterestrate(interestrate);
                 creditrepository.save(credit);
                 return interestrate;
@@ -433,11 +433,6 @@ public class Creditservice implements Icreditservice {
             return listmontantrestant;
         }
     }
-
-
-
-
-
         @Override
     public double Calculateamountafterinsurance (Long id) {
     Credit c = creditrepository.findById(id).orElseThrow(() -> new RuntimeException(String.format("Credit not found")));
@@ -457,15 +452,15 @@ public class Creditservice implements Icreditservice {
                 c.setStatut(Statut.Non_Approuvé);
                 creditrepository.save(c);
             } else if ((score >= 580 && score <= 669) /*bank.amount*/) {
-               c.setAmount(c.getAmount() * 0.80);
+               c.setAmount((c.getAmount() * 0.80)-250);
                 c.setStatut(Statut.Approuvé);
                 creditrepository.save(c);
             } else if ((score >= 670 && score <= 739)) {
                 c.setStatut(Statut.Approuvé);
-                c.setAmount(c.getAmount() * 0.90);
+                c.setAmount((c.getAmount() * 0.90)-250);
                 creditrepository.save(c);
             } else if ((score >= 740 && score <= 799)) {
-                  c.setAmount(c.getAmount() * 0.95);
+                  c.setAmount((c.getAmount() * 0.95)-250);
                 c.setStatut(Statut.Approuvé);
                 creditrepository.save(c);
             } else c.setStatut(Statut.Approuvé);
@@ -474,6 +469,7 @@ public class Creditservice implements Icreditservice {
          else c.setStatut(Statut.Non_Approuvé);
         creditrepository.save(c);
     }
+
 
     public Double averageInterestRate(List<Credit> credits) {
         Double totalInterestRate = 0.0;
@@ -487,7 +483,8 @@ public class Creditservice implements Icreditservice {
         return credits.size();
     }
 
-    public Double totalAmountOfLoans(List<Credit> credits) {
+    public Double totalAmountOfLoans() {
+        List<Credit> credits=creditrepository.findAll();
         Double totalAmount = 0.0;
         for (Credit credit : credits) {
             totalAmount += credit.getAmount();
@@ -701,9 +698,8 @@ public class Creditservice implements Icreditservice {
         return byteArrayOutputStream.toByteArray();
     }
         @Override
-     public void SendEmail(HttpServletResponse response, Long idCredit) throws DocumentException, IOException {
+        public void SendEmail( Long idCredit) throws DocumentException, IOException {
         User user =userRepository.findUserByCreditId(idCredit);
-
          byte[] pdfBytes = exportPdfs(idCredit);
          String userEmail = user.getEmail();
          String emailBody = "Details credits.";
@@ -714,6 +710,7 @@ public class Creditservice implements Icreditservice {
          email.setMsgBody(emailBody);
          emailService.sendEmail(email);
      }
+     @Override
     @Scheduled(cron = "0 0 1 1 * *")
     public void generateCreditReport() {
         List<Credit> credits = creditrepository.findAll();

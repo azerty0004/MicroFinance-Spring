@@ -69,19 +69,17 @@ public class PaymentService implements IPayment {
 
 
 
-
     }
 
     @Override
     public void confimPayment(String intentId) throws StripeException {
         Stripe.apiKey=this.stripePublicKey;
-        /* Gson gson = new Gson();
-        JsonObject jsonObject = gson.fromJson(intentId, JsonObject.class);
-        String id = jsonObject.get("intentId").getAsString();*/
         PaymentIntent intent = PaymentIntent.retrieve(intentId);
         Map<String, Object> params = new HashMap<>();
         params.put("payment_method", "pm_card_visa");
         intent.confirm(params);
 
     }
+
+
 }

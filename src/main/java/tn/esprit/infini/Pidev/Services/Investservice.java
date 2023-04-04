@@ -92,8 +92,6 @@ public class Investservice implements Iinvestservice {
         investrepository.deleteById(id);
 
     }
-
-
     @Override
     public List<Invest> getInvestByiduser(Long userid) {
         return investrepository.getInvestByiduser(userid);
@@ -140,28 +138,55 @@ public class Investservice implements Iinvestservice {
         return entityManager.createQuery(query).getResultList();
     }
 
-    @Override
-    //@Scheduled(cron = "0 0 1 * * ")
-    public List<Double> Amountgiven(Long id) {
-        Invest i = investrepository.findById(id).orElseThrow(() -> new RuntimeException(String.format("Invest not found")));
-            Double montantinteret;
+         @Override
+        @Scheduled(cron = "0 0 1 * * * ")
+        public void Amountgiven() {
+        List<Invest> invests = investrepository.findAll();
+        Double montantinteret;
         Double tax;
         Double x;
-        LocalDate currentdate = LocalDate.now();
-        List amountgiven = new ArrayList<>();
-        long mounths = ChronoUnit.MONTHS.between(currentdate.withDayOfMonth(1), i.getDateoffinish().withDayOfMonth(1));
+        for (int i = 0; i < invests.size(); i++) {
+            LocalDate currentdate = LocalDate.now();
+            List amountgiven = new ArrayList<>();
+            long mounths = ChronoUnit.MONTHS.between(currentdate.withDayOfMonth(1), invests.get(i).getDateoffinish().withDayOfMonth(1));
+            if (mounths == 3) {
+                montantinteret = (invests.get(i).getAmount() * invests.get(i).getInterestrate());
+                tax = montantinteret * 0.15;
+                x = (invests.get(i).getAmount() + montantinteret - tax);
+                amountgiven.add(x);
+                invests.get(i).setAmount(x);
+                investrepository.save(invests.get(i));
 
-        if (mounths == 3) {
-            montantinteret = (i.getAmount() * i.getInterestrate());
-            tax = montantinteret * 0.15;
-            x = (i.getAmount() + montantinteret - tax);
-            amountgiven.add(x);
-            i.setAmount(x);
-            investrepository.save(i);
+            }
         }
 
-        return amountgiven;
-
+    }
+    @Override
+    public Double totalAmountOfInvests() {
+        Double totalAmount = 0.0;
+        List<Invest> invests = investrepository.findAll();
+        for (Invest invest : invests) {
+            totalAmount += invest.getAmount();
+        }
+        return totalAmount;
+    }
+    @Override
+    public Map<Statut, Double> percentageOfinvestsByStatus() {
+        List<Invest> invests = investrepository.findAll();
+        Map<Statut, Integer> numberOfCreditsByStatus = new HashMap<>();
+        for (Invest invest : invests) {
+            Statut status = invest.getStatut();
+            numberOfCreditsByStatus.put(status, numberOfCreditsByStatus.getOrDefault(status, 0) + 1);
+        }
+        Map<Statut, Double> percentageOfCreditsByStatus = new HashMap<>();
+        int totalNumberOfCredits = invests.size();
+        for (Map.Entry<Statut, Integer> entry : numberOfCreditsByStatus.entrySet()) {
+            Statut status = entry.getKey();
+            int numberOfCredits = entry.getValue();
+            double percentage = (double) numberOfCredits / totalNumberOfCredits * 100;
+            percentageOfCreditsByStatus.put(status, percentage);
+        }
+        return percentageOfCreditsByStatus;
     }
 
 }

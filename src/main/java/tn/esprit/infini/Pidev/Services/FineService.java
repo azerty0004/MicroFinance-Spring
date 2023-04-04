@@ -19,7 +19,6 @@ import java.util.concurrent.TimeUnit;
 
 @Service
 @AllArgsConstructor
-@NoArgsConstructor
 public class FineService implements  IFine {
     FineRepository fineRepository;
     private EntityManager entityManager;

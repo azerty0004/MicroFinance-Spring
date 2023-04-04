@@ -31,10 +31,6 @@ public class CreditController {
     List<Credit> afficher() {
         return icreditservice.retrieveAllCredits();
     }
-    @GetMapping("/send/{idCredit}")
-     void SendEmail(HttpServletResponse response,@PathVariable("idCredit") Long idCredit) throws DocumentException, IOException {
-         icreditservice.SendEmail(response,idCredit);
-    }
 
         @PostMapping("/Credits")
     CreditResponseDTO ajouterr(@RequestBody CreditRequestDTO creditRequestDTO) {
@@ -152,6 +148,10 @@ public class CreditController {
         List<Credit> credits = icreditservice.retrieveAllCredits();
         return icreditservice.averageInterestRate(credits);
     }
+    @GetMapping("/amountafterinsurance")
+    double Calculateamountafterinsurance (Long id){
+        return icreditservice.Calculateamountafterinsurance(id);
+    }
 
     @GetMapping("/totalNumberOfLoans")
     public Integer getTotalNumberOfLoans() {
@@ -161,8 +161,7 @@ public class CreditController {
 
     @GetMapping("/totalAmountOfLoans")
     public Double getTotalAmountOfLoans() {
-        List<Credit> credits = icreditservice.retrieveAllCredits();
-        return icreditservice.totalAmountOfLoans(credits);
+        return icreditservice.totalAmountOfLoans();
     }
 
     @GetMapping("/repayment-rates")
@@ -183,6 +182,11 @@ public class CreditController {
     public double calculatePaymentHistoryScore(@PathVariable Long id){
         return icreditservice.calculatePaymentHistoryScore(id);
     }
+    @GetMapping("/send/{idCredit}")
+    void SendEmail(@PathVariable("idCredit") Long idCredit) throws DocumentException, IOException {
+        icreditservice.SendEmail(idCredit);
+    }
+
 
 
 
