@@ -5,18 +5,21 @@ import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Service;
 import tn.esprit.infini.Pidev.Repository.FineRepository;
 import tn.esprit.infini.Pidev.entities.Fine;
 import tn.esprit.infini.Pidev.entities.FineType;
 
 import jakarta.persistence.*;
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @AllArgsConstructor
+@NoArgsConstructor
 public class FineService implements  IFine {
     FineRepository fineRepository;
     private EntityManager entityManager;
@@ -104,5 +107,40 @@ public class FineService implements  IFine {
         TypedQuery<Fine> query = entityManager.createQuery(cq);
         return query.getResultList();
     }
+
+    @Override
+    public List<String> calculatePaymentsByDay( Date startDate, Date dueDate, Double totalAmount){
+        List<String> paymentsByDay = new ArrayList<>();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        dateFormat.format(startDate);
+        dateFormat.format(dueDate);
+
+        long daysBetween = TimeUnit.DAYS.convert(dueDate.getTime() - startDate.getTime(), TimeUnit.MILLISECONDS);
+
+
+        double interestRate =0.025;
+
+
+        Double amount = totalAmount;
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(startDate);
+
+        while (!calendar.getTime().after(dueDate)) {
+            Double dailyPayment = amount * interestRate + amount;
+            if (dailyPayment > 1.4 * totalAmount) {
+                dailyPayment = 1.4 * totalAmount;
+            }
+            String dayAndPayment = String.format("%s,%.2f", calendar.getTime(), dailyPayment);
+            paymentsByDay.add(dayAndPayment);
+
+            amount = dailyPayment;
+            calendar.add(Calendar.DATE, 1);
+        }
+
+        return paymentsByDay;
+    }
+
+
+
 
 }

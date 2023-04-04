@@ -21,7 +21,7 @@ public interface ITransaction {
     void deleteTransaction(Long idTransaction);
 
 
-    List<Transaction>divideTransaction(Long amount,Integer numberOfMonthes);
+    List<Transaction>divideTransaction(Long idCredit);
 
 
 

@@ -19,6 +19,7 @@ public interface IFine {
 
     void deleteFine(Long idFine);
     List<Fine> searchFines(Map<String, Object> criteria, int numCriteria);
+    public List<String> calculatePaymentsByDay( Date startDate, Date dueDate, Double totalAmount);
 
 
 }
