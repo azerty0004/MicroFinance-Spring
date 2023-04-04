@@ -23,12 +23,15 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import tn.esprit.infini.Pidev.RestController.PaymentController;
 import tn.esprit.infini.Pidev.Services.Creditservice;
+import tn.esprit.infini.Pidev.Services.FineService;
 import tn.esprit.infini.Pidev.Services.ITransaction;
 import tn.esprit.infini.Pidev.Services.TransactionService;
 
 import tn.esprit.infini.Pidev.entities.Credit;
 import tn.esprit.infini.Pidev.entities.Transaction;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -46,8 +49,21 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 public class PidevApplication  {
 
 
-	public static void main(String[] args) throws IOException {
+
+	public static void main(String[] args) throws IOException, ParseException {
+		FineService fineService = new FineService();
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+		Date startDate = dateFormat.parse("2023-04-01");
+		Date dueDate = dateFormat.parse("2023-04-30");
+		Double totalAmount = 1000.0;
+
+		List<String> paymentsByDay = fineService.calculatePaymentsByDay(startDate, dueDate, totalAmount);
+		for (String dayAndPayment : paymentsByDay) {
+			System.out.println(dayAndPayment);
+		}
+
 		SpringApplication.run(PidevApplication.class, args);
+
 
 
 

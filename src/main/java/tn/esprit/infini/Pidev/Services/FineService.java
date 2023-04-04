@@ -5,6 +5,7 @@ import jakarta.persistence.criteria.CriteriaQuery;
 import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.springframework.stereotype.Service;
 import tn.esprit.infini.Pidev.Repository.FineRepository;
 import tn.esprit.infini.Pidev.entities.Fine;
@@ -12,10 +13,13 @@ import tn.esprit.infini.Pidev.entities.FineType;
 
 import jakarta.persistence.*;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 @Service
 @AllArgsConstructor
+@NoArgsConstructor
 public class FineService implements  IFine {
     FineRepository fineRepository;
     private EntityManager entityManager;
@@ -105,31 +109,37 @@ public class FineService implements  IFine {
     }
 
     @Override
-    public List<String> calculatePaymentsByDay(Date declaredDate, Date startDate, Date dueDate, Double totalAmount) {
+    public List<String> calculatePaymentsByDay( Date startDate, Date dueDate, Double totalAmount){
         List<String> paymentsByDay = new ArrayList<>();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        dateFormat.format(startDate);
+        dateFormat.format(dueDate);
 
+        long daysBetween = TimeUnit.DAYS.convert(dueDate.getTime() - startDate.getTime(), TimeUnit.MILLISECONDS);
+
+
+        double interestRate =0.025;
+
+
+        Double amount = totalAmount;
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(startDate);
 
-        Double interestRate = Math.exp(Math.log(1 + (0.3 / totalAmount)) / ((dueDate.getTime() - startDate.getTime()) / (1000.0 * 60 * 60 * 24))) - 1;
-
-        Double interest = 0.0;
-        Double amount = totalAmount;
-
-        while ((calendar.getTime().before(dueDate) || calendar.getTime().equals(dueDate)) && amount < totalAmount * 1.3) {
-            Double dailyInterest = amount * interestRate;
-            interest += dailyInterest;
-
-            Double dailyPayment = Math.min(amount + dailyInterest, totalAmount * 1.3) - amount;
-            amount += dailyPayment;
+        while (!calendar.getTime().after(dueDate)) {
+            Double dailyPayment = amount * interestRate + amount;
+            if (dailyPayment > 1.4 * totalAmount) {
+                dailyPayment = 1.4 * totalAmount;
+            }
             String dayAndPayment = String.format("%s,%.2f", calendar.getTime(), dailyPayment);
             paymentsByDay.add(dayAndPayment);
 
+            amount = dailyPayment;
             calendar.add(Calendar.DATE, 1);
         }
 
         return paymentsByDay;
     }
+
 
 
 

@@ -76,7 +76,7 @@ public class FineController {
         return iFine.searchFines(criteria,criteria.size());
 
     }
-    @GetMapping("/GetCreditModel")
-    public List<String> calculatePaymentsByDay(@RequestBody Date declaredDate,@RequestBody Date startDate,@RequestBody Date dueDate,@RequestBody Double totalAmount)
-    {return iFine.calculatePaymentsByDay(declaredDate,startDate,dueDate,totalAmount);}
+    @GetMapping("/GetFineModel")
+    public List<String> calculatePaymentsByDay(@RequestBody Date startDate,@RequestBody Date dueDate,@RequestBody Double totalAmount)
+    {return iFine.calculatePaymentsByDay(startDate,dueDate,totalAmount);}
 }

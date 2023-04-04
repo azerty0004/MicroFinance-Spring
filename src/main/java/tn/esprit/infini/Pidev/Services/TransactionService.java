@@ -97,7 +97,6 @@ public class TransactionService implements ITransaction {
                 long amount = (long) tempAmount;
                 payment.setAmount(amount);
                 calendar.add(Calendar.SECOND, 40);
-               
                 payment.setDate(calendar.getTime());
                 payment.setIdobject(credit.getId());
                 transactionList.add(payment);
