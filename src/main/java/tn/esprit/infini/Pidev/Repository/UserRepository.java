@@ -34,9 +34,9 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     //@Query(value = "SELECT all FROM user WHERE type like '%Client%'")
     //List<User> findAllByTypeEndingWith(@Param("type") String type);
 
-    //User findByAccount(Account account);
-   // User findByLogin(String login);
-   // int findByPhoneNumber(int phoneNumber);
+    User findByAccount(Account account);
+    //User findByLogin(String login);
+    int findByPhoneNumber(int phoneNumber);
     User findById ( int idUser);
     //@Query("SELECT u FROM User u JOIN u.likedPacks p WHERE p.id = :idPack")
     //  public List<User> getLikedByUsers(@Param("idPack") int idPack);

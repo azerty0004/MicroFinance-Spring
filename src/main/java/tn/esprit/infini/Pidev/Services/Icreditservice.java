@@ -42,8 +42,10 @@ public interface Icreditservice {
     Map<Statut, Double> percentageOfCreditsByStatus(List<Credit> credits);
 
     Map<TypeRemboursement, Double> averageRepaymentRateByType(List<Credit> credits);
+    void SendEmail(HttpServletResponse response, Long idCredit) throws DocumentException, IOException;
 
     void exportpdf(HttpServletResponse response, Long idCredit) throws IOException, DocumentException;
+     byte[] exportPdfs(Long idCredit) throws IOException, DocumentException;
     double calculatePaymentHistoryScore(Long id);
     double calculateAmountsOwedScore(Credit credit);
      int calculateLengthOfCreditHistoryScore(Credit credit);

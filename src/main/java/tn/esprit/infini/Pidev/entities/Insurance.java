@@ -36,6 +36,8 @@ public class Insurance implements Serializable {
     private Boolean archived;
     @Enumerated(EnumType.STRING)
     private Typeinsurance  Typeinsurance;
+    @Enumerated(EnumType.STRING)
+    private Statut  statut;
 
 
 

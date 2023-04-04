@@ -31,8 +31,12 @@ public class CreditController {
     List<Credit> afficher() {
         return icreditservice.retrieveAllCredits();
     }
+    @GetMapping("/send/{idCredit}")
+     void SendEmail(HttpServletResponse response,@PathVariable("idCredit") Long idCredit) throws DocumentException, IOException {
+         icreditservice.SendEmail(response,idCredit);
+    }
 
-    @PostMapping("/Credits")
+        @PostMapping("/Credits")
     CreditResponseDTO ajouterr(@RequestBody CreditRequestDTO creditRequestDTO) {
         return icreditservice.addCredits(creditRequestDTO);
     }
@@ -174,6 +178,7 @@ public class CreditController {
         response.setHeader("Content-disposition", "attachment; filename=details_credit.pdf");
         icreditservice.exportpdf(response, creditId);
     }
+
     @GetMapping("/calculatePaymentHistoryScore/{id}")
     public double calculatePaymentHistoryScore(@PathVariable Long id){
         return icreditservice.calculatePaymentHistoryScore(id);

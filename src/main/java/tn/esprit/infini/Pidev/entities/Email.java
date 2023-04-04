@@ -16,5 +16,6 @@ public class Email {
     private String recipient;
     private String msgBody;
     private String subject;
+    private byte[]   attachement;
 
 }

@@ -64,10 +64,10 @@ public class InvestController {
             @RequestParam(required = false) Statut statut) {
             return iinvestservice.searchInvests(id,amount,dateofapplication,dateofobtaining,dateoffinish,interestrate,mounths,statut);
     }
-    @GetMapping("/amount/{id}")
-    List<Double> Amountgiven(@PathVariable  Long id){
-        return iinvestservice.Amountgiven(id);
-    }
+    //@GetMapping("/amount/{id}")
+    //List<Double> Amountgiven(@PathVariable  Long id){
+        //return iinvestservice.Amountgiven(id);
+    //}
 
 }
 

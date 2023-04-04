@@ -162,7 +162,7 @@ public  class ComplaintService implements IComplaintService {
         }
     }*/ //
     @Override
-    @Scheduled( fixedRate = 5000)
+    @Scheduled( cron = "0 0 0 * * *")
     public void archiveResolvedComplaints() {
         List<Complaint> resolvedComplaints = complaintRepository.getResolvedComplaints();
         for (Complaint complaint : resolvedComplaints) {

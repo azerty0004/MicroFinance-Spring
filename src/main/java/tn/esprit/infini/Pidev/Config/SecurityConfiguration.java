@@ -25,7 +25,7 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests()
                 .requestMatchers("/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs/**")
                 .permitAll()
-                .requestMatchers("/api/v1/auth/**","/User/**","/Account/**","/ Guarantor/**","/Pack/**","/ChatBot/**","/Cart/**","/Transaction/**","/Payment/**","/Complaint/**","/Insurance/**","/Credit/**","/Invest/**")
+                .requestMatchers("/api/v1/auth/**","/Account/**","/ Guarantor/**","/Pack/**","/ChatBot/**","/Cart/**","/Transaction/**","/Payment/**","/Insurance/**","/Credit/**","/Invest/**","/Complaint/**","/User/**")
                 .permitAll()
                 .anyRequest()
                 .authenticated()

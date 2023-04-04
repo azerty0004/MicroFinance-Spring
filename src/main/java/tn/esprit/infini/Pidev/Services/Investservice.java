@@ -8,6 +8,7 @@ import jakarta.persistence.criteria.Root;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import tn.esprit.infini.Pidev.Repository.Investrepository;
 import tn.esprit.infini.Pidev.Repository.TransactionRepository;
@@ -140,17 +141,17 @@ public class Investservice implements Iinvestservice {
     }
 
     @Override
-   // @Scheduled(cron = "0 0 1 * * ")
+    //@Scheduled(cron = "0 0 1 * * ")
     public List<Double> Amountgiven(Long id) {
         Invest i = investrepository.findById(id).orElseThrow(() -> new RuntimeException(String.format("Invest not found")));
-        Double montantinteret;
+            Double montantinteret;
         Double tax;
         Double x;
         LocalDate currentdate = LocalDate.now();
         List amountgiven = new ArrayList<>();
         long mounths = ChronoUnit.MONTHS.between(currentdate.withDayOfMonth(1), i.getDateoffinish().withDayOfMonth(1));
 
-        if (mounths == 12) {
+        if (mounths == 3) {
             montantinteret = (i.getAmount() * i.getInterestrate());
             tax = montantinteret * 0.15;
             x = (i.getAmount() + montantinteret - tax);

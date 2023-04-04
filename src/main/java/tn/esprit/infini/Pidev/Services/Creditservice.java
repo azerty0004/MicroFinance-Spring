@@ -1,6 +1,4 @@
 package tn.esprit.infini.Pidev.Services;
-
-
 import com.lowagie.text.*;
 import com.lowagie.text.pdf.PdfPCell;
 import com.lowagie.text.pdf.PdfPTable;
@@ -31,9 +29,6 @@ import java.time.ZoneId;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
 import java.util.List;
-import jakarta.persistence.*;
-
-
 
 @Service
 @Configuration
@@ -46,6 +41,8 @@ public class Creditservice implements Icreditservice {
     private UserRepository userRepository;
     private AccountRepository accountRepository;
     private TransactionRepository transactionRepository;
+    private EmailService emailService;
+    private ComplaintService complaintService;
     @Override
     public List<Credit> retrieveAllCredits() {
         return  creditrepository.findAll();
@@ -166,8 +163,9 @@ public class Creditservice implements Icreditservice {
     public int calculateLengthOfCreditHistoryScore(Credit credit) {
         LocalDate oldestTransactionDate = LocalDate.now();
         int ageOfOldestTransactionInMonths = 0;
-
-        List<Transaction> transactions = credit.getTransactions();
+        User user = userRepository.findUserByCreditId(credit.getId());
+        Account c = accountRepository.getAccountByUser(user);
+        List<Transaction> transactions = transactionRepository.getTransactionByAccounts(c);
 
         if (transactions.isEmpty()) {
             return 0;
@@ -450,7 +448,7 @@ public class Creditservice implements Icreditservice {
     @Override
     public void ValidateCredit(Long id) throws IOException {
         Credit c=creditrepository.findById(id).orElseThrow(()-> new RuntimeException(String.format("Credit not found")));
-        float score = calculateFicoScore(c);
+                float score = calculateFicoScore(c);
          if (Optional.ofNullable(c.getGuarantor()).isPresent()) {
              //if{balance.admin>
             if (score < 580) {
@@ -530,6 +528,7 @@ public class Creditservice implements Icreditservice {
      @Override
      public void exportpdf(HttpServletResponse response, Long idCredit) throws IOException, DocumentException {
         Credit credit = retrieveCredit(idCredit);
+        User user =userRepository.findUserByCreditId(idCredit);
         Document document = new Document(PageSize.A4);
         PdfWriter.getInstance(document, response.getOutputStream());
         document.open();
@@ -607,7 +606,112 @@ public class Creditservice implements Icreditservice {
          Image chartImage = Image.getInstance(chartBytes);
          document.add(chartImage);
          document.close();
+         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+         PdfWriter.getInstance(document, byteArrayOutputStream);
+         document.close();
+
+
+     }
+    @Override
+    public byte[] exportPdfs(Long idCredit) throws IOException, DocumentException {
+        Credit credit = retrieveCredit(idCredit);
+        User user = userRepository.findUserByCreditId(idCredit);
+        Document document = new Document(PageSize.A4);
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+        PdfWriter.getInstance(document, outputStream);
+        document.open();
+        Font fontTitle = FontFactory.getFont(FontFactory.HELVETICA_BOLD);
+        fontTitle.setSize(18);
+        Paragraph paragraph = new Paragraph("Voici les détails de votre crédit.", fontTitle);
+        paragraph.setAlignment(Paragraph.ALIGN_CENTER);
+        document.add(paragraph);
+        List<Double> mensualites = CalculMensualitevariable(credit);
+        List<Double> tauxInterets = listetauxinterets(idCredit);
+        List<Double> Montantrestant = listemontantrestant(idCredit);
+        List<Double> Amortissement = listeAmortissement(idCredit);
+        Font fontParagraph = FontFactory.getFont(FontFactory.HELVETICA);
+        fontParagraph.setSize(12);
+        PdfPTable table = new PdfPTable(5);
+        table.setWidthPercentage(100);
+        table.setHorizontalAlignment(Element.ALIGN_LEFT);
+        PdfPCell cellNumero = new PdfPCell(new Phrase("Mensualité numéro", fontTitle));
+        cellNumero.setHorizontalAlignment(Element.ALIGN_CENTER);
+        table.addCell(cellNumero);
+        PdfPCell cellMensualites = new PdfPCell(new Phrase("Montant du mensualité", fontTitle));
+        cellMensualites.setHorizontalAlignment(Element.ALIGN_CENTER);
+        table.addCell(cellMensualites);
+        PdfPCell cellTaux = new PdfPCell(new Phrase("montant  d'interets", fontTitle));
+        cellTaux.setHorizontalAlignment(Element.ALIGN_CENTER);
+        table.addCell(cellTaux);
+        PdfPCell cellMontantrestant = new PdfPCell(new Phrase("montant  restant", fontTitle));
+        cellTaux.setHorizontalAlignment(Element.ALIGN_CENTER);
+        table.addCell(cellMontantrestant);
+        PdfPCell cellamortissement= new PdfPCell(new Phrase("amortissement", fontTitle));
+        cellTaux.setHorizontalAlignment(Element.ALIGN_CENTER);
+        table.addCell(cellamortissement);
+        for (int i = 0; i < mensualites.size(); i++) {
+            PdfPCell cellNumeroValue = new PdfPCell(new Phrase(Integer.toString(i+1), fontParagraph));
+            cellNumeroValue.setHorizontalAlignment(Element.ALIGN_LEFT);
+            table.addCell(cellNumeroValue);
+            PdfPCell cellMensualitesValue = new PdfPCell(new Phrase(Double.toString(mensualites.get(i)), fontParagraph));
+            cellMensualitesValue.setHorizontalAlignment(Element.ALIGN_LEFT);
+            table.addCell(cellMensualitesValue);
+            PdfPCell cellTauxValue = new PdfPCell(new Phrase(Double.toString(tauxInterets.get(i)), fontParagraph));
+            cellTauxValue.setHorizontalAlignment(Element.ALIGN_LEFT);
+            table.addCell(cellTauxValue);
+            PdfPCell cellMontantrestantValue = new PdfPCell(new Phrase(Double.toString(Amortissement.get(i)), fontParagraph));
+            cellTauxValue.setHorizontalAlignment(Element.ALIGN_LEFT);
+            table.addCell(cellMontantrestantValue);
+            PdfPCell cellamortissementValue = new PdfPCell(new Phrase(Double.toString(Montantrestant.get(i)), fontParagraph));
+            cellTauxValue.setHorizontalAlignment(Element.ALIGN_LEFT);
+            table.addCell(cellamortissementValue);
+        }
+        document.add(table);
+        double totalAmount = credit.getAmount();
+        double insuranceAmount = Calculateamountafterinsurance(idCredit);
+        double suminterest = listetauxinterets(idCredit).stream().mapToDouble(Double::doubleValue).sum();
+        double fraisdossier =250;
+        double interestPercent = suminterest/totalAmount*100.0;
+        double insurancePercent = (insuranceAmount / totalAmount * 100.0);
+        double fraisdossierPercent = fraisdossier/totalAmount*100;
+        double principalPercent = 100.0 - interestPercent - insurancePercent-fraisdossierPercent;
+
+        DefaultPieDataset dataset = new DefaultPieDataset();
+        dataset.setValue("Interest (" + String.format("%.1f", interestPercent) + "%)", suminterest);
+        dataset.setValue("Insurance (" + String.format("%.1f", insurancePercent) + "%)", insuranceAmount);
+        dataset.setValue("Frais (" + String.format("%.1f", fraisdossierPercent) + "%)", fraisdossier);
+        dataset.setValue("Principal (" + String.format("%.1f", principalPercent) + "%)", credit.getAmount());
+
+        JFreeChart chart = ChartFactory.createPieChart(
+                "Credit Details", dataset, true, true, false);
+
+        PiePlot plot = (PiePlot) chart.getPlot();
+        plot.setToolTipGenerator(new StandardPieToolTipGenerator(
+                "{0}: {1} ({2})", new DecimalFormat("0.0"), new DecimalFormat("0.0%")));
+        ByteArrayOutputStream chartOut = new ByteArrayOutputStream();
+        ChartUtilities.writeChartAsPNG(chartOut, chart, 500, 300);
+        byte[] chartBytes = chartOut.toByteArray();
+        Image chartImage = Image.getInstance(chartBytes);
+        document.add(chartImage);
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        PdfWriter.getInstance(document, byteArrayOutputStream);
+        document.close();
+        return byteArrayOutputStream.toByteArray();
     }
+        @Override
+     public void SendEmail(HttpServletResponse response, Long idCredit) throws DocumentException, IOException {
+        User user =userRepository.findUserByCreditId(idCredit);
+
+         byte[] pdfBytes = exportPdfs(idCredit);
+         String userEmail = user.getEmail();
+         String emailBody = "Details credits.";
+         Email email = new Email();
+         email.setRecipient(userEmail);
+         email.setSubject("Detailscredits");
+         email.setAttachement(pdfBytes);
+         email.setMsgBody(emailBody);
+         emailService.sendEmail(email);
+     }
     @Scheduled(cron = "0 0 1 1 * *")
     public void generateCreditReport() {
         List<Credit> credits = creditrepository.findAll();

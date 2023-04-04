@@ -181,11 +181,17 @@ public Insurance addInsurance(Insurance i) {
         if (insurance.getClaimsHistory() != null && !insurance.getClaimsHistory().isEmpty()) {
             // Si l'historique de sinistres existe, vérifier le nombre de sinistres
             int numberOfClaims = insurance.getClaimsHistory().split(",").length;
-            if (numberOfClaims >= 3) {
+            if (numberOfClaims >= 5) {
+                insurance.setStatut(Statut.Non_Approuvé);
+                insuranceRepository.save(insurance);
+
                 // Si le nombre de sinistres est supérieur ou égal à 3, refuser la demande d'assurance
                 return false;
             }
         }
+        insurance.setStatut(Statut.Approuvé);
+        insuranceRepository.save(insurance);
+
         // Si l'assurance n'a pas d'historique de sinistres ou si le nombre de sinistres est inférieur à 3, approuver la demande d'assurance
         return true;
     }
